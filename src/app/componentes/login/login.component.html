@@ -7,14 +7,12 @@
       [formGroup]="formularioLogin"
       (ngSubmit)="iniciarSesion()"
     >
-      <h5 class="text-xl font-medium text-gray-900 dark:text-white">
-        Sign in to our platform
-      </h5>
+      <h5 class="text-xl font-medium text-gray-900 dark:text-white">Login</h5>
       <div>
         <label
           for="email"
           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >Your email</label
+          >Email</label
         >
         <input
           type="email"
@@ -30,7 +28,7 @@
         <label
           for="password"
           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >Your password</label
+          >Contraseña</label
         >
         <input
           [type]="ocultarPassword ? 'password' : 'text'"
@@ -108,3 +106,4 @@
     </form>
   </div>
 </section>
+<app-notificacion class="flex mt-2 justify-center" />

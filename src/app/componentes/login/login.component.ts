@@ -10,10 +10,11 @@ import { Router } from '@angular/router';
 import { Login } from '../../core/models/login';
 import { UsuarioService } from '@core/services/usuario.service';
 import { UtilidadService } from '@core/services/utilidad.service';
+import { NotificacionComponent } from '@shared/components/notificacion/notificacion.component';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule, NotificacionComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
@@ -58,9 +59,11 @@ export class LoginComponent implements OnInit {
         }
       },
       error: (error) => {
+        console.log(error);
         this.utilidadService.mostrarAlert('Hubo un error', 'ERROR');
       },
       complete: () => {
+        console.log('complete');
         this.mostrarLoading = false;
       },
     });
