@@ -5,5 +5,5 @@ export interface Usuario {
   idRol: number;
   rolDescripcion: string;
   clave: string;
-  esActivo: boolean;
+  esActivo: number;
 }
