@@ -11,10 +11,11 @@ import { Login } from '../../core/models/login';
 import { UsuarioService } from '@core/services/usuario.service';
 import { UtilidadService } from '@core/services/utilidad.service';
 import { NotificacionComponent } from '@shared/components/notificacion/notificacion.component';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, NotificacionComponent],
+  imports: [FormsModule, ReactiveFormsModule, NotificacionComponent,CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
