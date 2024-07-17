@@ -1,0 +1,7 @@
+#logo-sidebar {
+  display: none;
+}
+
+#logo-sidebar.is-active {
+  display: block;
+}

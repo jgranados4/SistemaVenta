@@ -1,4 +1,12 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  input,
+  InputSignal,
+  OnInit,
+  signal,
+} from '@angular/core';
 import {
   FormBuilder,
   FormControlName,
@@ -26,7 +34,8 @@ export class ModalUsuarioComponent implements OnInit {
   fb = inject(FormBuilder);
   formularioUsuario: FormGroup;
   ocultarPassword: boolean = true;
-  tituloAccion = signal<string>('Agregar');
+  tituloAccion = input<string>('Agregar');
+  data: InputSignal<Usuario[] | undefined> = input<Usuario[]>();
   botonAccion = signal<string>('Guardar');
   ListarRoles: Rol[] = [];
   public usuarios: Usuario | null = null;
@@ -45,7 +54,6 @@ export class ModalUsuarioComponent implements OnInit {
     });
     //
     if (this.usuarios != null) {
-      this.tituloAccion.set('Editar');
       this.botonAccion.set('Actualizar');
     }
     this.RolService.lista().subscribe({
@@ -55,6 +63,10 @@ export class ModalUsuarioComponent implements OnInit {
       error: (e) => {
         console.error(e);
       },
+    });
+    effect(() => {
+      console.log('data', this.data());
+      console.log('accion', this.tituloAccion());
     });
   }
   ngOnInit(): void {

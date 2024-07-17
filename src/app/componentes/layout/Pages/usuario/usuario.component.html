@@ -52,6 +52,14 @@
       />
     </div>
   </div>
+  <!-- tablas -->
+
+  <app-table-rtze
+    class="mt-3"
+    [columns]="columnasTablas"
+    [data]="dataListaUsuario"
+  />
 </div>
 
-<app-modal-usuario />
+<app-modal-usuario [tituloAccion]="agregar()" />
+<app-notificacion />

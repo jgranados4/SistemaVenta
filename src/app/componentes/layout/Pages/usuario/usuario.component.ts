@@ -6,6 +6,7 @@ import {
   viewChild,
   inject,
   signal,
+  model,
 } from '@angular/core';
 import { ModalUsuarioComponent } from '../../modales/modal-usuario/modal-usuario.component';
 
@@ -14,30 +15,34 @@ import { UsuarioService } from '@core/services/usuario.service';
 import { UtilidadService } from '@core/services/utilidad.service';
 import Swal from 'sweetalert2';
 import { filter } from 'rxjs';
+import { TableRtzeComponent } from '@shared/components/table-rtze/table-rtze.component';
+import { Table } from '@core/models/table/table';
+import { NotificacionComponent } from '@shared/components/notificacion/notificacion.component';
 
 @Component({
   selector: 'app-usuario',
   standalone: true,
-  imports: [ModalUsuarioComponent],
+  imports: [ModalUsuarioComponent, TableRtzeComponent, NotificacionComponent],
   templateUrl: './usuario.component.html',
   styleUrl: './usuario.component.css',
 })
 export class UsuarioComponent implements OnInit, AfterViewInit {
-  columnasTablas: string[] = [
-    'NombreCompleto',
+  columnasTablas: any[] = [
+    'nombreCompleto',
     'correo',
-    'Rol',
-    'RolDescripcion',
-    'Estado',
+    'idRol',
+    'rolDescripcion',
+    'esActivo',
   ];
   dataInicio: Usuario[] = [];
   dataListaUsuario = this.dataInicio;
   modalUsuario = signal<boolean>(false);
+  agregar = signal<string>('Agregar');
   //@viewChild
   //*inject
   private _usuarioService = inject(UsuarioService);
   private _utilidadService = inject(UtilidadService);
-
+  //input
   ngOnInit(): void {
     this.ObtenerUsuario();
   }
