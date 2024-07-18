@@ -2,3 +2,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --color-indigo-50: 238 242 255;
+    --color-indigo-500: 99 102 241;
+    --color-indigo-600: 79 70 229;
+    /* ... */
+  }
+}
