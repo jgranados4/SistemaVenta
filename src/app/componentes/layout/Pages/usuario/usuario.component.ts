@@ -7,6 +7,7 @@ import {
   inject,
   signal,
   model,
+  effect,
 } from '@angular/core';
 import { ModalUsuarioComponent } from '../../modales/modal-usuario/modal-usuario.component';
 
@@ -38,11 +39,15 @@ export class UsuarioComponent implements OnInit, AfterViewInit {
   dataListaUsuario = this.dataInicio;
   modalUsuario = signal<boolean>(false);
   agregar = signal<string>('Agregar');
+  modalSwitch = signal<boolean>(false);
   //@viewChild
   //*inject
   private _usuarioService = inject(UsuarioService);
   private _utilidadService = inject(UtilidadService);
   //input
+  constructor() {
+    effect(() => {});
+  }
   ngOnInit(): void {
     this.ObtenerUsuario();
   }
@@ -66,6 +71,7 @@ export class UsuarioComponent implements OnInit, AfterViewInit {
 
   nuevoUsuario() {
     //modal
+    this.openModal();
   }
 
   editarUsuario() {
@@ -94,5 +100,12 @@ export class UsuarioComponent implements OnInit, AfterViewInit {
         });
       }
     });
+  }
+  //
+  openModal() {
+    this.modalSwitch.set(!this.modalSwitch());
+  }
+  closeModal() {
+    this.modalSwitch.set(false);
   }
 }

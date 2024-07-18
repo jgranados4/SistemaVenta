@@ -1,17 +1,15 @@
 <section class="flex justify-center content-center items-center h-dvh">
   <div
-    class="w-full h-3/4 items-center max-w-sm rounded-lg shadow shadow-bluePastel sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700"
+    class="w-full h-3/4 items-center max-w-sm rounded-lg shadow shadow-bluePastel sm:p-6 md:p-8"
   >
     <form
       class="space-y-6"
       [formGroup]="formularioLogin"
       (ngSubmit)="iniciarSesion()"
     >
-      <h5 class="text-4xl text-center font-extrabold">Login</h5>
+      <h5 class="text-4xl text-center text-black font-extrabold">Login</h5>
       <div>
-        <label
-          for="email"
-          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        <label for="email" class="text-lg font-bold text-black tracking-wide"
           >Email</label
         >
         <input
@@ -19,15 +17,13 @@
           name="email"
           id="email"
           formControlName="email"
-          class=""
+          class="w-full content-center text-base py-2 border-b border-grayS focus:outline-none focus:border-indigo"
           placeholder="name@company.com"
           required
         />
       </div>
       <div>
-        <label
-          for="password"
-          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        <label for="password" class="text-lg font-bold text-black tracking-wide"
           >Contraseña</label
         >
         <input
@@ -36,7 +32,7 @@
           formControlName="password"
           id="password"
           placeholder="••••••••"
-          class=""
+          class="w-full text-base py-2 border-b border-grayS focus:outline-none focus:border-indigo"
           required
         />
       </div>
@@ -51,14 +47,12 @@
               required
             />
           </div>
-          <label
-            for="remember"
-            class="ms-2 text-sm font-medium text-bluePastel text-gray-900 dark:text-gray-300"
+          <label for="remember" class="ms-2 text-sm font-medium text-black"
             >Remember me</label
           >
         </div>
         <a
-          class="ms-auto text-sm font-medium text-bluePastel hover:underline dark:text-blue-500"
+          class="ms-auto text-sm font-medium text-blueS hover:underline dark:text-blue-500"
           >Lost Password?</a
         >
       </div>
@@ -66,11 +60,7 @@
         <button
           [disabled]="formularioLogin.invalid"
           type="submit"
-          class="text-center w-full px-5 py-4 font-bold leading-none transition duration-300 rounded-2xl"
-          [ngClass]="{
-            ' cursor-not-allowed': formularioLogin.invalid,
-            'bg-bluePastel  hover:bg-black': !formularioLogin.invalid
-          }"
+          class="text-center bg-indigo text-white w-full px-5 py-4 rounded-full tracking-wide font-semibold focus:outline-none focus:shadow-outline hover:bg-indigo_v shadow-lg cursor-pointer transition ease-in duration-300"
         >
           Ingresar
         </button>
@@ -83,7 +73,7 @@
       </div>
       }
 
-      <div class="text-sm font-medium text-blueS dark:text-gray-300">
+      <div class="text-sm font-medium text-blueS">
         Not registered?
         <a href="#" class="text-blue-700 hover:underline dark:text-blue-500"
           >Create account</a

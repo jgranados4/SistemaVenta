@@ -1,11 +1,11 @@
-<nav class="static top-0 z-50 w-full bg-bluePastel p-2">
+<nav class="static z-50 w-full p-2 bg-white border-b border-grayS">
   <div class="px-3 py-3 lg:px-5 lg:pl-3">
     <div class="flex items-center justify-between">
       <div class="flex items-center justify-start rtl:justify-end">
         <button
           (click)="toggleSidebar()"
           type="button"
-          class="inline-flex items-center p-2 text-sm text-white rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+          class="inline-flex items-center p-4 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-grayS"
         >
           <span class="sr-only">Open sidebar</span>
           <svg
@@ -23,7 +23,7 @@
           </svg>
         </button>
         <span
-          class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-white"
+          class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-black"
           >Sistema de Venta</span
         >
       </div>
@@ -46,7 +46,6 @@
           </div>
           <div
             class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600"
-            id="dropdown-user"
           >
             <div class="px-4 py-3" role="none">
               <p class="text-sm text-gray-900 dark:text-white" role="none">
@@ -95,7 +94,7 @@
 </nav>
 <aside
   id="logo-sidebar"
-  class="fixed w-64 border-2 bg-bluePastel left-0 z-40 h-full p-4 transition-transform"
+  class="fixed w-64 left-0 z-40 h-full p-4 bg-white border-r border-grayS transition-transform"
   [ngClass]="{ 'is-active': isSidebarActive() }"
   tabindex="-1"
 >
@@ -104,10 +103,10 @@
       <li>
         <a
           routerLink="/pages/dasboard"
-          class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-grayS hover:bg-opacity-10 hover:text-bluePastel group cursor-pointer"
+          class="flex items-center p-4 rounded-lg hover:bg-grayS hover:text-bluePastel group cursor-pointer"
         >
           <svg
-            class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+            class="w-5 h-5 text-gray-500 transition duration-75"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="currentColor"
@@ -126,10 +125,10 @@
       <li>
         <a
           routerLink="/pages/usuarios"
-          class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-grayS hover:bg-opacity-10 hover:text-bluePastel group"
+          class="flex items-center p-4 rounded-lg hover:bg-grayS hover:text-bluePastel group cursor-pointer"
         >
           <svg
-            class="w-6 h-6 text-gray-500 dark:text-white"
+            class="w-5 h-5 text-gray-500 transition duration-75"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -153,10 +152,10 @@
       <li>
         <a
           routerLink="/pages/productos"
-          class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-grayS hover:bg-opacity-10 hover:text-bluePastel group"
+          class="flex items-center p-4 rounded-lg hover:bg-grayS hover:text-bluePastel group cursor-pointer"
         >
           <svg
-            class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+            class="w-5 h-5 text-gray-500 transition duration-75"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="currentColor"
@@ -172,10 +171,10 @@
       <li>
         <a
           routerLink="/pages/Venta"
-          class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-grayS hover:bg-opacity-10 hover:text-bluePastel group"
+          class="flex items-center p-4 rounded-lg hover:bg-grayS hover:text-bluePastel group cursor-pointer"
         >
           <svg
-            class="w-6 h-6 text-gray-500 dark:text-white"
+            class="w-6 h-6 text-gray-500 transition duration-75"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -199,10 +198,10 @@
       <li>
         <a
           routerLink="/pages/historial_venta"
-          class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-grayS hover:bg-opacity-10 hover:text-bluePastel group"
+          class="flex items-center p-4 rounded-lg hover:bg-grayS hover:text-bluePastel group cursor-pointer"
         >
           <svg
-            class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+            class="w-5 h-5 text-gray-500 transition duration-75"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -222,10 +221,10 @@
       <li>
         <a
           routerLink="/pages/reportes"
-          class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-grayS hover:bg-opacity-10 hover:text-bluePastel group"
+          class="flex items-center p-4 rounded-lg hover:bg-grayS hover:text-bluePastel group cursor-pointer"
         >
           <svg
-            class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+            class="w-5 h-5 text-gray-500 transition duration-75"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="currentColor"
@@ -248,7 +247,7 @@
   </div>
 </aside>
 
-<div class="p-4 sm-64">
+<div class="p-4">
   <div class="p-4 border-2 border-dashed rounded-lg dark:border-blueC">
     <router-outlet />
   </div>

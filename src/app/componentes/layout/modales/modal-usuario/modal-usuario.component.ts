@@ -5,6 +5,7 @@ import {
   input,
   InputSignal,
   OnInit,
+  output,
   signal,
 } from '@angular/core';
 import {
@@ -40,6 +41,8 @@ export class ModalUsuarioComponent implements OnInit {
   ListarRoles: Rol[] = [];
   public usuarios: Usuario | null = null;
   modelusuario: UsuarioComponent = new UsuarioComponent();
+  //*output
+  close = output<boolean>();
   //injectar
   private RolService = inject(RolService);
   private UsuarioService = inject(UsuarioService);
@@ -64,10 +67,7 @@ export class ModalUsuarioComponent implements OnInit {
         console.error(e);
       },
     });
-    effect(() => {
-      console.log('data', this.data());
-      console.log('accion', this.tituloAccion());
-    });
+    effect(() => {});
   }
   ngOnInit(): void {
     if (this.usuarios != null) {
@@ -100,7 +100,7 @@ export class ModalUsuarioComponent implements OnInit {
               'El usuarios fue Registro',
               'OPPS'
             );
-            this.modelusuario;
+            this.closeModal();
           } else {
             this.UtilidadService.mostrarAlert(
               'No puedo registrar el usuarios',
@@ -110,5 +110,9 @@ export class ModalUsuarioComponent implements OnInit {
         },
       });
     }
+  }
+
+  closeModal() {
+    this.close.emit(false);
   }
 }

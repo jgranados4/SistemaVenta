@@ -24,6 +24,7 @@ export class TableRtzeComponent {
   dataSource: any = [];
   //
   editar = signal<string>('Editar');
+  modalSwitch = signal<boolean>(false);
 
   @Input() set titulo(title: any) {
     this.title = title;
@@ -38,9 +39,16 @@ export class TableRtzeComponent {
   }
   @Output() action: EventEmitter<Accion> = new EventEmitter();
   onAction(accion: string, row?: any) {
+    this.openModal();
     this.action.emit({
       accion: accion,
       fila: row,
     });
+  }
+  openModal() {
+    this.modalSwitch.set(!this.modalSwitch());
+  }
+  closeModal() {
+    this.modalSwitch.set(false);
   }
 }

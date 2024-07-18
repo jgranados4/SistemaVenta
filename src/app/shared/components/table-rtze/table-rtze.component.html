@@ -1,10 +1,6 @@
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-  <table
-    class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-  >
-    <thead
-      class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-    >
+  <table class="w-full text-sm text-left rtl:text-right">
+    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
       <tr>
         @for (item of columnas; track $index) {
         <th scope="col" class="px-6 py-3">{{ item }}</th>
@@ -14,15 +10,10 @@
     </thead>
     <tbody>
       @for (item of dataSource; track $index) {
-      <tr
-        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-      >
-        @if(columnas != null){ @for (colu of columnas; track $index) {
+      <tr class="bg-white border-b">
+        @for (colu of columnas; track $index) {
         <td class="px-6 py-4">{{ item[colu] }}</td>
-        } }@else {
-        <td class="px-6 py-4" [colSpan]="4">No hay contenido</td>
         }
-
         <!-- <th
           scope="row"
           class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
@@ -32,10 +23,8 @@
         <td class="px-6 py-4">
           <button
             type="button"
-            data-modal-target="Editar-modal"
-            data-modal-toggle="Editar-modal"
             (click)="onAction('Editar', item)"
-            class="font-medium mr-2 text-blue-600 dark:text-blue-500 hover:underline"
+            class="font-medium mr-2 bg-blue_500 hover:bg-blueS text-white py-3 px-3 rounded-full"
           >
             Editar
           </button>
@@ -46,8 +35,15 @@
           >
         </td>
       </tr>
-      <app-modal-usuario [tituloAccion]="editar()" [data]="item" />
-      }
+      @if(modalSwitch()==true){
+      <app-modal-usuario
+        [tituloAccion]="editar()"
+        [data]="item"
+        (close)="closeModal()"
+      />
+
+      } }
+      <td class="px-6 py-4">No hay contenido</td>
     </tbody>
   </table>
   <nav
@@ -56,11 +52,8 @@
   >
     <span
       class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto"
-      >Showing
-      <span class="font-semibold text-gray-900 dark:text-white">1-10</span> of
-      <span class="font-semibold text-gray-900 dark:text-white"
-        >1000</span
-      ></span
+      >Showing <span class="font-semibold text-gray-900">1-10</span> of
+      <span class="font-semibold text-gray-900">1000</span></span
     >
     <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
       <li>
@@ -86,9 +79,8 @@
       </li>
       <li>
         <a
-          href="#"
           aria-current="page"
-          class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+          class="flex items-center justify-center px-3 h-8 border border-gray-300 bg-blue-50 dark:border-gray-700 dark:bg-gray-700"
           >3</a
         >
       </li>
