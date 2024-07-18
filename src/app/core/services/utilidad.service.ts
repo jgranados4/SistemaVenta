@@ -1,4 +1,10 @@
-import { Injectable, model, signal, WritableSignal } from '@angular/core';
+import {
+  effect,
+  Injectable,
+  model,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { Sesion } from '../models/sesion';
 
 @Injectable({
@@ -7,7 +13,9 @@ import { Sesion } from '../models/sesion';
 export class UtilidadService {
   mensaje = signal<string>('');
   tipos = signal<string>('');
-  constructor() {}
+  constructor() {
+    effect(() => {});
+  }
 
   mostrarAlert(mensaje: string, tipo: string) {
     this.mensaje.set(mensaje);
