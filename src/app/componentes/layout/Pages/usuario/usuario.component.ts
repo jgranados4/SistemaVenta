@@ -29,6 +29,7 @@ import { NotificacionComponent } from '@shared/components/notificacion/notificac
 })
 export class UsuarioComponent implements OnInit, AfterViewInit {
   columnasTablas: any[] = [
+    'idUsuario',
     'nombreCompleto',
     'correo',
     'idRol',
