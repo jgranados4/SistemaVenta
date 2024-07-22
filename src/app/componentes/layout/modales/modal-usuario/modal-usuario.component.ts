@@ -139,6 +139,7 @@ export class ModalUsuarioComponent implements OnInit {
         if (data.status) {
           this.UtilidadService.mostrarAlert('El usuarios fue Editado', 'OPPS');
           this.closeModal();
+          this.ngOnInit();
         } else {
           this.UtilidadService.mostrarAlert('No puedo editarse', 'ERROR');
         }
