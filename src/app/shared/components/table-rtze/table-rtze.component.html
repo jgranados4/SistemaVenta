@@ -24,12 +24,12 @@
           <button
             type="button"
             (click)="onAction('Editar', item)"
-            class="font-medium mr-2 bg-blue_500 hover:bg-blueS text-white py-3 px-3 rounded-full"
+            class="font-medium bg-blue_500 px-5 ml-4 py-2 hover:bg-blueS text-white rounded-full"
           >
             Editar
           </button>
           <a
-            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+            class="font-medium hover:shadow-lg bg-red-500 px-5 ml-4 py-2 border-2 border-red-500 text-white rounded-full"
             (click)="onAction('Eliminar', item)"
             >Eliminar</a
           >
@@ -38,12 +38,11 @@
       @if(modalSwitch()==true){
       <app-modal-usuario
         [tituloAccion]="editar()"
-        [data]="item"
+        [datas]="idData()"
         (close)="closeModal()"
       />
 
       } }
-      <td class="px-6 py-4">No hay contenido</td>
     </tbody>
   </table>
   <nav

@@ -6,9 +6,11 @@ import {
   Output,
   signal,
   Signal,
+  WritableSignal,
 } from '@angular/core';
 import { ModalUsuarioComponent } from '@component/layout/modales/modal-usuario/modal-usuario.component';
 import { Accion } from '@core/models/table/tabla-columna';
+import { Usuario } from '@core/models/usuario';
 
 @Component({
   selector: 'app-table-rtze',
@@ -23,6 +25,8 @@ export class TableRtzeComponent {
   columnas: any[] = [];
   dataSource: any = [];
   //
+  //
+  idData = signal<Usuario | undefined>(undefined);
   editar = signal<string>('Editar');
   modalSwitch = signal<boolean>(false);
 
@@ -34,12 +38,14 @@ export class TableRtzeComponent {
     this.columnas = columns;
   }
   @Input() set data(data: any) {
-    console.log('DATA', data);
     this.dataSource = data;
   }
   @Output() action: EventEmitter<Accion> = new EventEmitter();
   onAction(accion: string, row?: any) {
-    this.openModal();
+    if (accion == 'Editar') {
+      this.idData.set(row);
+      this.openModal();
+    }
     this.action.emit({
       accion: accion,
       fila: row,
