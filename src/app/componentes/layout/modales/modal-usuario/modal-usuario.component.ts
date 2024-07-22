@@ -4,6 +4,7 @@ import {
   inject,
   input,
   InputSignal,
+  model,
   OnInit,
   output,
   signal,
@@ -35,14 +36,16 @@ export class ModalUsuarioComponent implements OnInit {
   fb = inject(FormBuilder);
   formularioUsuario: FormGroup;
   ocultarPassword: boolean = true;
-  tituloAccion = input<string>('Agregar');
-  data: InputSignal<Usuario[] | undefined> = input<Usuario[]>();
-  botonAccion = signal<string>('Guardar');
   ListarRoles: Rol[] = [];
   public usuarios: Usuario | null = null;
   modelusuario: UsuarioComponent = new UsuarioComponent();
   //*output
   close = output<boolean>();
+  //*input
+  tituloAccion = input<string>('Agregar');
+  datas = model<Usuario | undefined>(undefined);
+  //*signal
+  botonAccion = signal<string>('Guardar');
   //injectar
   private RolService = inject(RolService);
   private UsuarioService = inject(UsuarioService);
@@ -67,7 +70,9 @@ export class ModalUsuarioComponent implements OnInit {
         console.error(e);
       },
     });
-    effect(() => {});
+    effect(() => {
+      console.log('este efecto ', this.datas());
+    });
   }
   ngOnInit(): void {
     if (this.usuarios != null) {
@@ -78,6 +83,10 @@ export class ModalUsuarioComponent implements OnInit {
         clave: this.usuarios.clave,
         esActivo: this.usuarios.esActivo.toString(),
       });
+    }
+    if (this.tituloAccion() === 'Editar') {
+      console.log('editar✔️✔️✔️');
+      this.formularioUsuario.patchValue(this.datas() ?? {});
     }
   }
 
@@ -92,24 +101,52 @@ export class ModalUsuarioComponent implements OnInit {
       esActivo: parseInt(this.formularioUsuario.value.esActivo),
       rolDescripcion: '',
     };
-    if (this.usuarios == null) {
-      this.UsuarioService.guardar(_usuario).subscribe({
-        next: (data) => {
-          if (data.status) {
-            this.UtilidadService.mostrarAlert(
-              'El usuarios fue Registro',
-              'OPPS'
-            );
-            this.closeModal();
-          } else {
-            this.UtilidadService.mostrarAlert(
-              'No puedo registrar el usuarios',
-              'ERROR'
-            );
-          }
-        },
-      });
-    }
+    this.UsuarioService.guardar(_usuario).subscribe({
+      next: (data) => {
+        if (data.status) {
+          this.UtilidadService.mostrarAlert('El usuarios fue Registro', 'OPPS');
+          this.closeModal();
+          this.ngOnInit();
+        } else {
+          this.UtilidadService.mostrarAlert(
+            'No puedo registrar el usuarios',
+            'ERROR'
+          );
+        }
+      },
+    });
+  }
+  //*Editar
+  EditarUsuario() {
+    console.log('click');
+    console.log('usuariosssssssss', this.datas());
+    const _usuario: Usuario = {
+      idUsuario: this.datas()?.idUsuario || 0,
+      nombreCompleto: this.formularioUsuario.value.nombreCompleto,
+      correo: this.formularioUsuario.value.correo,
+      clave: this.formularioUsuario.value.clave,
+      idRol: parseInt(this.formularioUsuario.value.idRol),
+      esActivo: parseInt(this.formularioUsuario.value.esActivo),
+      rolDescripcion:
+        this.ListarRoles.find(
+          (rol) => rol.idRol === this.formularioUsuario.value.idRol
+        )?.nombre || '',
+    };
+    console.log('usuarios editadps', _usuario);
+    this.UsuarioService.editar(_usuario).subscribe({
+      next: (data) => {
+        console.log('datassss', data);
+        if (data.status) {
+          this.UtilidadService.mostrarAlert('El usuarios fue Editado', 'OPPS');
+          this.closeModal();
+        } else {
+          this.UtilidadService.mostrarAlert('No puedo editarse', 'ERROR');
+        }
+      },
+      error(err) {
+        console.log('error ', err);
+      },
+    });
   }
 
   closeModal() {
