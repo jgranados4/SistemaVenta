@@ -1,27 +1,45 @@
-# AngularTailwindcss
+# 🛒 Sistema de Ventas
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.0.
+Aplicación web moderna para la gestión de ventas, desarrollada en Angular, con arquitectura limpia y buenas prácticas de organización de código.
 
-## Development server
+---
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## 📂 Estructura Principal del Proyecto
 
-## Code scaffolding
+- **src/app/componentes/**: Contiene los componentes principales de la aplicación.
+- **src/app/core/**: Servicios y lógica central del sistema.
+- **src/app/shared/**: Componentes, pipes y módulos reutilizables.
+- **src/assets/**: Recursos estáticos (imágenes, íconos, etc.).
+- **src/environments/**: Configuraciones de entornos (producción y desarrollo).
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+---
 
-## Build
+## 🚀 Tecnologías Utilizadas
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- Angular 17
+- TailwindCSS (para estilos rápidos y responsivos)
+- Angular Material (componentes UI)
+- Signals y State Management reactivo
 
-## Running unit tests
+---
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## 🛠 Funcionalidades principales
 
-## Running end-to-end tests
+- Gestión de productos, clientes y ventas
+- Interfaz intuitiva y responsive
+- Optimización de carga y rendimiento
+- Arquitectura modular basada en mejores prácticas
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+---
 
-## Further help
+## 📜 Scripts comunes
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```bash
+# Instalar dependencias
+npm install
+
+# Ejecutar servidor de desarrollo
+npm run start
+
+# Construir versión de producción
+npm run build
