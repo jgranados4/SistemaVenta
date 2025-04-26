@@ -1,109 +1,124 @@
-<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-  <table class="w-full text-sm text-left rtl:text-right">
-    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-      <tr>
-        @for (item of columnas; track $index) {
-        <th scope="col" class="px-6 py-3">{{ item }}</th>
-        }
-        <th scope="col" class="px-6 py-3">Accion</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (item of dataSource; track $index) {
-      <tr class="bg-white border-b">
-        @for (colu of columnas; track $index) {
-        <td class="px-6 py-4">{{ item[colu] }}</td>
-        }
-        <!-- <th
-          scope="row"
-          class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+<table class="w-full text-sm text-left rtl:text-right">
+  <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+    <tr>
+      @for (item of columnas; track $index) {
+      <th scope="col" class="px-6 py-3">{{ item }}</th>
+      }
+      <th scope="col" class="px-6 py-3">Accion</th>
+    </tr>
+  </thead>
+  <tbody>
+    @defer(when dataSource ) { @for (item of dataSource; track $index) {
+    <tr class="bg-white border-b">
+      @for (colu of columnas; track $index) {
+      <td class="px-6 py-4">{{ item[colu] }}</td>
+      }
+      <td class="px-6 py-4">
+        @if (titulo() == 'EditarUsuario') {
+        <button
+          type="button"
+          (click)="onAction('Editar Usuario', item)"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
         >
-          Apple MacBook Pro 17"
-        </th> -->
-        <td class="px-6 py-4">
-          <button
-            type="button"
-            (click)="onAction('Editar', item)"
-            class="font-medium bg-blue_500 px-5 ml-4 py-2 hover:bg-blueS text-white rounded-full"
-          >
-            Editar
-          </button>
-          <a
-            class="font-medium hover:shadow-lg bg-red-500 px-5 ml-4 py-2 border-2 border-red-500 text-white rounded-full"
-            (click)="onAction('Eliminar', item)"
-            >Eliminar</a
-          >
-        </td>
-      </tr>
-      @if(modalSwitch()==true){
-      <app-modal-usuario
-        [tituloAccion]="editar()"
-        [datas]="idData()"
-        (close)="closeModal()"
-      />
-
-      } }
-    </tbody>
-  </table>
-  <nav
-    class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
-    aria-label="Table navigation"
+          Editar
+        </button>
+        } @if (titulo() == 'EditarProducto') {
+        <button
+          type="button"
+          (click)="onAction('Editar Producto', item)"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+        >
+          Editar
+        </button>
+        }
+        <a
+          class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800"
+          (click)="eliminar(item)"
+          >Eliminar</a
+        >
+      </td>
+    </tr>
+    @if(modalSwitch()==true){ @if(showUserModal){
+    <app-modal-usuario
+      [tituloAccion]="editar()"
+      [datas]="idData()"
+      (close)="closeModal()"
+    />
+    } @if(showProductModal){
+    <app-modal-producto
+      [tituloAccion]="editarT()"
+      [datas]="idDataPro()"
+      (close)="closeModal()"
+    />
+    }} }@empty {
+    <td rowSpan="4" colspan="4">No hay Contenido</td>
+    } }@placeholder {
+    <h1>sin contenido</h1>
+    } @loading (after 100ms;minimum 1s) {
+    <h1>Cargando......</h1>
+    }@error {
+    <h1>Sin contenido</h1>
+    }
+  </tbody>
+</table>
+<!-- <nav
+  class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+  aria-label="Table navigation"
+>
+  <span
+    class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto"
+    >Showing <span class="font-semibold text-gray-900">1-10</span> of
+    <span class="font-semibold text-gray-900">1000</span></span
   >
-    <span
-      class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto"
-      >Showing <span class="font-semibold text-gray-900">1-10</span> of
-      <span class="font-semibold text-gray-900">1000</span></span
-    >
-    <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-      <li>
-        <a
-          href="#"
-          class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-          >Previous</a
-        >
-      </li>
-      <li>
-        <a
-          href="#"
-          class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-          >1</a
-        >
-      </li>
-      <li>
-        <a
-          href="#"
-          class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-          >2</a
-        >
-      </li>
-      <li>
-        <a
-          aria-current="page"
-          class="flex items-center justify-center px-3 h-8 border border-gray-300 bg-blue-50 dark:border-gray-700 dark:bg-gray-700"
-          >3</a
-        >
-      </li>
-      <li>
-        <a
-          href="#"
-          class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-          >4</a
-        >
-      </li>
-      <li>
-        <a
-          href="#"
-          class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-          >5</a
-        >
-      </li>
-      <li>
-        <a
-          href="#"
-          class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-          >Next</a
-        >
-      </li>
-    </ul>
-  </nav>
-</div>
+  <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+    <li>
+      <a
+        href="#"
+        class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+        >Previous</a
+      >
+    </li>
+    <li>
+      <a
+        href="#"
+        class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+        >1</a
+      >
+    </li>
+    <li>
+      <a
+        href="#"
+        class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+        >2</a
+      >
+    </li>
+    <li>
+      <a
+        aria-current="page"
+        class="flex items-center justify-center px-3 h-8 border border-gray-300 bg-blue-50 dark:border-gray-700 dark:bg-gray-700"
+        >3</a
+      >
+    </li>
+    <li>
+      <a
+        href="#"
+        class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+        >4</a
+      >
+    </li>
+    <li>
+      <a
+        href="#"
+        class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+        >5</a
+      >
+    </li>
+    <li>
+      <a
+        href="#"
+        class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+        >Next</a
+      >
+    </li>
+  </ul>
+</nav> -->

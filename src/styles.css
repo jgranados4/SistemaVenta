@@ -8,6 +8,23 @@
     --color-indigo-50: 238 242 255;
     --color-indigo-500: 99 102 241;
     --color-indigo-600: 79 70 229;
-    /* ... */
   }
+}
+
+/* 
+ indigo_50: "rgb(var(--color-indigo-50) / <alpha-value>)",
+      indigo: "rgb(var(--color-indigo-500) / <alpha-value>)",
+      indigo_v: "rgb(var(--color-indigo-600) / <alpha-value>)", */
+.tituloGradiante {
+  @apply text-4xl text-center font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-red-700;
+}
+.botonnuevo {
+  @apply text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800;
+}
+
+.botonSubmit {
+  @apply text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800;
+}
+.inputBuscar {
+  @apply block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500;
 }

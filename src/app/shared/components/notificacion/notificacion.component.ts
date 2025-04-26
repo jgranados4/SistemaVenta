@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { UtilidadService } from '@core/services/utilidad.service';
 
 @Component({
