@@ -12,6 +12,6 @@ export class CategoriaService {
   private readonly url = `${environment.endpoint}Categoria`;
   constructor() {}
   lista(): Observable<ResponseApi> {
-    return this.http.get<ResponseApi>(`${this.url}/Lista`);
+    return this.http.get<ResponseApi>(`${this.url}/Listar`);
   }
 }

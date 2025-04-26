@@ -1,7 +1,7 @@
-export interface DetalleVenta {
+export interface detalleVentaDTOs {
   idProducto: number;
-  descripcionProducto: string;
+  descripcionProducto?: string;
   cantidad: number;
-  precioTexto: string;
-  totalTexto: string;
+  precio: string;
+  total: string;
 }

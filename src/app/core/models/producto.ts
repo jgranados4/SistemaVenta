@@ -4,6 +4,8 @@ export interface Producto {
   idCategoria: number;
   descripcionCategoria: string;
   stock: number;
-  precio: string;
+  precio: Precio;
   esActivo: number;
 }
+
+type Precio = string | undefined;
