@@ -12,10 +12,16 @@ import { UsuarioService } from '@core/services/usuario.service';
 import { UtilidadService } from '@core/services/utilidad.service';
 import { NotificacionComponent } from '@shared/components/notificacion/notificacion.component';
 import { CommonModule } from '@angular/common';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, NotificacionComponent,CommonModule],
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    NotificacionComponent,
+    CommonModule,
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
@@ -26,15 +32,18 @@ export class LoginComponent implements OnInit {
   private usuarioService = inject(UsuarioService);
   private utilidadService = inject(UtilidadService);
   //formulario
-  formularioLogin: FormGroup;
+  formularioLogin: FormGroup = this.form.group({
+    email: this.form.nonNullable.control('', Validators.required),
+    password: this.form.nonNullable.control('', Validators.required),
+  });
   ocultarPassword: boolean = true;
   mostrarLoading: boolean = false;
 
   constructor() {
-    this.formularioLogin = this.form.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-    });
+    this.formularioLogin
+      .get('email')
+      ?.valueChanges.pipe(debounceTime(1000), distinctUntilChanged())
+      .subscribe((value) => console.log(value));
   }
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -68,5 +77,10 @@ export class LoginComponent implements OnInit {
         this.mostrarLoading = false;
       },
     });
+  }
+  //Validaccion
+  HasRequiredError(field: string) {
+    const control = this.formularioLogin.get(field);
+    return control?.hasError('required') && control.touched;
   }
 }

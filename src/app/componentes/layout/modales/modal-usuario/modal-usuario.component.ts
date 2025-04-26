@@ -23,7 +23,7 @@ import { Usuario } from '@core/models/usuario';
 import { UsuarioService } from '@core/services/usuario.service';
 import { RolService } from '@core/services/rol.service';
 import { UtilidadService } from '@core/services/utilidad.service';
-import { UsuarioComponent } from '../../Pages/usuario/usuario.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-modal-usuario',
@@ -34,11 +34,11 @@ import { UsuarioComponent } from '../../Pages/usuario/usuario.component';
 })
 export class ModalUsuarioComponent implements OnInit {
   fb = inject(FormBuilder);
+  router = inject(Router);
   formularioUsuario: FormGroup;
   ocultarPassword: boolean = true;
   ListarRoles: Rol[] = [];
   public usuarios: Usuario | null = null;
-  modelusuario: UsuarioComponent = new UsuarioComponent();
   //*output
   close = output<boolean>();
   //*input
@@ -52,7 +52,7 @@ export class ModalUsuarioComponent implements OnInit {
   private UtilidadService = inject(UtilidadService);
   constructor() {
     this.formularioUsuario = this.fb.group({
-      nombreCompleto: ['', Validators.required],
+      nombreApellidos: ['', Validators.required],
       correo: ['', [Validators.required, Validators.email]],
       idRol: ['', Validators.required],
       clave: ['', Validators.required],
@@ -77,7 +77,7 @@ export class ModalUsuarioComponent implements OnInit {
   ngOnInit(): void {
     if (this.usuarios != null) {
       this.formularioUsuario.patchValue({
-        nombreCompleto: this.usuarios.nombreCompleto,
+        nombreApellidos: this.usuarios.nombreApellidos,
         correo: this.usuarios.correo,
         idRol: this.usuarios.idRol,
         clave: this.usuarios.clave,
@@ -85,7 +85,6 @@ export class ModalUsuarioComponent implements OnInit {
       });
     }
     if (this.tituloAccion() === 'Editar') {
-      console.log('editar✔️✔️✔️');
       this.formularioUsuario.patchValue(this.datas() ?? {});
     }
   }
@@ -94,7 +93,7 @@ export class ModalUsuarioComponent implements OnInit {
   GuardarEditar_Ussuario() {
     const _usuario: Usuario = {
       idUsuario: this.usuarios == null ? 0 : this.usuarios.idUsuario,
-      nombreCompleto: this.formularioUsuario.value.nombreCompleto,
+      nombreApellidos: this.formularioUsuario.value.nombreApellidos,
       correo: this.formularioUsuario.value.correo,
       clave: this.formularioUsuario.value.clave,
       idRol: this.formularioUsuario.value.idRol,
@@ -106,6 +105,7 @@ export class ModalUsuarioComponent implements OnInit {
         if (data.status) {
           this.UtilidadService.mostrarAlert('El usuarios fue Registro', 'OPPS');
           this.closeModal();
+          window.location.reload();
           this.ngOnInit();
         } else {
           this.UtilidadService.mostrarAlert(
@@ -122,15 +122,15 @@ export class ModalUsuarioComponent implements OnInit {
     console.log('usuariosssssssss', this.datas());
     const _usuario: Usuario = {
       idUsuario: this.datas()?.idUsuario || 0,
-      nombreCompleto: this.formularioUsuario.value.nombreCompleto,
+      nombreApellidos: this.formularioUsuario.value.nombreApellidos,
       correo: this.formularioUsuario.value.correo,
       clave: this.formularioUsuario.value.clave,
       idRol: parseInt(this.formularioUsuario.value.idRol),
       esActivo: parseInt(this.formularioUsuario.value.esActivo),
       rolDescripcion:
         this.ListarRoles.find(
-          (rol) => rol.idRol === this.formularioUsuario.value.idRol
-        )?.nombre || '',
+          (rol) => rol.idRol === parseInt(this.formularioUsuario.value.idRol)
+        )?.descripcion || '',
     };
     console.log('usuarios editadps', _usuario);
     this.UsuarioService.editar(_usuario).subscribe({
@@ -139,6 +139,7 @@ export class ModalUsuarioComponent implements OnInit {
         if (data.status) {
           this.UtilidadService.mostrarAlert('El usuarios fue Editado', 'OPPS');
           this.closeModal();
+          window.location.reload();
           this.ngOnInit();
         } else {
           this.UtilidadService.mostrarAlert('No puedo editarse', 'ERROR');

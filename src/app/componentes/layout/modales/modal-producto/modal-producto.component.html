@@ -1,6 +1,4 @@
-<!-- Main modal -->
-
-@if(tituloAccion()=='Agregar'){
+@if(tituloAccion()=='Agregar Producto'){
 <div
   tabindex="-1"
   class="mt-2 fixed flex justify-center z-50 w-full md:inset-0 max-h-full"
@@ -42,38 +40,22 @@
       <div class="p-4 md:p-5">
         <form
           class="space-y-4"
-          [formGroup]="formularioUsuario"
-          (ngSubmit)="GuardarEditar_Ussuario()"
+          [formGroup]="formularioProducto"
+          (ngSubmit)="GuardarEditar_producto()"
         >
           <div>
             <label
               for="nombreCompleto"
               class="block mb-2 text-sm font-medium dark:text-black"
-              >Nombre Completo</label
+              >Nombre</label
             >
             <input
               type="text"
-              name="nombreApellidos"
+              name="nombre"
               id="nombreCompleto"
               class="bg-gray-50 border-b text-sm rounded-lg w-full p-2.5 dark:border-gray-500 dark:placeholder-gray-400 text-black"
               placeholder="Ingrese el Nombre Completo"
-              formControlName="nombreApellidos"
-              required
-            />
-          </div>
-          <div>
-            <label
-              for="email"
-              class="block mb-2 text-sm font-medium dark:text-black"
-              >Correo</label
-            >
-            <input
-              type="email"
-              name="correo"
-              id="email"
-              class="bg-gray-50 border-b border-gray-300 text-sm rounded-lg focus:ring-blueS focus:border-blueS block w-full p-2.5 dark:border-gray-500 dark:placeholder-gray-400 dark:text-black"
-              placeholder="name@company.com"
-              formControlName="correo"
+              formControlName="nombre"
               required
             />
           </div>
@@ -81,15 +63,15 @@
             <label
               for="category"
               class="block mb-2 text-sm font-medium dark:text-black"
-              >Rol</label
+              >Categoria</label
             >
             <select
               id="category"
-              formControlName="idRol"
+              formControlName="idCategoria"
               class="bg-gray-50 border-b border-gray-300 text-sm rounded-lg focus:ring-blueS focus:border-blueS block w-full p-2.5 dark:border-gray-500 dark:placeholder-gray-400 dark:text-black"
             >
-              @for(item of ListarRoles; track $index){
-              <option class="text-black" [value]="item.idRol">
+              @for(item of listaCategoria; track $index){
+              <option class="text-black" [value]="item.idCategoria">
                 {{ item.descripcion }}
               </option>
               }
@@ -97,16 +79,176 @@
           </div>
           <div>
             <label
-              for="password"
+              for="stock"
               class="block mb-2 text-sm font-medium dark:text-black"
-              >Contraseña</label
+              >Stock</label
             >
             <input
-              type="password"
-              name="clave"
-              id="password"
-              formControlName="clave"
-              placeholder="••••••••"
+              type="text"
+              name="stock"
+              id="stock"
+              formControlName="stock"
+              placeholder="Ingrese el Stock"
+              class="bg-gray-50 border-b border-gray-300 text-sm rounded-lg focus:ring-blueS focus:border-blueS block w-full p-2.5 dark:border-gray-500 dark:placeholder-gray-400 dark:text-black"
+              required
+            />
+          </div>
+          <div>
+            <label
+              for="precio"
+              class="block mb-2 text-sm font-medium dark:text-black"
+              >Precio</label
+            >
+            <input
+              type="text"
+              name="precio"
+              id="precio"
+              formControlName="precio"
+              placeholder="Ingrese el precio"
+              class="bg-gray-50 border-b border-gray-300 text-sm rounded-lg focus:ring-blueS focus:border-blueS block w-full p-2.5 dark:border-gray-500 dark:placeholder-gray-400 dark:text-black"
+              required
+            />
+          </div>
+          <div>
+            <label
+              for="Activo"
+              class="block mb-2 text-sm font-medium dark:text-black"
+              >Activo</label
+            >
+            <select
+              id="estado"
+              formControlName="esActivo"
+              class="bg-gray-50 border-b border-gray-300 text-sm rounded-lg focus:ring-blueS focus:border-blueS block w-full p-2.5 dark:border-gray-500 dark:placeholder-gray-400 dark:text-black"
+            >
+              <option value="1" selected class="text-black">Activo</option>
+              <option value="0" class="text-black">No Activo</option>
+            </select>
+          </div>
+
+          <button
+            [disabled]="formularioProducto.invalid"
+            type="submit"
+            class="w-full hover:bg-blue-400 text-white bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue_500 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600"
+          >
+            {{ botonAccion() }}
+          </button>
+          <button
+            (click)="closeModal()"
+            class="w-full hover:bg-blue-400 text-white bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue_500 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600"
+          >
+            Volver
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+}@else if(tituloAccion() == 'Editar Producto'){
+<div
+  tabindex="-1"
+  class="mt-2 fixed flex justify-center z-50 w-full md:inset-0 max-h-full"
+>
+  <div class="relative bg-white p-4 w-full max-w-md max-h-full">
+    <!-- Modal content -->
+    <div class="relative rounded-lg shadow-lg">
+      <!-- Modal header -->
+      <div
+        class="flex items-center justify-between p-4 md:p-5 border-b rounded-t"
+      >
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-black">
+          {{ tituloAccion() }}
+        </h3>
+        <button
+          type="button"
+          (click)="closeModal()"
+          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+        >
+          <svg
+            class="w-3 h-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 14 14"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+            />
+          </svg>
+          <span class="sr-only">Close modal</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <div class="p-4 md:p-5">
+        <form
+          class="space-y-4"
+          [formGroup]="formularioProducto"
+          (ngSubmit)="EditarProducto()"
+        >
+          <div>
+            <label
+              for="nombreCompleto"
+              class="block mb-2 text-sm font-medium dark:text-black"
+              >Nombre</label
+            >
+            <input
+              type="text"
+              name="nombre"
+              id="nombreCompleto"
+              class="bg-gray-50 border-b text-sm rounded-lg w-full p-2.5 dark:border-gray-500 dark:placeholder-gray-400 text-black"
+              placeholder="Ingrese el Nombre Completo"
+              formControlName="nombre"
+              required
+            />
+          </div>
+          <div>
+            <label
+              for="category"
+              class="block mb-2 text-sm font-medium dark:text-black"
+              >Categoria</label
+            >
+            <select
+              formControlName="idCategoria"
+              class="bg-gray-50 border-b border-gray-300 text-sm rounded-lg focus:ring-blueS focus:border-blueS block w-full p-2.5 dark:border-gray-500 dark:placeholder-gray-400 dark:text-black"
+            >
+              @for(item of listaCategoria; track $index){
+              <option class="text-black" [value]="item.idCategoria">
+                {{ item.descripcion }}
+              </option>
+              }
+            </select>
+          </div>
+          <div>
+            <label
+              for="stock"
+              class="block mb-2 text-sm font-medium dark:text-black"
+              >Stock</label
+            >
+            <input
+              type="number"
+              name="stock"
+              id="stock"
+              formControlName="stock"
+              placeholder="Ingrese el Stock"
+              class="bg-gray-50 border-b border-gray-300 text-sm rounded-lg focus:ring-blueS focus:border-blueS block w-full p-2.5 dark:border-gray-500 dark:placeholder-gray-400 dark:text-black"
+              required
+            />
+          </div>
+          <div>
+            <label
+              for="precio"
+              class="block mb-2 text-sm font-medium dark:text-black"
+              >Precio</label
+            >
+            <input
+              type="number"
+              name="precio"
+              id="precio"
+              formControlName="precio"
+              placeholder="Ingrese el precio"
               class="bg-gray-50 border-b border-gray-300 text-sm rounded-lg focus:ring-blueS focus:border-blueS block w-full p-2.5 dark:border-gray-500 dark:placeholder-gray-400 dark:text-black"
               required
             />
@@ -128,146 +270,7 @@
           </div>
           <button
             type="submit"
-            [disabled]="formularioUsuario.invalid"
-            class="w-full hover:bg-blue-400 text-white bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue_500 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600"
-          >
-            {{ botonAccion() }}
-          </button>
-          <button
-            class="w-full hover:bg-blue-400 text-white bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue_500 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600"
-          >
-            Volver
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-}@else if(tituloAccion() == 'Editar'){
-<div
-  tabindex="-1"
-  class="mt-2 fixed flex justify-center z-50 w-full md:inset-0 max-h-full"
->
-  <div class="relative bg-white p-4 w-full max-w-md max-h-full">
-    <!-- Modal content -->
-    <div class="relative rounded-lg shadow-lg">
-      <!-- Modal header -->
-      <div
-        class="flex items-center justify-between p-4 md:p-5 border-b rounded-t"
-      >
-        <h3 class="text-xl font-semibold text-gray-900 dark:text-black">
-          {{ tituloAccion() }}
-        </h3>
-        <button
-          type="button"
-          (click)="closeModal()"
-          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-        >
-          <svg
-            class="w-3 h-3"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 14 14"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-            />
-          </svg>
-          <span class="sr-only">Close modal</span>
-        </button>
-      </div>
-      <!-- Modal body -->
-      <div class="p-4 md:p-5">
-        <form
-          class="space-y-4"
-          [formGroup]="formularioUsuario"
-          (ngSubmit)="EditarUsuario()"
-        >
-          <div>
-            <label
-              for="nombreApellidos"
-              class="block mb-2 text-sm font-medium dark:text-black"
-              >Nombre Completo</label
-            >
-            <input
-              type="text"
-              name="nombreApellidos"
-              formControlName="nombreApellidos"
-              class="bg-gray-50 border-b border-gray-300 text-sm rounded-lg focus:ring-blueS focus:border-blueS w-full p-2.5 dark:border-gray-500 dark:placeholder-gray-400 dark:text-black"
-              placeholder="Ingrese el Nombre Completo"
-              required
-            />
-          </div>
-          <div>
-            <label
-              for="email"
-              class="block mb-2 text-sm font-medium dark:text-black"
-              >Correo</label
-            >
-            <input
-              type="email"
-              name="correo"
-              formControlName="correo"
-              class="bg-gray-50 border-b border-gray-300 text-sm rounded-lg focus:ring-blueS focus:border-blueS block w-full p-2.5 dark:border-gray-500 dark:placeholder-gray-400 dark:text-black"
-              placeholder="name@company.com"
-              required
-            />
-          </div>
-          <div>
-            <label
-              for="category"
-              class="block mb-2 text-sm font-medium dark:text-black"
-              >Rol</label
-            >
-            <select
-              formControlName="idRol"
-              class="bg-gray-50 border-b border-gray-300 text-sm rounded-lg focus:ring-blueS focus:border-blueS block w-full p-2.5 dark:border-gray-500 dark:placeholder-gray-400 dark:text-black"
-            >
-              @for(item of ListarRoles; track $index){
-              <option class="text-black" [value]="item.idRol">
-                {{ item.descripcion }}
-              </option>
-              }
-            </select>
-          </div>
-          <div>
-            <label
-              for="password"
-              class="block mb-2 text-sm font-medium dark:text-black"
-              >Contraseña</label
-            >
-            <input
-              type="password"
-              name="clave"
-              formControlName="clave"
-              placeholder="••••••••"
-              class="bg-gray-50 border-b border-gray-300 text-sm rounded-lg focus:ring-blueS focus:border-blueS block w-full p-2.5 dark:border-gray-500 dark:placeholder-gray-400 dark:text-black"
-              required
-            />
-          </div>
-          <div>
-            <label
-              for="Activo"
-              class="block mb-2 text-sm font-medium dark:text-black"
-              >Activo</label
-            >
-            <select
-              name="esActivo"
-              formControlName="esActivo"
-              class="bg-gray-50 border-b border-gray-300 text-sm rounded-lg focus:ring-blueS focus:border-blueS block w-full p-2.5 dark:border-gray-500 dark:placeholder-gray-400 dark:text-black"
-            >
-              <option value="1" class="text-black">Activo</option>
-              <option value="0" class="text-black">No Activo</option>
-            </select>
-          </div>
-          <button
-            type="submit"
-            class="w-full hover:bg-blue-400 text-white bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue_500 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600"
+            class="w-full hover:bg-blu text-white bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue_500 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600"
           >
             {{ botonAccion() }}
           </button>

@@ -7,7 +7,7 @@ import { VentaComponent } from './Pages/venta/venta.component';
 import { HistorialVentaComponent } from './Pages/historial-venta/historial-venta.component';
 import { ReporteComponent } from './Pages/reporte/reporte.component';
 
-export const routes: Routes = [
+const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,

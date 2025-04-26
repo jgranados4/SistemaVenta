@@ -15,9 +15,7 @@ import { Usuario } from '@core/models/usuario';
 import { UsuarioService } from '@core/services/usuario.service';
 import { UtilidadService } from '@core/services/utilidad.service';
 import Swal from 'sweetalert2';
-import { filter } from 'rxjs';
 import { TableRtzeComponent } from '@shared/components/table-rtze/table-rtze.component';
-import { Table } from '@core/models/table/table';
 import { NotificacionComponent } from '@shared/components/notificacion/notificacion.component';
 
 @Component({
@@ -26,21 +24,24 @@ import { NotificacionComponent } from '@shared/components/notificacion/notificac
   imports: [ModalUsuarioComponent, TableRtzeComponent, NotificacionComponent],
   templateUrl: './usuario.component.html',
   styleUrl: './usuario.component.css',
+  host: {
+    class: 'p-6',
+  },
 })
 export class UsuarioComponent implements OnInit, AfterViewInit {
   columnasTablas: any[] = [
     'idUsuario',
-    'nombreCompleto',
+    'nombreApellidos',
     'correo',
     'idRol',
     'rolDescripcion',
     'esActivo',
   ];
-  dataInicio: Usuario[] = [];
-  dataListaUsuario = this.dataInicio;
+  dataListaUsuario = signal<Usuario[]>([]);
   modalUsuario = signal<boolean>(false);
   agregar = signal<string>('Agregar');
   modalSwitch = signal<boolean>(false);
+  usuarios = signal<string>('EditarUsuario');
   //@viewChild
   //*inject
   private _usuarioService = inject(UsuarioService);
@@ -55,7 +56,7 @@ export class UsuarioComponent implements OnInit, AfterViewInit {
   ObtenerUsuario() {
     this._usuarioService.listar().subscribe({
       next: (data) => {
-        if (data.status) this.dataListaUsuario = data.value;
+        if (data.status) this.dataListaUsuario.set(data.value);
         else this._utilidadService.mostrarAlert('No se encontro datos', 'OPPS');
       },
       error: (e) => {},
@@ -66,8 +67,19 @@ export class UsuarioComponent implements OnInit, AfterViewInit {
   }
 
   aplicarFiltroTabla(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataListaUsuario.filter(() => filterValue.trim().toLocaleLowerCase());
+    const filterValue = (event.target as HTMLInputElement).value
+      .trim()
+      .toLocaleLowerCase();
+    if (filterValue === '') {
+      this.ObtenerUsuario();
+    }
+    this.dataListaUsuario.update((elementos) => {
+      return elementos.filter((elementos) => {
+        return elementos.nombreApellidos
+          .toLocaleLowerCase()
+          .includes(filterValue);
+      });
+    });
   }
 
   nuevoUsuario() {
@@ -81,7 +93,7 @@ export class UsuarioComponent implements OnInit, AfterViewInit {
   eliminarUsuario(usuario: Usuario) {
     Swal.fire({
       title: 'Desea eliminar el Usuario?',
-      text: usuario.nombreCompleto,
+      text: usuario.nombreApellidos,
       icon: 'warning',
       confirmButtonColor: '#3085d6',
       confirmButtonText: 'si,eliminar',

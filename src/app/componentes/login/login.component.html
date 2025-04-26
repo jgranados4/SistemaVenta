@@ -7,7 +7,7 @@
       [formGroup]="formularioLogin"
       (ngSubmit)="iniciarSesion()"
     >
-      <h5 class="text-4xl text-center text-black font-extrabold">Login</h5>
+      <h5 class="tituloGradiante">Login</h5>
       <div>
         <label for="email" class="text-lg font-bold text-black tracking-wide"
           >Email</label
@@ -21,6 +21,9 @@
           placeholder="name@company.com"
           required
         />
+        @if(HasRequiredError('email')){
+        <small> Campo requerido </small>
+        }
       </div>
       <div>
         <label for="password" class="text-lg font-bold text-black tracking-wide"
@@ -35,6 +38,9 @@
           class="w-full text-base py-2 border-b border-gray-200 focus:outline-none focus:border-indigo"
           required
         />
+        @if(HasRequiredError('password')){
+        <small> Campo requerido </small>
+        }
       </div>
       <div class="flex items-start">
         <div class="flex items-start">
@@ -60,7 +66,7 @@
         <button
           [disabled]="formularioLogin.invalid"
           type="submit"
-          class="text-center bg-indigo text-white w-full px-5 py-4 rounded-full tracking-wide font-semibold focus:outline-none focus:shadow-outline hover:bg-indigo_v shadow-lg cursor-pointer transition ease-in duration-300"
+          class="botonnuevo cursor-pointer"
         >
           Ingresar
         </button>
