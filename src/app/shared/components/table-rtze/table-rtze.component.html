@@ -8,13 +8,13 @@
     </tr>
   </thead>
   <tbody>
-    @defer(when dataSource ) { @for (item of dataSource; track $index) {
+    @defer(when data() ) { @for (item of data(); track $index) {
     <tr class="bg-white border-b">
       @for (colu of columnas; track $index) {
       <td class="px-6 py-4">{{ item[colu] }}</td>
       }
       <td class="px-6 py-4">
-        @if (titulo() == 'EditarUsuario') {
+        @if (TipoEntidad() == 'EditarUsuario') {
         <button
           type="button"
           (click)="onAction('Editar Usuario', item)"
@@ -22,7 +22,7 @@
         >
           Editar
         </button>
-        } @if (titulo() == 'EditarProducto') {
+        } @if (TipoEntidad() == 'EditarProducto') {
         <button
           type="button"
           (click)="onAction('Editar Producto', item)"
@@ -33,18 +33,18 @@
         }
         <a
           class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800"
-          (click)="eliminar(item)"
+          (click)="eliminar('Eliminar usuario', item)"
           >Eliminar</a
         >
       </td>
     </tr>
-    @if(modalSwitch()==true){ @if(showUserModal){
+    @if(modalSwitch()==true){ @if(showUserModalSwitch()){
     <app-modal-usuario
       [tituloAccion]="editar()"
       [datas]="idData()"
       (close)="closeModal()"
     />
-    } @if(showProductModal){
+    } @if(showProductModalSwitch()){
     <app-modal-producto
       [tituloAccion]="editarT()"
       [datas]="idDataPro()"
