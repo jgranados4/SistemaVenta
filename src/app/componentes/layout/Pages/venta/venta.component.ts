@@ -167,7 +167,6 @@ export class VentaComponent implements OnInit {
               text: `Numero de Venta  ${response.value.numeroDocumento}`,
             });
           } else {
-            this._utilidadService.mostrarAlert('No se puedo Registrar', 'OPPS');
           }
         },
         complete: () => {

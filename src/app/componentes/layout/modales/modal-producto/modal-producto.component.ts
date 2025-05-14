@@ -17,7 +17,6 @@ import { Categoria } from '@core/models/categoria';
 import { Producto } from '@core/models/producto';
 import { CategoriaService } from '@core/services/categoria.service';
 import { ProductoService } from '@core/services/producto.service';
-import { UtilidadService } from '@core/services/utilidad.service';
 
 @Component({
   selector: 'app-modal-producto',
@@ -33,7 +32,6 @@ export class ModalProductoComponent implements OnInit {
   private fb = inject(FormBuilder);
   private categoriaService = inject(CategoriaService);
   private productoService = inject(ProductoService);
-  private utilidadService = inject(UtilidadService);
   //*SIGNAL , INPUT Y OUTPUT
   tituloAccion = input<string>('Agregar Producto');
   datas = model<Producto | undefined>(undefined);
@@ -90,12 +88,7 @@ export class ModalProductoComponent implements OnInit {
     this.productoService.guardar(_producto).subscribe({
       next: (data) => {
         if (data.status) {
-          this.utilidadService.mostrarAlert('El producto fue Registro', 'OPPS');
         } else {
-          this.utilidadService.mostrarAlert(
-            'No puedo registrar el producto',
-            'ERROR'
-          );
         }
       },
       error: (err) => {
@@ -127,12 +120,10 @@ export class ModalProductoComponent implements OnInit {
       next: (data) => {
         console.log('datassss', data);
         if (data.status) {
-          this.utilidadService.mostrarAlert('El Producto fue Editado', 'OPPS');
           this.closeModal();
           window.location.reload();
           this.ngOnInit();
         } else {
-          this.utilidadService.mostrarAlert('No puedo editarse', 'ERROR');
         }
       },
       error(err) {

@@ -3,14 +3,13 @@ import { ModalProductoComponent } from '@component/layout/modales/modal-producto
 import { Producto } from '@core/models/producto';
 import { ProductoService } from '@core/services/producto.service';
 import { UtilidadService } from '@core/services/utilidad.service';
-import { NotificacionComponent } from '@shared/components/notificacion/notificacion.component';
 import { TableRtzeComponent } from '@shared/components/table-rtze/table-rtze.component';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-producto',
   standalone: true,
-  imports: [ModalProductoComponent, NotificacionComponent, TableRtzeComponent],
+  imports: [ModalProductoComponent, TableRtzeComponent],
   templateUrl: './producto.component.html',
   styleUrl: './producto.component.css',
   host: {
@@ -43,7 +42,8 @@ export class ProductoComponent implements OnInit {
       next: (data) => {
         console.log('inicio', data);
         if (data.status) this.dataListaProducto.set(data.value);
-        else this._utilidadService.mostrarAlert('No se encontro datos', 'OPPS');
+        else {
+        }
       },
       error: (e) => {},
     });
@@ -95,12 +95,7 @@ export class ProductoComponent implements OnInit {
       if (resultado.isConfirmed) {
         this._productoService.eliminar(producto.idProducto).subscribe({
           next: (data) => {
-            if (data.status)
-              this._utilidadService.mostrarAlert(
-                'El producto fue eliminado',
-                'OPPS'
-              );
-            this.obtenerProducto();
+            if (data.status) this.obtenerProducto();
           },
         });
       }

@@ -10,18 +10,12 @@ import { Router } from '@angular/router';
 import { Login } from '../../core/models/login';
 import { UsuarioService } from '@core/services/usuario.service';
 import { UtilidadService } from '@core/services/utilidad.service';
-import { NotificacionComponent } from '@shared/components/notificacion/notificacion.component';
 import { CommonModule } from '@angular/common';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    NotificacionComponent,
-    CommonModule,
-  ],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
@@ -62,15 +56,10 @@ export class LoginComponent implements OnInit {
           this.utilidadService.guardarSesionUsuario(data.value);
           this.router.navigate(['pages']);
         } else {
-          this.utilidadService.mostrarAlert(
-            'No se econtraron conicidencias',
-            'OPPS'
-          );
         }
       },
       error: (error) => {
         console.log(error);
-        this.utilidadService.mostrarAlert('Hubo un error', 'ERROR');
       },
       complete: () => {
         console.log('complete');

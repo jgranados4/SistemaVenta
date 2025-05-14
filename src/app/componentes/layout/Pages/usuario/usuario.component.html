@@ -46,12 +46,14 @@
 <app-table-rtze
   class="m-2"
   [columns]="columnasTablas"
-  [data]="dataListaUsuario()"
+  [data2]="listaFiltrada()"
   [titulo]="usuarios()"
 />
 
 @if(modalSwitch()==true){
-<app-modal-usuario [tituloAccion]="agregar()" (close)="closeModal()" />
+<app-modal-usuario
+  [tituloAccion]="agregar()"
+  (close)="closeModal()"
+/>
 
 }
-<app-notificacion />
