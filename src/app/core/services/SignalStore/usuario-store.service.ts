@@ -1,11 +1,12 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { ICrudService, Usuario } from '@core/models/usuario';
+import {  Usuario } from '@core/models/usuario';
 import { filter, from, map, Observable, switchMap, tap } from 'rxjs';
 import { UsuarioService } from '../usuario.service';
 import { ResponseApi } from '@core/models/response-api';
 import Swal from 'sweetalert2';
 import { UtilidadService } from '../utilidad.service';
 import { showAlert } from '@core/models/utility.Alert';
+import { ICrudService } from '@core/models/Crud';
 interface usuarioState {
   res: Usuario[];
   loading: boolean;
@@ -54,8 +55,18 @@ export class UsuarioStoreService implements ICrudService<Usuario> {
       map((data) => data.value)
     );
   }
-  actualizar(id: number | string, entidad: Usuario): Observable<Usuario> {
-    throw new Error('Method not implemented.');
+  actualizar(entidad: Usuario): Observable<Usuario> {
+    return this._usuarioService.editar(entidad).pipe(
+      tap(() => {
+        this.#state.update((state) => ({
+          res: state.res.map((u) =>
+            u.idUsuario === entidad.idUsuario ? { ...entidad } : u
+          ),
+          loading: false,
+        }));
+      }),
+      map((data) => data.value)
+    );
   }
   eliminar(usuario: Usuario): Observable<void> {
     console.log('usuerios eliminar', usuario);

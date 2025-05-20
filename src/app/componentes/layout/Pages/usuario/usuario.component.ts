@@ -46,8 +46,7 @@ export class UsuarioComponent implements OnDestroy {
   modalSwitch = signal<boolean>(false);
   usuarios = signal<string>('EditarUsuario');
   //*inject
-  private _usuarioService = inject(UsuarioService);
-  private _utilidadService = inject(UtilidadService);
+
   Usuario = inject(UsuarioStoreService);
   injector = inject(Injector);
   dataListaUsuario = computed(() => {
@@ -113,27 +112,6 @@ export class UsuarioComponent implements OnDestroy {
     this.openModal();
   }
 
-  eliminarUsuario(usuario: Usuario) {
-    Swal.fire({
-      title: 'Desea eliminar el Usuario?',
-      text: usuario.nombreApellidos,
-      icon: 'warning',
-      confirmButtonColor: '#3085d6',
-      confirmButtonText: 'si,eliminar',
-      showCancelButton: true,
-      cancelButtonColor: '#d33',
-      cancelButtonText: 'No , volver',
-    }).then((resultado) => {
-      if (resultado.isConfirmed) {
-        this._usuarioService.eliminar(usuario.idUsuario).subscribe({
-          next: (data) => {
-            if (data.status) {
-            }
-          },
-        });
-      }
-    });
-  }
   //
   openModal() {
     this.modalSwitch.set(true);

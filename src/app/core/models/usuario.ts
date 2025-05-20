@@ -10,16 +10,7 @@ export interface Usuario {
   clave: string;
   esActivo: number;
 }
-export interface IReadable<T> {
-  obtenerPorId(id: number | string): Observable<T>;
-  obtenerTodos(): void;
-}
-export interface IWriteable<T> {
-  guardar(entidad: T): Observable<T>;
-  actualizar(id: number | string, entidad: T): Observable<T>;
-  eliminar(id: Usuario): Observable<void>;
-}
-export interface ICrudService<T> extends IReadable<T>, IWriteable<T> {}
+
 export interface IUsuarioService<T> {
   iniciarSesion(request: Login): Observable<T>;
   listar(): Observable<T>;

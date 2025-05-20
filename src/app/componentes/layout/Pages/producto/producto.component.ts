@@ -2,7 +2,6 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ModalProductoComponent } from '@component/layout/modales/modal-producto/modal-producto.component';
 import { Producto } from '@core/models/producto';
 import { ProductoService } from '@core/services/producto.service';
-import { UtilidadService } from '@core/services/utilidad.service';
 import { TableRtzeComponent } from '@shared/components/table-rtze/table-rtze.component';
 import Swal from 'sweetalert2';
 
@@ -32,7 +31,6 @@ export class ProductoComponent implements OnInit {
   dataListaProducto = signal<Producto[]>([]);
   editarPro = signal<string>('EditarProducto');
   private _productoService = inject(ProductoService);
-  private _utilidadService = inject(UtilidadService);
   constructor() {}
   ngOnInit(): void {
     this.obtenerProducto();

@@ -87,7 +87,7 @@
               formControlName="idRol"
               class="bg-gray-50 border-b border-gray-300 text-sm rounded-lg focus:ring-blueS focus:border-blueS block w-full p-2.5 dark:border-gray-500 dark:placeholder-gray-400 dark:text-black"
             >
-              @for(item of ListarRoles(); track $index){
+              @for(item of roles(); track $index){
               <option class="text-black" [value]="item.idRol">
                 {{ item.descripcion }}
               </option>
