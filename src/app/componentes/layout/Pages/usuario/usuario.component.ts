@@ -40,7 +40,7 @@ export class UsuarioComponent implements OnDestroy {
     'rolDescripcion',
     'esActivo',
   ];
-  dataListaUsuario3 = signal<string>('');
+  UsuarioFiltro = signal<string>('');
   modalUsuario = signal<boolean>(false);
   agregar = signal<string>('Agregar');
   modalSwitch = signal<boolean>(false);
@@ -54,7 +54,7 @@ export class UsuarioComponent implements OnDestroy {
     return value;
   });
   listaFiltrada = computed(() => {
-    const filtro = this.dataListaUsuario3().toLowerCase().trim();
+    const filtro = this.UsuarioFiltro().toLowerCase().trim();
     if (!filtro) return this.dataListaUsuario();
 
     return this.dataListaUsuario().filter((usuario: any) =>
@@ -104,7 +104,7 @@ export class UsuarioComponent implements OnDestroy {
 
   aplicarFiltroTabla(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataListaUsuario3.set(filterValue);
+    this.UsuarioFiltro.set(filterValue);
   }
 
   nuevoUsuario() {
