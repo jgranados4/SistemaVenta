@@ -1,37 +1,35 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { Usuario } from '@core/models/usuario';
-import { filter, from, map, Observable, switchMap, tap } from 'rxjs';
-import { UsuarioService } from '../usuario.service';
-import { ResponseApi } from '@core/models/response-api';
-import Swal from 'sweetalert2';
-import { UtilidadService } from '../utilidad.service';
-import { showAlert } from '@core/models/utility.Alert';
 import { ICrudService } from '@core/models/Crud';
-interface usuarioState {
-  res: Usuario[];
+import { Producto } from '@core/models/producto';
+import { filter, from, map, Observable, switchMap, tap } from 'rxjs';
+import { ProductoService } from '../producto.service';
+import { ResponseApi } from '@core/models/response-api';
+import { showAlert } from '@core/models/utility.Alert';
+interface productoState {
+  res: Producto[];
   loading: boolean;
 }
 
 @Injectable({
   providedIn: 'root',
 })
-export class UsuarioStoreService implements ICrudService<Usuario> {
+export class ProductoStoreService implements ICrudService<Producto> {
   //*SIGNAL
-  #state = signal<usuarioState>({
+  #state = signal<productoState>({
     res: [],
     loading: false,
   });
-  //*INJECT
-  private _usuarioService = inject(UsuarioService);
-  //*COMPUTED
+  private _productoService = inject(ProductoService);
   readonly values = computed(() => this.#state().res);
   readonly loading = computed(() => this.#state().loading);
-  obtenerPorId(id: number | string): Observable<Usuario> {
+
+  obtenerPorId(id: number | string): Observable<Producto> {
     throw new Error('Method not implemented.');
   }
   obtenerTodos(): void {
-    this._usuarioService.listar().subscribe({
+    this._productoService.listar().subscribe({
       next: (response: ResponseApi) => {
+        console.log('response', response);
         if (response.status) {
           this.#state.set({
             res: response.value,
@@ -41,8 +39,8 @@ export class UsuarioStoreService implements ICrudService<Usuario> {
       },
     });
   }
-  guardar(entidad: Usuario): Observable<Usuario> {
-    return this._usuarioService.guardar(entidad).pipe(
+  guardar(entidad: Producto): Observable<Producto> {
+    return this._productoService.guardar(entidad).pipe(
       tap((data: ResponseApi) => {
         if (data.status) {
           this.#state.update((state) => ({
@@ -54,12 +52,12 @@ export class UsuarioStoreService implements ICrudService<Usuario> {
       map((data) => data.value)
     );
   }
-  actualizar(entidad: Usuario): Observable<Usuario> {
-    return this._usuarioService.editar(entidad).pipe(
+  actualizar(entidad: Producto): Observable<Producto> {
+    return this._productoService.editar(entidad).pipe(
       tap(() => {
         this.#state.update((state) => ({
           res: state.res.map((u) =>
-            u.idUsuario === entidad.idUsuario ? { ...entidad } : u
+            u.idProducto === entidad.idProducto ? { ...entidad } : u
           ),
           loading: false,
         }));
@@ -67,32 +65,27 @@ export class UsuarioStoreService implements ICrudService<Usuario> {
       map((data) => data.value)
     );
   }
-  eliminar(usuario: Usuario): Observable<void> {
-    console.log('usuerios eliminar', usuario);
+  eliminar(producto: Producto): Observable<void> {
+    console.log('productos', producto);
     return from(
-      showAlert(
-        'Desea eliminar el Usuario?',
-        usuario.nombreApellidos,
-        'warning',
-        {
-          showCancelButton: true,
-          confirmButtonText: 'Sí',
-          cancelButtonText: 'No',
-        }
-      )
+      showAlert('Desea eliminar el Producto?', producto.nombre, 'warning', {
+        showCancelButton: true,
+        confirmButtonText: 'Sí',
+        cancelButtonText: 'No',
+      })
     ).pipe(
       // Filtramos solo cuando el usuario confirme la eliminación.
       filter((resultado) => {
         return resultado.isConfirmed;
       }),
       // Encadenamos la llamada al servicio de eliminación.
-      switchMap(() => this._usuarioService.eliminar(usuario.idUsuario)),
+      switchMap(() => this._productoService.eliminar(producto.idProducto)),
       // Cambiar el estado .
       tap((data) => {
         if (data.status) {
           this.#state.update((state) => ({
             ...state,
-            res: state.res.filter((u) => u.idUsuario !== usuario.idUsuario),
+            res: state.res.filter((u) => u.idProducto !== producto.idProducto),
           }));
         }
       }),

@@ -3,12 +3,12 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { ResponseApi } from '../models/response-api';
 import { Observable } from 'rxjs';
-import { Producto } from '../models/producto';
+import { IProductoService, Producto } from '../models/producto';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ProductoService {
+export class ProductoService implements IProductoService<ResponseApi> {
   private http = inject(HttpClient);
   private readonly url = `${environment.endpoint}Producto`;
   constructor() {}

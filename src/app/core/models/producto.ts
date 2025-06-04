@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+
 export interface Producto {
   idProducto: number;
   nombre: string;
@@ -9,3 +11,10 @@ export interface Producto {
 }
 
 type Precio = string | undefined;
+
+export interface IProductoService<T> {
+  listar(): Observable<T>;
+  guardar(request: Producto): Observable<T>;
+  editar(request: Producto): Observable<T>;
+  eliminar(id: number): Observable<T>;
+}

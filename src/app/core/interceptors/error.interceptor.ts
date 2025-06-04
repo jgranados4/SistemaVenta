@@ -1,38 +1,41 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { showAlert } from '@core/models/utility.Alert';
 import { catchError, throwError } from 'rxjs';
 import Swal from 'sweetalert2';
 
+let isAlertShown = false;
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
-  const STATUS = {
-    ERROR: 'error',
-    WARNING: 'warning',
-    INFO: 'info',
-    SUCCESS: 'success',
-  } as const;
-  type Status = (typeof STATUS)[keyof typeof STATUS];
-  const showAlert = (title: string, text: string, icon: Status) => {
-    return Swal.fire(title, text, icon);
-  };
+
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 0) {
+        console.log('boleano', isAlertShown);
+        if (!isAlertShown) {
+          isAlertShown = true;
+          showAlert(
+            'No Internet Connection',
+            'Please check your connection.',
+            'error'
+          ).then(() => {
+            setTimeout(() => {
+              isAlertShown = false;
+            }, 5000);
+          });
+        }
         // Client side error
-        showAlert(
-          'No Internet Connection',
-          'Please check your connection.',
-          'error'
-        );
       } else {
         // Server side error
         switch (error.status) {
           case 401:
-            showAlert('Unauthorized', 'Please log in again.', 'warning').then(
-              () => {
-                router.navigate(['/login']);
-              }
+            showAlert(
+              'Unauthorized',
+              'Please log in again.',
+              'warning',
+              {},
+              '/login'
             );
             break;
           case 403:
