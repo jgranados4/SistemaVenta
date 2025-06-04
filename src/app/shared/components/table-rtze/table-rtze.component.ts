@@ -3,14 +3,13 @@ import {
   Component,
   computed,
   effect,
+  EffectRef,
   EventEmitter,
   inject,
   Input,
   input,
   model,
-  OnInit,
-  output,
-  Output,
+  OnDestroy,
   OutputEmitterRef,
   signal,
   Signal,
@@ -22,6 +21,7 @@ import { Producto } from '@core/models/producto';
 import { Accion } from '@core/models/table/tabla-columna';
 import { Usuario } from '@core/models/usuario';
 import { showAlert } from '@core/models/utility.Alert';
+import { ProductoStoreService } from '@core/services/SignalStore/producto-store.service';
 import { UsuarioStoreService } from '@core/services/SignalStore/usuario-store.service';
 
 @Component({
@@ -35,7 +35,7 @@ import { UsuarioStoreService } from '@core/services/SignalStore/usuario-store.se
     class: 'overflow-x-auto shadow-md sm:rounded-lg',
   },
 })
-export class TableRtzeComponent {
+export class TableRtzeComponent implements OnDestroy {
   columnas: any[] = [];
   editarT = signal<string>('Editar Producto');
   editar = signal<string>('Editar');
@@ -48,8 +48,9 @@ export class TableRtzeComponent {
   showProductModalSwitch = signal<boolean>(false);
 
   UsuarioStor = inject(UsuarioStoreService);
+  productoStor = inject(ProductoStoreService);
 
-  titulo = input<string>('');
+  titulo = model<string>('');
   TipoEntidad = computed(() => {
     const valor = this.titulo();
     if (valor == 'EditarUsuario') return 'EditarUsuario';
@@ -64,7 +65,7 @@ export class TableRtzeComponent {
   data = computed(() => {
     return this.data2();
   });
-  public efectos = effect(() => {
+  public efectos: EffectRef = effect(() => {
     console.log('efeto', this.TipoEntidad());
     console.log('efecto de data model', this.data());
     // Este efecto se ejecutará cuando idData cambie.
@@ -89,25 +90,58 @@ export class TableRtzeComponent {
       this.openModal();
     }
   }
+
   eliminar(accion: string, row?: any) {
-    this.UsuarioStor.eliminar(row).subscribe({
-      next: () => {
-        console.log('Usuario eliminado correctamente');
-        showAlert(
-          '¡Operación exitosa!',
-          'La Eliminado se completó correctamente.',
-          'success'
-        );
-      },
-      error: (err) => {
-        console.error('Error al eliminar el usuario:', err);
-      },
-    });
+    console.log('contenido tabla ', row);
+    if (accion === 'Eliminar usuario') {
+      this.UsuarioStor.eliminar(row).subscribe({
+        next: () => {
+          console.log('Usuario eliminado correctamente');
+          showAlert(
+            '¡Operación exitosa!',
+            'La Eliminado se completó correctamente.',
+            'success'
+          );
+        },
+        error: (err) => {
+          console.error('Error al eliminar el usuario:', err);
+        },
+      });
+    }
+    if (accion === 'Eliminar producto') {
+      this.productoStor.eliminar(row).subscribe({
+        next: () => {
+          console.log('producto eliminado correctamente');
+          showAlert(
+            '¡Operación exitosa!',
+            ' Eliminado se completó correctamente.',
+            'success'
+          );
+        },
+        error: (err) => {
+          console.error('Error al eliminar el producto:', err);
+        },
+      });
+    }
+    console.log('wwswsdwe', accion);
   }
   openModal() {
     this.modalSwitch.set(!this.modalSwitch());
   }
   closeModal() {
     this.modalSwitch.set(false);
+  }
+  ngOnDestroy(): void {
+    console.log('limpiar');
+    //Limpiar efectos al destruir el componente
+    this.efectos.destroy();
+    this.idData.set(undefined);
+    this.idDataPro.set(undefined);
+    this.showUserModalSwitch.set(false);
+    this.showProductModalSwitch.set(false);
+    this.modalSwitch.set(false);
+    this.columnas = [];
+    this.data2.set([]);
+    this.titulo.set('');
   }
 }
