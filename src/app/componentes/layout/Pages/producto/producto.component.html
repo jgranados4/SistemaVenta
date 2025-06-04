@@ -45,9 +45,8 @@
 <app-table-rtze
   class="m-2"
   [columns]="columnasTablas"
-  [data2]="dataListaProducto()"
+  [data2]="listaFiltrada()"
   [titulo]="editarPro()"
-  (onEliminarProduct)="eliminarProducto.bind(this)"
 />
 
 @if(modalSwitch()==true){

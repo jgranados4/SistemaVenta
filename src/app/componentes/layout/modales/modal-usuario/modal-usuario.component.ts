@@ -52,7 +52,7 @@ export class ModalUsuarioComponent {
   tituloAccion = input<string>('Agregar');
   datas = input<Usuario | undefined>(undefined);
   //*signal
-  Titulo = signal<string>('Guardar');
+
   //injectar
   private RolService = inject(RolService);
   private storeUs = inject(UsuarioStoreService);
@@ -68,7 +68,6 @@ export class ModalUsuarioComponent {
     this.tituloAccion() === 'Editar' ? 'Actualizar' : 'Guardar'
   );
   readonly roles = computed(() => this.ListarRoles());
-  constructor() {}
   effectos = effect(
     () => {
       this.cargarRoles();
@@ -144,7 +143,7 @@ export class ModalUsuarioComponent {
       console.log('agregar', _usuario);
       this.storeUs.guardar(_usuario).subscribe({
         next: () => {
-          console.log('Usuario eliminado correctamente');
+          console.log('Usuario guardado correctamente');
           showAlert(
             '¡Operación exitosa!',
             'Agregado correctamente.',

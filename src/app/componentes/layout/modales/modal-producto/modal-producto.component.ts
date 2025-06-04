@@ -1,6 +1,10 @@
 import {
+  ChangeDetectionStrategy,
   Component,
+  computed,
+  effect,
   inject,
+  Injector,
   input,
   model,
   OnInit,
@@ -15,8 +19,10 @@ import {
 } from '@angular/forms';
 import { Categoria } from '@core/models/categoria';
 import { Producto } from '@core/models/producto';
+import { showAlert } from '@core/models/utility.Alert';
 import { CategoriaService } from '@core/services/categoria.service';
 import { ProductoService } from '@core/services/producto.service';
+import { ProductoStoreService } from '@core/services/SignalStore/producto-store.service';
 
 @Component({
   selector: 'app-modal-producto',
@@ -24,111 +30,118 @@ import { ProductoService } from '@core/services/producto.service';
   imports: [ReactiveFormsModule],
   templateUrl: './modal-producto.component.html',
   styleUrl: './modal-producto.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ModalProductoComponent implements OnInit {
+export class ModalProductoComponent {
   //*Variables
   public dataProducto: Producto | null = null;
   //*INJECT
   private fb = inject(FormBuilder);
+  inject = inject(Injector);
+  storeProd = inject(ProductoStoreService);
   private categoriaService = inject(CategoriaService);
-  private productoService = inject(ProductoService);
-  //*SIGNAL , INPUT Y OUTPUT
+  //*SIGNAL , INPUT Y OUTPUT`
   tituloAccion = input<string>('Agregar Producto');
-  datas = model<Producto | undefined>(undefined);
+  datas = input<Producto | undefined>(undefined);
   close = output<boolean>();
-  botonAccion = signal<string>('Guardar');
   //*formulario
-  formularioProducto: FormGroup;
+  formularioProducto: FormGroup = this.fb.group({
+    nombre: ['', Validators.required],
+    idCategoria: [1, Validators.required],
+    stock: [0, Validators.required],
+    precio: ['', Validators.required],
+    esActivo: ['1', Validators.required],
+  });
 
-  listaCategoria: Categoria[] = [];
+  readonly botonAccion = computed(() =>
+    this.tituloAccion() === 'Editar' ? 'Actualizar' : 'Guardar'
+  );
+  listaCategoria = signal<Categoria[]>([]);
+  readonly Categorias = computed(() => this.listaCategoria());
+  effectos = effect(
+    () => {
+      this.cargarCategoria();
+      const dataproducto = this.datas();
+      if (dataproducto && this.tituloAccion() === 'Editar Producto') {
+        this.formularioProducto.patchValue({
+          nombre: dataproducto.nombre,
+          idCategoria: dataproducto.idCategoria,
+          stock: dataproducto.stock,
+          precio: dataproducto.precio,
+          esActivo: dataproducto.esActivo.toString(),
+        });
+      } else {
+        this.formularioProducto.reset({
+          nombre: '',
+          idCategoria: 1,
+          stock: '',
+          precio: '',
+          esActivo: 0,
+        });
+      }
+    },
+    {
+      injector: this.inject,
+    }
+  );
 
-  constructor() {
-    this.formularioProducto = this.fb.group({
-      nombre: ['', Validators.required],
-      idCategoria: ['', Validators.required],
-      stock: ['', Validators.required],
-      precio: ['', Validators.required],
-      esActivo: ['1', Validators.required],
-    });
-
+  cargarCategoria(): void {
     this.categoriaService.lista().subscribe({
       next: (data) => {
-        if (data.status) this.listaCategoria = data.value;
+        if (data.status) this.listaCategoria.set(data.value);
       },
       error: (err) => {
-        console;
+        console.log(err);
       },
     });
   }
-  ngOnInit(): void {
-    if (this.dataProducto != null) {
-      this.formularioProducto.patchValue({
-        nombre: this.dataProducto.nombre,
-        idCategoria: this.dataProducto.idCategoria,
-        stock: this.dataProducto.stock,
-        precio: this.dataProducto.precio,
-        esActivo: this.dataProducto.esActivo.toString(),
-      });
-    }
-    if (this.tituloAccion() === 'Editar Producto') {
-      this.formularioProducto.patchValue(this.datas() ?? {});
-    }
-  }
   GuardarEditar_producto() {
+    const ProductoAc = this.datas();
+    const idCategoria = parseInt(this.formularioProducto.value.idCategoria);
+    const IdCateSelec = this.listaCategoria().find(
+      (Ca) => Ca.idCategoria === idCategoria
+    );
+    console.log('formulario', this.formularioProducto.value);
+    console.log('idCat', idCategoria);
+    console.log('seleciones', IdCateSelec);
+    console.log('titulo', this.tituloAccion());
+    console.log('listasCate', this.listaCategoria());
     const _producto: Producto = {
-      idProducto: this.dataProducto == null ? 0 : this.dataProducto.idProducto,
+      idProducto: ProductoAc?.idProducto ?? 0,
       nombre: this.formularioProducto.value.nombre,
-      idCategoria: this.formularioProducto.value.idCategoria,
+      idCategoria: idCategoria,
       stock: this.formularioProducto.value.stock,
       precio: this.formularioProducto.value.precio,
       esActivo: parseInt(this.formularioProducto.value.esActivo.toString()),
-      descripcionCategoria: '',
+      descripcionCategoria: IdCateSelec?.descripcion ?? '',
     };
-    console.log('clcicl', _producto);
-    this.productoService.guardar(_producto).subscribe({
-      next: (data) => {
-        if (data.status) {
-        } else {
-        }
-      },
-      error: (err) => {
-        console.error('problema ', err);
-      },
-    });
+    if (this.tituloAccion() === 'Editar Producto') {
+      console.log('contenido de la Editar', _producto);
+      this.storeProd.actualizar(_producto).subscribe({
+        next: () => {
+          showAlert('¡Operación exitosa!', 'Editado correctamente.', 'success');
+        },
+        error: (err) => {
+          console.error('Error al agregar el producto:', err);
+        },
+      });
+      this.closeModal();
+    } else {
+      console.log('contenido de la guardar', _producto);
+      //Agregar
+      this.storeProd.guardar(_producto).subscribe({
+        next: () => {
+          showAlert(
+            '¡Operación exitosa!',
+            'Agregado correctamente.',
+            'success'
+          );
+        },
+      });
+      this.closeModal();
+    }
   }
   closeModal() {
     this.close.emit(false);
-  }
-  EditarProducto() {
-    console.log('cabmaio', this.datas());
-    const _producto: Producto = {
-      idProducto: this.datas()?.idProducto || 0,
-      nombre: this.formularioProducto.value.nombre,
-      idCategoria: parseInt(this.formularioProducto.value.idCategoria),
-      stock: this.formularioProducto.value.stock,
-      precio: this.formularioProducto.value.precio.toString(),
-      esActivo: parseInt(this.formularioProducto.value.esActivo.toString()),
-      descripcionCategoria:
-        this.listaCategoria.find(
-          (rol) =>
-            rol.idCategoria ===
-            parseInt(this.formularioProducto.value.idCategoria)
-        )?.descripcion || '',
-    };
-    console.log('Producros', _producto);
-    this.productoService.editar(_producto).subscribe({
-      next: (data) => {
-        console.log('datassss', data);
-        if (data.status) {
-          this.closeModal();
-          window.location.reload();
-          this.ngOnInit();
-        } else {
-        }
-      },
-      error(err) {
-        console.log('error ', err);
-      },
-    });
   }
 }
