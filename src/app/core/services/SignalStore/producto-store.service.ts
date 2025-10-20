@@ -29,7 +29,6 @@ export class ProductoStoreService implements ICrudService<Producto> {
   obtenerTodos(): void {
     this._productoService.listar().subscribe({
       next: (response: ResponseApi) => {
-        console.log('response', response);
         if (response.status) {
           this.#state.set({
             res: response.value,

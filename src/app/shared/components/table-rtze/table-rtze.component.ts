@@ -92,45 +92,53 @@ export class TableRtzeComponent implements OnDestroy {
   }
 
   eliminar(accion: string, row?: any) {
-    console.log('contenido tabla ', row);
-    if (accion === 'Eliminar usuario') {
-      this.UsuarioStor.eliminar(row).subscribe({
-        next: () => {
-          console.log('Usuario eliminado correctamente');
-          showAlert(
-            '¡Operación exitosa!',
-            'La Eliminado se completó correctamente.',
-            'success'
-          );
-        },
-        error: (err) => {
-          console.error('Error al eliminar el usuario:', err);
-        },
-      });
-    }
-    if (accion === 'Eliminar producto') {
-      this.productoStor.eliminar(row).subscribe({
-        next: () => {
-          console.log('producto eliminado correctamente');
-          showAlert(
-            '¡Operación exitosa!',
-            ' Eliminado se completó correctamente.',
-            'success'
-          );
-        },
-        error: (err) => {
-          console.error('Error al eliminar el producto:', err);
-        },
-      });
-    }
-    console.log('wwswsdwe', accion);
+    const ACCIONES = {
+      ELIMINAR_USUARIO: 'Eliminar usuario',
+      ELIMINAR_PRODUCTO: 'Eliminar producto',
+    } as const;
+    type Accion = (typeof ACCIONES)[keyof typeof ACCIONES];
+    const accionesEliminar: Record<Accion, (row: any) => void> = {
+      [ACCIONES.ELIMINAR_USUARIO]: (row) => {
+        this.UsuarioStor.eliminar(row).subscribe({
+          next: () => {
+            console.log('Usuario eliminado correctamente');
+            showAlert(
+              '¡Operación exitosa!',
+              'La eliminación se completó correctamente.',
+              'success'
+            );
+          },
+          error: (err) => {
+            console.error('Error al eliminar el usuario:', err);
+          },
+        });
+      },
+      [ACCIONES.ELIMINAR_PRODUCTO]: (row) => {
+        this.productoStor.eliminar(row).subscribe({
+          next: () => {
+            console.log('Producto eliminado correctamente');
+            showAlert(
+              '¡Operación exitosa!',
+              'La eliminación se completó correctamente.',
+              'success'
+            );
+          },
+          error: (err) => {
+            console.error('Error al eliminar el producto:', err);
+          },
+        });
+      },
+    };
+    accionesEliminar[accion as Accion](row);
   }
+
   openModal() {
     this.modalSwitch.set(!this.modalSwitch());
   }
   closeModal() {
     this.modalSwitch.set(false);
   }
+
   ngOnDestroy(): void {
     console.log('limpiar');
     //Limpiar efectos al destruir el componente

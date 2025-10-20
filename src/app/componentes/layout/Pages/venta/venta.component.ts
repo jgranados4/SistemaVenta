@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
@@ -29,6 +30,7 @@ import { ProductoService } from '@core/services/producto.service';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { TableRtzeComponent } from '@shared/components/table-rtze/table-rtze.component';
+import { showAlert } from '@core/models/utility.Alert';
 
 @Component({
   selector: 'app-venta',
@@ -36,11 +38,12 @@ import { TableRtzeComponent } from '@shared/components/table-rtze/table-rtze.com
   imports: [ReactiveFormsModule, CommonModule, TableRtzeComponent],
   templateUrl: './venta.component.html',
   styleUrl: './venta.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'w-5/6 p-6 ',
   },
 })
-export class VentaComponent implements OnInit {
+export class VentaComponent {
   //*Inject
   private fb = inject(FormBuilder);
   private _productoService = inject(ProductoService);
@@ -55,8 +58,12 @@ export class VentaComponent implements OnInit {
   TipoPagoPorDefecto: string = 'Efectivo';
   totalPagar = signal<number>(0);
 
-  FormularioProductoVenta: FormGroup;
+  FormularioProductoVenta: FormGroup = this.fb.group({
+    producto: ['', Validators.required],
+    cantidad: ['', Validators.required],
+  });
   columnasTablas: string[] = [
+    'idProducto',
     'descripcionProducto',
     'cantidad',
     'precio',
@@ -74,11 +81,7 @@ export class VentaComponent implements OnInit {
     );
   }
 
-  constructor() {
-    this.FormularioProductoVenta = this.fb.group({
-      producto: ['', Validators.required],
-      cantidad: ['', Validators.required],
-    });
+  effectos = effect(() => {
     this._productoService.listar().subscribe({
       next: (data) => {
         if (data.status) {
@@ -95,13 +98,7 @@ export class VentaComponent implements OnInit {
         this.listaProductoFiltro.set(this.RetornarProductoPorFiltro(value));
       }
     );
-  }
-  ngOnInit(): void {
-    effect(() => {
-      console.log('Cambios ', this.listaProducto());
-      console.log('adsadsadsdsa', this.totalPagar());
-    });
-  }
+  });
   mostrarProducto(producto: Producto): string {
     return producto.nombre;
   }
@@ -116,28 +113,28 @@ export class VentaComponent implements OnInit {
       this.ProductoSeleccionado &&
       typeof this.ProductoSeleccionado.precio === 'string'
     ) {
-      console.log('prodcutoseleccionado', this.ProductoSeleccionado.idProducto);
       console.log('formulario', this.FormularioProductoVenta.value);
       const cantidad: number = this.FormularioProductoVenta.value.cantidad;
       const precio: number = parseFloat(this.ProductoSeleccionado.precio);
       const total: number = cantidad * precio;
       this.totalPagar.update((current) => current + total);
-      this.listaProductoParaVenta.update((item: detalleVentaDTOs[]) => {
-        item.push({
+      this.listaProductoParaVenta.update((item: detalleVentaDTOs[]) => [
+        ...item,
+        {
           idProducto: this.ProductoSeleccionado.idProducto,
           descripcionProducto: this.ProductoSeleccionado.nombre,
           cantidad: cantidad,
           precio: String(precio.toFixed(2)),
           total: String(total.toFixed(2)),
-        });
-        return item;
-      });
+        },
+      ]);
       this.FormularioProductoVenta.patchValue({
         producto: '',
         cantidad: '',
       });
       this.listaProductoFiltro.set([]);
     }
+    console.log('lista', this.listaProductoParaVenta());
   }
 
   eliminarProducto(detalle: detalleVentaDTOs) {
@@ -161,11 +158,11 @@ export class VentaComponent implements OnInit {
           if (response.status) {
             this.totalPagar.set(0.0);
             this.listaProductoParaVenta.set([]);
-            Swal.fire({
-              icon: 'success',
-              title: 'Venta Registrada',
-              text: `Numero de Venta  ${response.value.numeroDocumento}`,
-            });
+            showAlert(
+              'Venta Registrada',
+              `Numero de Venta  ${response.value.numeroDocumento}`,
+              'success'
+            );
           } else {
           }
         },
