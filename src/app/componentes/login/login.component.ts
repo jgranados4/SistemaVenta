@@ -10,12 +10,12 @@ import { Router } from '@angular/router';
 import { Login } from '../../core/models/login';
 import { UsuarioService } from '@core/services/usuario.service';
 import { UtilidadService } from '@core/services/utilidad.service';
-import { CommonModule } from '@angular/common';
+
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [FormsModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
