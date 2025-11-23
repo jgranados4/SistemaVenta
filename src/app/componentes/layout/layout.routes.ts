@@ -12,26 +12,45 @@ const routes: Routes = [
     path: '',
     component: LayoutComponent,
     children: [
-      { path: 'dasboard', component: DashBoardComponent },
+      {
+        path: 'dasboard',
+        loadComponent: () =>
+          import('./Pages/dash-board/dash-board.component').then(
+            (d) => d.DashBoardComponent
+          ),
+      },
       {
         path: 'usuarios',
-        component: UsuarioComponent,
+        loadComponent: () =>
+          import('./Pages/usuario/usuario.component').then(
+            (d) => d.UsuarioComponent
+          ),
       },
       {
         path: 'productos',
-        component: ProductoComponent,
+        loadComponent: () =>
+          import('./Pages/producto/producto.component').then(
+            (d) => d.ProductoComponent
+          ),
       },
       {
         path: 'Venta',
-        component: VentaComponent,
+        loadComponent: () =>
+          import('./Pages/venta/venta.component').then((d) => d.VentaComponent),
       },
       {
         path: 'historial_venta',
-        component: HistorialVentaComponent,
+        loadComponent: () =>
+          import('./Pages/historial-venta/historial-venta.component').then(
+            (d) => d.HistorialVentaComponent
+          ),
       },
       {
         path: 'reportes',
-        component: ReporteComponent,
+        loadComponent: () =>
+          import('./Pages/reporte/reporte.component').then(
+            (d) => d.ReporteComponent
+          ),
       },
     ],
   },

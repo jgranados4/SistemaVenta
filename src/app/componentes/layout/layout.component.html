@@ -1,6 +1,6 @@
 <aside
   id="logo-sidebar"
-  class="fixed top-0 bottom-0 w-52 z-40 h-full p-4 bg-white border-r border-gray-300"
+  class="fixed top-0 bottom-0 w-52 z-40 h-full p-4  border-r "
 >
   <div class="py-4">
     <ul class="space-y-2 font-medium">
@@ -152,7 +152,7 @@
 </aside>
 <main class="relative md:ml-52">
   <nav
-    class="absolute z-50 h-18 w-full p-2 top-0 bg-white border-b border-gray-300"
+    class="absolute z-50 h-18 w-full p-2 top-0  border-b border-gray-300"
   >
     <div class="flex p-2 justify-between">
       <div class="">
@@ -161,74 +161,28 @@
           >Sistema de Venta</span
         >
       </div>
-      <div class="w-10 flex items-center">
-        <div class="flex items-center ms-3">
-          <div class="absolute top-15">
-            <button
-              appDesplegarBoton
-              type="button"
-              class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-              aria-expanded="false"
-            >
-              <span class="sr-only">Open user menu</span>
-              <img
-                class="w-8 h-8 rounded-full"
-                src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-                alt="user photo"
-              />
-            </button>
-          </div>
-          <div
-            id="dropdown-user"
-            class="absolute z-10 w-32 right-6 top-9 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600"
-          >
-            <div class="px-4 py-3" role="none">
-              <p class="text-sm text-gray-900 dark:text-white" role="none">
-                Neil Sims
-              </p>
-            </div>
-            <ul class="py-1" role="none">
-              <li>
-                <a
-                  href="#"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                  role="menuitem"
-                  >Dashboard</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                  role="menuitem"
-                  >Settings</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                  role="menuitem"
-                  >Earnings</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                  role="menuitem"
-                  >Sign out</a
-                >
-              </li>
-            </ul>
-          </div>
-        </div>
+      <div class="w-10 flex items-center gap-2">
+        <!-- Botón para cambiar tema -->
+        <button
+          mat-icon-button
+          [matTooltip]="theme() === 'dark' ? 'Modo Claro' : 'Modo Oscuro'"
+          (click)="toggleTheme()"
+          class="mr-2"
+          aria-label="Cambiar tema"
+        >
+          @if (theme() === 'dark') {
+            <mat-icon>light_mode</mat-icon>
+          } @else {
+            <mat-icon>dark_mode</mat-icon>
+          }
+        </button>
+        
       </div>
     </div>
   </nav>
 
   <div class="absolute top-20 items-center justify-center w-full h-full">
-    <div class="w-auto top-20 p-2 border-2 border-dashed rounded-lg">
+    <div class="w-auto top-20 p-2  rounded-lg">
       <router-outlet />
     </div>
   </div>
