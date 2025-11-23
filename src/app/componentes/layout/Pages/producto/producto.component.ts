@@ -2,21 +2,19 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   inject,
-  OnInit,
   signal,
 } from '@angular/core';
 import { ModalProductoComponent } from '@component/layout/modales/modal-producto/modal-producto.component';
 import { Producto } from '@core/models/producto';
 import { ProductoStoreService } from '@core/services/SignalStore/producto-store.service';
-import { TableRtzeComponent } from '@shared/components/table-rtze/table-rtze.component';
-import Swal from 'sweetalert2';
+import { ApxTabla } from '@jgranados199795/apx-ui/apx-tabla';
+import { MaterialModule } from '@jgranados199795/apx-ui/apx-material';
 
 @Component({
   selector: 'app-producto',
   standalone: true,
-  imports: [ModalProductoComponent, TableRtzeComponent],
+  imports: [ModalProductoComponent,ApxTabla,MaterialModule],
   templateUrl: './producto.component.html',
   styleUrl: './producto.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,12 +28,11 @@ export class ProductoComponent {
   agregar = signal<string>('Agregar Producto');
   //
   columnasTablas: any[] = [
-    'nombre',
-    'idCategoria',
-    'descripcionCategoria',
-    'stock',
-    'precio',
-    'esActivo',
+    { key: 'nombre',label:'Nombre'},
+    { key: 'descripcionCategoria',label:'Descripcion'},
+    { key: 'stock',label:'Stock'},
+    { key: 'precio',label:'Precio'},
+    { key: 'esActivoTexto',label:'Estado'},
   ];
 
   editarPro = signal<string>('EditarProducto');
@@ -47,21 +44,16 @@ export class ProductoComponent {
   });
   listaFiltrada = computed(() => {
     const filtro = this.productoFiltro().toLowerCase().trim();
-    if (!filtro) return this.dataListaProducto();
-
-    return this.dataListaProducto().filter((producto: Producto) =>
-      producto.nombre.toLowerCase().includes(filtro)
+    const lista = this.dataListaProducto().map((producto) => ({
+      ...producto,
+      esActivoTexto: producto.esActivo === 1 ? 'Activo' : 'Desactivado',
+    }));
+    if (!filtro) return lista;
+    return lista.filter((u) =>
+      u.nombre.toLowerCase().includes(filtro)
     );
   });
   constructor() {
-    effect(
-      () => {
-        this.producto.obtenerTodos();
-      },
-      {
-        allowSignalWrites: true,
-      }
-    );
   }
 
   aplicarFiltroTabla(event: Event) {

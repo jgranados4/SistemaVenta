@@ -1,6 +1,8 @@
-<button type="button" (click)="nuevoProducto()" class="botonnuevo">
-  Nuevo Producto
-</button>
+<div class="input" >
+  <button mat-raised-button color="primary"(click)="nuevoProducto()" class="botonnuevo">
+    Nuevo Producto
+  </button>
+</div>
 <div class="mt-2">
   <div class="relative">
     <form class="max-w-md mx-auto">
@@ -42,12 +44,7 @@
   </div>
 </div>
 <!-- tablas -->
-<app-table-rtze
-  class="m-2"
-  [columns]="columnasTablas"
-  [data2]="listaFiltrada()"
-  [titulo]="editarPro()"
-/>
+<lib-apx-tabla [columns]="columnasTablas" [data]="listaFiltrada()"></lib-apx-tabla>
 
 @if(modalSwitch()==true){
 <app-modal-producto [tituloAccion]="agregar()" (close)="closeModal()" />
