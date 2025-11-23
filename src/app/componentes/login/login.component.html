@@ -1,90 +1,20 @@
 <section class="flex justify-center content-center items-center h-dvh">
   <div
-    class="w-full h-3/4 items-center max-w-sm rounded-lg shadow shadow-bluePastel sm:p-6 md:p-8"
+    class="w-full h-3/4 items-center max-w-sm rounded-lg shadow sm:p-6 md:p-8"
   >
-    <form
-      class="space-y-6"
-      [formGroup]="formularioLogin"
-      (ngSubmit)="iniciarSesion()"
+    <h5 class="tituloGradiante">Login</h5>
+    <lib-apx-formulario
+      [fields]="fields"
+      submitButtonText="Ingresar"
+      [showFormStatus]="false"
+      (formSubmit)="onSubmit($event)"
+    />
+    @if (mostrarLoading) {
+    <div
+      class="px-3 py-1 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200"
     >
-      <h5 class="tituloGradiante">Login</h5>
-      <div>
-        <label for="email" class="text-lg font-bold text-black tracking-wide"
-          >Email</label
-        >
-        <input
-          type="email"
-          name="email"
-          id="email"
-          formControlName="email"
-          class="w-full content-center text-base py-2 border-b border-gray-200 focus:outline-none focus:border-indigo"
-          placeholder="name@company.com"
-          required
-        />
-        @if(HasRequiredError('email')){
-        <small> Campo requerido </small>
-        }
-      </div>
-      <div>
-        <label for="password" class="text-lg font-bold text-black tracking-wide"
-          >Contraseña</label
-        >
-        <input
-          [type]="ocultarPassword ? 'password' : 'text'"
-          name="password"
-          formControlName="password"
-          id="password"
-          placeholder="••••••••"
-          class="w-full text-base py-2 border-b border-gray-200 focus:outline-none focus:border-indigo"
-          required
-        />
-        @if(HasRequiredError('password')){
-        <small> Campo requerido </small>
-        }
-      </div>
-      <div class="flex items-start">
-        <div class="flex items-start">
-          <div class="flex items-center h-5">
-            <input
-              id="remember"
-              type="checkbox"
-              value=""
-              class="w-4 h-4 border rounded bg focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
-              required
-            />
-          </div>
-          <label for="remember" class="ms-2 text-sm font-medium text-black"
-            >Remember me</label
-          >
-        </div>
-        <a
-          class="ms-auto text-sm font-medium text-blueS hover:underline dark:text-blue-500"
-          >Lost Password?</a
-        >
-      </div>
-      <div class="flex w-full justify-center">
-        <button
-          [disabled]="formularioLogin.invalid"
-          type="submit"
-          class="botonnuevo cursor-pointer"
-        >
-          Ingresar
-        </button>
-      </div>
-      @if(mostrarLoading){
-      <div
-        class="px-3 py-1 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200"
-      >
-        loading...
-      </div>
-      }
-
-      <div class="text-sm font-medium text-blueS">
-        Not registered?
-        <a href="#" class="text-blue-700 hover:underline dark:text-blue-500"
-          >Create account</a
-        >
-      </div>
-    </form>
+      loading...
+    </div>
+    }
   </div>
 </section>
