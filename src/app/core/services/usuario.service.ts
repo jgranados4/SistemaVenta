@@ -1,9 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, httpResource, HttpResourceRef } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
-import { ResponseApi } from '../models/response-api';
-import { Login } from '../models/login';
-import { IUsuarioService, Usuario } from '../models/usuario';
+import { Login ,ResponseApi,Usuario,IUsuarioService} from '@core/models';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -19,9 +17,7 @@ export class UsuarioService implements IUsuarioService<ResponseApi> {
   iniciarSesion(request: Login): Observable<ResponseApi> {
     return this.http.post<ResponseApi>(`${this.url}/IniciarSesion`, request);
   }
-  listar(): Observable<ResponseApi> {
-    return this.http.get<ResponseApi>(`${this.url}/Listar`);
-  }
+  readonly listar= httpResource<ResponseApi>(()=>`${this.url}/Listar`);
   guardar(request: Usuario): Observable<ResponseApi> {
     return this.http.post<ResponseApi>(`${this.url}/Crear`, request);
   }
