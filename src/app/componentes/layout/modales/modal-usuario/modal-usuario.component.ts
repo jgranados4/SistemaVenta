@@ -3,19 +3,12 @@ import {
   Component,
   computed,
   effect,
-  EffectRef,
   inject,
   Injector,
-  input,
-  InputSignal,
-  model,
-  OnInit,
-  output,
   signal,
 } from '@angular/core';
 import {
   FormBuilder,
-  FormControlName,
   FormsModule,
   ReactiveFormsModule,
   Validators,
@@ -24,38 +17,56 @@ import {
 import { Rol } from '@core/models/rol';
 import { Usuario } from '@core/models/usuario';
 // service
-import { UsuarioService } from '@core/services/usuario.service';
 import { RolService } from '@core/services/rol.service';
-import { UtilidadService } from '@core/services/utilidad.service';
 import { Router } from '@angular/router';
 import { UsuarioStoreService } from '@core/services/SignalStore/usuario-store.service';
 import { showAlert } from '@core/models/utility.Alert';
-
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
+import { ModalGenericoComponent } from '../modal-generico/modal-generico.component';
 @Component({
   selector: 'app-modal-usuario',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule],
+  imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSelectModule,
+    MatInputModule,
+    MatFormFieldModule,
+    ModalGenericoComponent,
+  ],
   templateUrl: './modal-usuario.component.html',
   styleUrl: './modal-usuario.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalUsuarioComponent {
+  //injectar
   fb = inject(FormBuilder);
   router = inject(Router);
   inject = inject(Injector);
-  ocultarPassword: boolean = true;
-  ListarRoles = signal<Rol[]>([]);
-  public usuarios: Usuario | null = null;
-  //*output
-  close = output<boolean>();
-  //*input
-  tituloAccion = input<string>('Agregar');
-  datas = input<Usuario | undefined>(undefined);
-  //*signal
-
-  //injectar
   private RolService = inject(RolService);
   private storeUs = inject(UsuarioStoreService);
+  private dialogRef = inject(MatDialogRef<ModalUsuarioComponent>);
+  private data = inject<{ data?:{usuario?: Usuario} }>(
+    MAT_DIALOG_DATA
+  );
+  ocultarPassword: boolean = true;
+  // Signals
+  
+  usuarioEditar  = signal<Usuario | undefined>(this.data.data?.usuario);
+  ListarRoles = signal<Rol[]>([]);
+
   formularioUsuario: FormGroup = this.fb.group({
     nombreApellidos: ['', Validators.required],
     correo: ['', [Validators.required, Validators.email]],
@@ -64,21 +75,31 @@ export class ModalUsuarioComponent {
     esActivo: ['1', Validators.required],
   });
   //* COMPUTED
+  readonly titulo = computed(() => 
+    this.usuarioEditar() ? 'Editar' : 'Agregar'
+  );
   readonly botonAccion = computed(() =>
-    this.tituloAccion() === 'Editar' ? 'Actualizar' : 'Guardar'
+    this.titulo() === 'Editar' ? 'Actualizar' : 'Guardar'
   );
   readonly roles = computed(() => this.ListarRoles());
-  effectos = effect(
+  readonly tituloModal = computed(() => `${this.titulo()} Usuario`);
+   readonly esEdicion = computed(() => this.titulo() === 'Editar');
+   constructor(){
+    effect(
     () => {
+      const usuario = this.usuarioEditar();
+        const esEdicion = this.esEdicion();
+        console.log('🔄 Effect ejecutándose:', { usuario, esEdicion });
+        console.log("data",this.data?.data?.usuario)
       this.cargarRoles();
-      const dataUsuario = this.datas();
-      if (dataUsuario && this.tituloAccion() === 'Editar') {
+   
+      if (usuario && esEdicion) {
         this.formularioUsuario.patchValue({
-          nombreApellidos: dataUsuario.nombreApellidos,
-          correo: dataUsuario.correo,
-          idRol: dataUsuario.idRol,
-          clave: dataUsuario.clave,
-          esActivo: dataUsuario.esActivo.toString(),
+          nombreApellidos: usuario.nombreApellidos,
+          correo: usuario.correo,
+          idRol: usuario.idRol,
+          clave: usuario.clave,
+          esActivo: usuario.esActivo.toString(),
         });
       } else {
         this.formularioUsuario.reset({
@@ -89,11 +110,10 @@ export class ModalUsuarioComponent {
           esActivo: '1',
         });
       }
-    },
-    {
-      injector: this.inject,
     }
   );
+   }
+
   cargarRoles() {
     this.RolService.lista().subscribe({
       next: (data) => {
@@ -107,7 +127,7 @@ export class ModalUsuarioComponent {
 
   //*METODO GUARDAR
   GuardarEditar_Ussuario() {
-    const usuarioActual = this.datas();
+    const usuarioActual = this.usuarioEditar();
     const idRolSelec = parseInt(this.formularioUsuario.value.idRol);
     const rolSeleccionado = this.ListarRoles().find(
       (r) => r.idRol === idRolSelec
@@ -127,18 +147,18 @@ export class ModalUsuarioComponent {
       esActivo: parseInt(this.formularioUsuario.value.esActivo),
       rolDescripcion: rolSeleccionado?.descripcion ?? '',
     };
-    if (this.tituloAccion() === 'Editar') {
+    if (this.titulo() === 'Editar') {
       console.log('contenido de la Editar', _usuario);
       this.storeUs.actualizar(_usuario).subscribe({
         next: () => {
           console.log('Usuario Editado correctamente');
           showAlert('¡Operación exitosa!', 'Editado correctamente.', 'success');
+          this.dialogRef.close()
         },
         error: (err) => {
           console.error('Error al agregar el usuario:', err);
         },
       });
-      this.closeModal();
     } else {
       console.log('agregar', _usuario);
       this.storeUs.guardar(_usuario).subscribe({
@@ -149,16 +169,13 @@ export class ModalUsuarioComponent {
             'Agregado correctamente.',
             'success'
           );
+          this.dialogRef.close()
         },
         error: (err) => {
           console.error('Error al agregar el usuario:', err);
         },
       });
-      this.closeModal();
     }
-  }
-
-  closeModal() {
-    this.close.emit(false);
+    
   }
 }

@@ -1,0 +1,21 @@
+/* 
+  ESTILOS LOCALES DEL COMPONENTE
+  Estos estilos solo se aplican a este componente debido a ViewEncapsulation.Emulated (por defecto)
+*/
+
+/* Estilos específicos para elementos dentro del template */
+form {
+  padding: 1rem;
+}
+
+/* 
+  Para aplicar estilos globales a componentes de Material dentro de este componente,
+  puedes usar ::ng-deep (aunque está deprecado, sigue funcionando)
+  O mejor aún, usar ViewEncapsulation.None en el componente
+*/
+
+/* Ejemplo con ::ng-deep (solo si es necesario) */
+::ng-deep .mat-mdc-form-field {
+  margin-bottom: 1rem;
+}
+
