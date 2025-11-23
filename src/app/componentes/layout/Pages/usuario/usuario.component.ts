@@ -2,28 +2,22 @@ import {
   Component,
   inject,
   signal,
-  model,
-  effect,
   ChangeDetectionStrategy,
-  untracked,
   computed,
   Injector,
   OnDestroy,
 } from '@angular/core';
 import { ModalUsuarioComponent } from '../../modales/modal-usuario/modal-usuario.component';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { Usuario } from '@core/models/usuario';
-import { UsuarioService } from '@core/services/usuario.service';
-import { UtilidadService } from '@core/services/utilidad.service';
-import Swal from 'sweetalert2';
-import { TableRtzeComponent } from '@shared/components/table-rtze/table-rtze.component';
-
 import { UsuarioStoreService } from '@core/services/SignalStore/usuario-store.service';
+import { ApxTabla, TableAction } from '@jgranados199795/apx-ui/apx-tabla';
+import { MaterialModule } from '@jgranados199795/apx-ui/apx-material';
+import { ModalService } from '@core/services/modalServices/modal.service';
+import {FormsModule} from '@angular/forms';
+import { showAlert, Usuario} from '@core/models';
 
 @Component({
   selector: 'app-usuario',
-  standalone: true,
-  imports: [ModalUsuarioComponent, TableRtzeComponent],
+  imports: [ApxTabla, MaterialModule,FormsModule],
   templateUrl: './usuario.component.html',
   styleUrl: './usuario.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,91 +27,77 @@ import { UsuarioStoreService } from '@core/services/SignalStore/usuario-store.se
 })
 export class UsuarioComponent implements OnDestroy {
   columnasTablas: any[] = [
-    'idUsuario',
-    'nombreApellidos',
-    'correo',
-    'idRol',
-    'rolDescripcion',
-    'esActivo',
+    { key: 'idUsuario', label: 'ID' },
+    { key: 'nombreApellidos', label: 'Nombre' },
+    { key: 'correo', label: 'Correo' },
+    { key: 'rolDescripcion', label: 'Rol' },
+    { key: 'esActivoTexto', label: 'Estado' },
   ];
   UsuarioFiltro = signal<string>('');
-  modalUsuario = signal<boolean>(false);
   agregar = signal<string>('Agregar');
-  modalSwitch = signal<boolean>(false);
-  usuarios = signal<string>('EditarUsuario');
   //*inject
 
   Usuario = inject(UsuarioStoreService);
   injector = inject(Injector);
+  readonly dialogModal = inject(ModalService);
+
   dataListaUsuario = computed(() => {
     const value = this.Usuario.values();
     return value;
   });
   listaFiltrada = computed(() => {
     const filtro = this.UsuarioFiltro().toLowerCase().trim();
-    if (!filtro) return this.dataListaUsuario();
 
-    return this.dataListaUsuario().filter((usuario: any) =>
-      usuario.nombreApellidos.toLowerCase().includes(filtro)
+    const lista = this.dataListaUsuario().map((usuario) => ({
+      ...usuario,
+      esActivoTexto: usuario.esActivo === 1 ? 'Activo' : 'Desactivado',
+    }));
+    if (!filtro) return lista;
+    return lista.filter((u) =>
+      u.nombreApellidos.toLowerCase().includes(filtro)
     );
   });
-  // dataListaUsuario2 = toSignal(
-  //   this._usuarioService.listar().pipe(
-  //     map((resp) => {
-  //       if (resp.status) {
-  //         return resp; // Devuelve tal cual si es correcto
-  //       } else {
-  //         this._utilidadService.mostrarAlert('No se encontró datos', 'OPPS');
-  //         return { status: false, msg: resp.msg || '', value: [] }; // Estructura consistente
-  //       }
-  //     }),
-  //     catchError((error) => {
-  //       console.error('Error al obtener usuarios', error);
-  //       this._utilidadService.mostrarAlert('Error de red', 'ERROR');
-  //       return of({ status: false, msg: 'Error de red', value: [] });
-  //     })
-  //   ),
-  //   {
-  //     initialValue: { status: false, msg: '', value: [] },
-  //   }
-  // );
-  constructor() {
-    effect(
-      () => {
-        this.Usuario.obtenerTodos();
-      },
-      {
-        allowSignalWrites: true,
-      }
-    );
-  }
 
-  // effectos = effect(
-  //   () => {
-  //     this.dataListaUsuario();
-  //     console.log('Componente Usuarios', this.dataListaUsuario());
-  //   },
-  //   {
-  //     injector: this.injector,
-  //   }
-  // );
-
+  constructor() {}
   aplicarFiltroTabla(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.UsuarioFiltro.set(filterValue);
   }
-
-  nuevoUsuario() {
-    //modal
-    this.openModal();
+  nuevoUsuario(): void {
+    this.dialogModal.openModal<ModalUsuarioComponent>(ModalUsuarioComponent);
+  }
+  handleEdit(event: TableAction<Usuario>): void {
+    console.log('Editando usuario:', event.row);
+    // Aquí podrías abrir un dialog de edición
+    const dialogRef = this.dialogModal.openModal<ModalUsuarioComponent, any>(
+      ModalUsuarioComponent,
+      {
+        data: {
+          usuario: event.row,
+        },
+      }
+    );
+    // dialogRef.afterClosed().subscribe(result => {
+    //   if (result) {
+    //     this.users.update(users =>
+    //       users.map(u => u.id === event.row.id ? result : u)
+    //     );
+    //   }
+    // });
   }
 
-  //
-  openModal() {
-    this.modalSwitch.set(true);
-  }
-  closeModal() {
-    this.modalSwitch.set(false);
+  // Manejar eliminación
+  handleDelete(event: TableAction<Usuario>): void {
+    console.log('Eliminando usuario:', event.row);
+this.Usuario.eliminar(event.row).subscribe({
+        next: () => {
+          console.log('Usuario eliminado correctamente');
+          showAlert('¡Operación exitosa!', 'Eliminado correctamente.', 'success');
+        },
+        error: (err) => {
+          console.error('Error al eliminar usuario:', err);
+        },
+      });
   }
   ngOnDestroy(): void {
     // this.effectos.destroy();

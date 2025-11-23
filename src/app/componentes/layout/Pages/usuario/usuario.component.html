@@ -1,7 +1,8 @@
-<button type="button" (click)="nuevoUsuario()" class="botonnuevo">
-  Nuevo Usuario
-</button>
-<div class="mt-2">
+
+<section class="input" >
+   <button mat-raised-button color="primary" (click)="nuevoUsuario()">Nuevo Usuario</button>
+</section>
+<div class="mt-2 mb-2">
   <div class="relative">
     <form class="max-w-md mx-auto">
       <label
@@ -43,14 +44,10 @@
 </div>
 <!-- tablas -->
 
-<app-table-rtze
+<!-- <app-table-rtze
   class="m-2"
   [columns]="columnasTablas"
   [data2]="listaFiltrada()"
   [titulo]="usuarios()"
-/>
-
-@if(modalSwitch()==true){
-<app-modal-usuario [tituloAccion]="agregar()" (close)="closeModal()" />
-
-}
+/> -->
+<lib-apx-tabla [columns]="columnasTablas" [data]="listaFiltrada()" [showActions]="true" (Edit)="handleEdit($event)"(Delete)="handleDelete($event)" >
