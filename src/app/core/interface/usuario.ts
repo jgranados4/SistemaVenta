@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
 import { Login } from './login';
+import { HttpResourceRef } from '@angular/common/http';
 
 export interface Usuario {
   idUsuario: number;
@@ -13,7 +14,7 @@ export interface Usuario {
 
 export interface IUsuarioService<T> {
   iniciarSesion(request: Login): Observable<T>;
-  listar(): Observable<T>;
+  listar: HttpResourceRef<T | undefined >;
   guardar(request: Usuario): Observable<T>;
   editar(request: Usuario): Observable<T>;
   eliminar(id: number): Observable<T>;

@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment.development';
 import Swal, { SweetAlertOptions, SweetAlertResult } from 'sweetalert2';
 
 const STATUS = {
@@ -9,7 +10,6 @@ const STATUS = {
 } as const;
 
 type Status = (typeof STATUS)[keyof typeof STATUS];
-
 const DEFAULT_TEXTS = {
   accept: 'Aceptar',
   cancel: 'No',
@@ -54,15 +54,13 @@ const DEFAULT_OPTIONS: Record<Status, SweetAlertOptions> = {
  * @param text Texto descriptivo
  * @param type Tipo de alerta ('info' | 'error' | 'success' | 'warning' | 'confirm')
  * @param customOptions Opcional: configuración personalizada
- * @param redirectUrl Opcional: redirige al confirmar o cerrar
  * @returns Promesa de resultado de la alerta
  */
 export const showAlert = (
   title: string,
   text: string,
   type: Status,
-  customOptions: Partial<SweetAlertOptions> = {},
-  redirectUrl?: string
+  customOptions: Partial<SweetAlertOptions> = {}
 ): Promise<SweetAlertResult> => {
   const defaultConfig = DEFAULT_OPTIONS[type];
 
@@ -78,8 +76,7 @@ export const showAlert = (
   } as SweetAlertOptions;
 
   return Swal.fire(finalOptions).then((result) => {
-    if (redirectUrl && (result.isConfirmed || result.isDismissed)) {
-      window.location.href = redirectUrl;
+    if (result.isConfirmed || result.isDismissed) {
     }
     return result;
   });

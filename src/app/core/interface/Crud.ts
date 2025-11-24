@@ -1,7 +1,6 @@
 import { Observable } from "rxjs";
 
 export interface IReadable<T> {
-  obtenerPorId(id: number | string): Observable<T>;
   obtenerTodos(): void;
 }
 export interface IWriteable<T> {

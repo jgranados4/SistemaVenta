@@ -1,3 +1,4 @@
+import { HttpResourceRef } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Producto {
@@ -13,7 +14,7 @@ export interface Producto {
 type Precio = string | undefined;
 
 export interface IProductoService<T> {
-  listar(): Observable<T>;
+ listar: HttpResourceRef<T | undefined >;
   guardar(request: Producto): Observable<T>;
   editar(request: Producto): Observable<T>;
   eliminar(id: number): Observable<T>;
