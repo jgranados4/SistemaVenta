@@ -13,7 +13,7 @@ import { ApxTabla, TableAction } from '@jgranados199795/apx-ui/apx-tabla';
 import { MaterialModule } from '@jgranados199795/apx-ui/apx-material';
 import { ModalService } from '@core/services/modalServices/modal.service';
 import {FormsModule} from '@angular/forms';
-import { showAlert, Usuario} from '@core/models';
+import { showAlert, Usuario} from '@core/interface';
 
 @Component({
   selector: 'app-usuario',
@@ -93,9 +93,6 @@ this.Usuario.eliminar(event.row).subscribe({
         next: () => {
           console.log('Usuario eliminado correctamente');
           showAlert('¡Operación exitosa!', 'Eliminado correctamente.', 'success');
-        },
-        error: (err) => {
-          console.error('Error al eliminar usuario:', err);
         },
       });
   }

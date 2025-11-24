@@ -4,38 +4,28 @@ import {
   computed,
   effect,
   inject,
-  input,
-  InputSignal,
-  model,
-  OnInit,
-  output,
+  linkedSignal,
   signal,
 } from '@angular/core';
 import {
   FormBuilder,
-  FormControlName,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
   FormGroup,
 } from '@angular/forms';
-import { Producto } from '@core/models/producto';
-import { Venta } from '@core/models/venta';
-import { detalleVentaDTOs } from '@core/models/detalle-venta';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Producto,Venta,
+detalleVentaDTOs,
+showAlert } from '@core/interface';
 //*Servicios
-import { UtilidadService } from '@core/services/utilidad.service';
 import { VentaService } from '@core/services/venta.service';
-import { ProductoService } from '@core/services/producto.service';
-//
-import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
-import { TableRtzeComponent } from '@shared/components/table-rtze/table-rtze.component';
-import { showAlert } from '@core/models/utility.Alert';
-
+import { ProductoStoreService } from '@core/services/SignalStore/producto-store.service';
+import {ApxTabla, TableColumn} from '@jgranados199795/apx-ui/apx-tabla'
 @Component({
   selector: 'app-venta',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, TableRtzeComponent],
+  imports: [ReactiveFormsModule, CommonModule, ApxTabla],
   templateUrl: './venta.component.html',
   styleUrl: './venta.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,11 +36,9 @@ import { showAlert } from '@core/models/utility.Alert';
 export class VentaComponent {
   //*Inject
   private fb = inject(FormBuilder);
-  private _productoService = inject(ProductoService);
+  private _storePto = inject(ProductoStoreService);
   private _ventaService = inject(VentaService);
-  private _utilidadService = inject(UtilidadService);
   listaProducto = signal<Producto[]>([]);
-  listaProductoFiltro = signal<Producto[]>([]);
   listaProductoParaVenta = signal<detalleVentaDTOs[]>([]);
   bloqueoBotonRegistar: boolean = false;
 
@@ -62,43 +50,38 @@ export class VentaComponent {
     producto: ['', Validators.required],
     cantidad: ['', Validators.required],
   });
-  columnasTablas: string[] = [
-    'idProducto',
-    'descripcionProducto',
-    'cantidad',
-    'precio',
-    'total',
+  columnasTablas: any[] = [
+    {key:'idProducto',label:'ID'},
+    {key:'descripcionProducto',label:'Descripcion'},
+    {key:'cantidad',label:'Cantidad'},
+    {key:'precio',label:'Precio'},
+    {key:'total',label:'Total'},
   ];
   datadetalleventa = computed(() => this.listaProductoParaVenta());
+  listaPto = computed(() => {
+    const values = this._storePto
+      .values()
+      .filter((p) => p.esActivo === 1 && p.stock > 0);
+    return values;
+  });
   RetornarProductoPorFiltro(busqueda: any): Producto[] {
     const valorbuscar =
       typeof busqueda === 'string'
         ? busqueda.toLocaleLowerCase()
         : busqueda.nombre.toLocaleLowerCase();
 
-    return this.listaProducto().filter((it) =>
+    return this.listaPto().filter((it) =>
       it.nombre.toLocaleLowerCase().includes(valorbuscar)
     );
   }
+  private productoValue = toSignal(
+    this.FormularioProductoVenta.get('producto')!.valueChanges,
+    { initialValue: '' }
+  );
+  listaProductoFiltro = linkedSignal<Producto[]>(() =>
+    this.RetornarProductoPorFiltro(this.productoValue())
+  );
 
-  effectos = effect(() => {
-    this._productoService.listar().subscribe({
-      next: (data) => {
-        if (data.status) {
-          const list = data.value as Producto[];
-          this.listaProducto.set(
-            list.filter((p) => p.esActivo == 1 && p.stock > 0)
-          );
-        }
-      },
-      error: (e) => {},
-    });
-    this.FormularioProductoVenta.get('producto')?.valueChanges.subscribe(
-      (value) => {
-        this.listaProductoFiltro.set(this.RetornarProductoPorFiltro(value));
-      }
-    );
-  });
   mostrarProducto(producto: Producto): string {
     return producto.nombre;
   }

@@ -6,7 +6,6 @@ import {
   signal,
 } from '@angular/core';
 import { ModalProductoComponent } from '@component/layout/modales/modal-producto/modal-producto.component';
-import { Producto } from '@core/models/producto';
 import { ProductoStoreService } from '@core/services/SignalStore/producto-store.service';
 import { ApxTabla } from '@jgranados199795/apx-ui/apx-tabla';
 import { MaterialModule } from '@jgranados199795/apx-ui/apx-material';
