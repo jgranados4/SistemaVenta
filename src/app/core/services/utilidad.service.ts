@@ -1,11 +1,8 @@
 import {
   effect,
-  Injectable,
-  model,
-  signal,
-  WritableSignal,
+  Injectable
 } from '@angular/core';
-import { Sesion } from '../models/sesion';
+import { Sesion } from '@core/interface';
 
 @Injectable({
   providedIn: 'root',

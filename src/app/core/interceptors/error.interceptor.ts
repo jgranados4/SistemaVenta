@@ -1,7 +1,7 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { showAlert } from '@core/models/utility.Alert';
+import { showAlert } from '@core/interface';
 import { catchError, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 
