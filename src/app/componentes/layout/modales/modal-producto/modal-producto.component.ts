@@ -6,8 +6,6 @@ import {
   inject,
   Injector,
   input,
-  model,
-  OnInit,
   output,
   signal,
 } from '@angular/core';
@@ -17,33 +15,39 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Categoria } from '@core/models/categoria';
-import { Producto } from '@core/models/producto';
-import { showAlert } from '@core/models/utility.Alert';
+import { Categoria,Producto,showAlert } from '@core/interface';
 import { CategoriaService } from '@core/services/categoria.service';
-import { ProductoService } from '@core/services/producto.service';
 import { ProductoStoreService } from '@core/services/SignalStore/producto-store.service';
+import { MaterialModule } from '@jgranados199795/apx-ui/apx-material';
+import { ModalGenericoComponent } from '../modal-generico/modal-generico.component';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-modal-producto',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule,MaterialModule,ModalGenericoComponent,MatDialogModule],
   templateUrl: './modal-producto.component.html',
   styleUrl: './modal-producto.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalProductoComponent {
-  //*Variables
-  public dataProducto: Producto | null = null;
   //*INJECT
   private fb = inject(FormBuilder);
   inject = inject(Injector);
   storeProd = inject(ProductoStoreService);
   private categoriaService = inject(CategoriaService);
+  private dialogRef = inject(MatDialogRef<ModalProductoComponent>);
+  private data = inject<{ data?:{producto?: Producto} }>(
+    MAT_DIALOG_DATA
+  );
   //*SIGNAL , INPUT Y OUTPUT`
-  tituloAccion = input<string>('Agregar Producto');
   datas = input<Producto | undefined>(undefined);
-  close = output<boolean>();
+  listaCategoria = signal<Categoria[]>([]);
+  protected productoEditar  = signal<Producto | undefined>(this.data.data?.producto);
   //*formulario
   formularioProducto: FormGroup = this.fb.group({
     nombre: ['', Validators.required],
@@ -53,16 +57,23 @@ export class ModalProductoComponent {
     esActivo: ['1', Validators.required],
   });
 
-  readonly botonAccion = computed(() =>
-    this.tituloAccion() === 'Editar' ? 'Actualizar' : 'Guardar'
+  readonly titulo = computed(() => 
+    this.productoEditar() ? 'Editar' : 'Agregar'
   );
-  listaCategoria = signal<Categoria[]>([]);
+  readonly botonAccion = computed(() =>
+    this.titulo() === 'Editar' ? 'Actualizar' : 'Guardar'
+  );
+  readonly tituloModal = computed(() => `${this.titulo()} Producto`);
+   readonly esEdicion = computed(() => this.titulo() === 'Editar');
   readonly Categorias = computed(() => this.listaCategoria());
-  effectos = effect(
+  constructor(){
+    effect(
     () => {
       this.cargarCategoria();
-      const dataproducto = this.datas();
-      if (dataproducto && this.tituloAccion() === 'Editar Producto') {
+      const dataproducto = this.productoEditar();
+      console.log("dialog data",dataproducto)
+      const esEdicion = this.esEdicion();
+      if (dataproducto && esEdicion) {
         this.formularioProducto.patchValue({
           nombre: dataproducto.nombre,
           idCategoria: dataproducto.idCategoria,
@@ -76,14 +87,12 @@ export class ModalProductoComponent {
           idCategoria: 1,
           stock: '',
           precio: '',
-          esActivo: 0,
+          esActivo: '1',
         });
       }
-    },
-    {
-      injector: this.inject,
     }
   );
+  }
 
   cargarCategoria(): void {
     this.categoriaService.lista().subscribe({
@@ -96,36 +105,34 @@ export class ModalProductoComponent {
     });
   }
   GuardarEditar_producto() {
-    const ProductoAc = this.datas();
+    const ProductoAc = this.productoEditar();
     const idCategoria = parseInt(this.formularioProducto.value.idCategoria);
     const IdCateSelec = this.listaCategoria().find(
       (Ca) => Ca.idCategoria === idCategoria
     );
-    console.log('formulario', this.formularioProducto.value);
-    console.log('idCat', idCategoria);
-    console.log('seleciones', IdCateSelec);
-    console.log('titulo', this.tituloAccion());
-    console.log('listasCate', this.listaCategoria());
+
     const _producto: Producto = {
       idProducto: ProductoAc?.idProducto ?? 0,
       nombre: this.formularioProducto.value.nombre,
       idCategoria: idCategoria,
       stock: this.formularioProducto.value.stock,
-      precio: this.formularioProducto.value.precio,
-      esActivo: parseInt(this.formularioProducto.value.esActivo.toString()),
+      precio: String(this.formularioProducto.value.precio),
+      esActivo: parseInt(this.formularioProducto.value.esActivo),
       descripcionCategoria: IdCateSelec?.descripcion ?? '',
     };
-    if (this.tituloAccion() === 'Editar Producto') {
+    const esEdicion = this.esEdicion();
+    if (esEdicion) {
       console.log('contenido de la Editar', _producto);
       this.storeProd.actualizar(_producto).subscribe({
         next: () => {
           showAlert('¡Operación exitosa!', 'Editado correctamente.', 'success');
+           this.dialogRef.close()
         },
         error: (err) => {
           console.error('Error al agregar el producto:', err);
         },
       });
-      this.closeModal();
+      
     } else {
       console.log('contenido de la guardar', _producto);
       //Agregar
@@ -136,12 +143,11 @@ export class ModalProductoComponent {
             'Agregado correctamente.',
             'success'
           );
+           this.dialogRef.close()
         },
       });
-      this.closeModal();
+  
     }
   }
-  closeModal() {
-    this.close.emit(false);
-  }
+
 }

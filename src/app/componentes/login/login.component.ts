@@ -1,7 +1,7 @@
-import { Component, inject, NgModule, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ULogin } from '../../core/models/login';
+import { ULogin } from '@core/interface';
 import { UsuarioService } from '@core/services/usuario.service';
 import { UtilidadService } from '@core/services/utilidad.service';
 import {ApxFormulario,FieldConfig} from '@jgranados199795/apx-ui/apx-formulario';

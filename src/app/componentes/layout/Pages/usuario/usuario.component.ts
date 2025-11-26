@@ -39,7 +39,7 @@ export class UsuarioComponent implements OnDestroy {
 
   Usuario = inject(UsuarioStoreService);
   injector = inject(Injector);
-  readonly dialogModal = inject(ModalService);
+  readonly #dialogModal = inject(ModalService);
 
   dataListaUsuario = computed(() => {
     const value = this.Usuario.values();
@@ -50,7 +50,7 @@ export class UsuarioComponent implements OnDestroy {
 
     const lista = this.dataListaUsuario().map((usuario) => ({
       ...usuario,
-      esActivoTexto: usuario.esActivo === 1 ? 'Activo' : 'Desactivado',
+      esActivoTexto: usuario.esActivo === 1 ? 'Activo' : 'Inactivo',
     }));
     if (!filtro) return lista;
     return lista.filter((u) =>
@@ -64,12 +64,12 @@ export class UsuarioComponent implements OnDestroy {
     this.UsuarioFiltro.set(filterValue);
   }
   nuevoUsuario(): void {
-    this.dialogModal.openModal<ModalUsuarioComponent>(ModalUsuarioComponent);
+    this.#dialogModal.openModal<ModalUsuarioComponent>(ModalUsuarioComponent);
   }
   handleEdit(event: TableAction<Usuario>): void {
     console.log('Editando usuario:', event.row);
     // Aquí podrías abrir un dialog de edición
-    const dialogRef = this.dialogModal.openModal<ModalUsuarioComponent, any>(
+    const dialogRef = this.#dialogModal.openModal<ModalUsuarioComponent, any>(
       ModalUsuarioComponent,
       {
         data: {
@@ -77,13 +77,6 @@ export class UsuarioComponent implements OnDestroy {
         },
       }
     );
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result) {
-    //     this.users.update(users =>
-    //       users.map(u => u.id === event.row.id ? result : u)
-    //     );
-    //   }
-    // });
   }
 
   // Manejar eliminación
