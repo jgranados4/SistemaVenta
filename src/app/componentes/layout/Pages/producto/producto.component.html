@@ -44,9 +44,4 @@
   </div>
 </div>
 <!-- tablas -->
-<lib-apx-tabla [columns]="columnasTablas" [data]="listaFiltrada()"></lib-apx-tabla>
-
-@if(modalSwitch()==true){
-<app-modal-producto [tituloAccion]="agregar()" (close)="closeModal()" />
-
-}
+<lib-apx-tabla [columns]="columnasTablas" [data]="listaFiltrada()" [showActions]="true" (Edit)="handleEdit($event)"(Delete)="handleDelete($event)" ></lib-apx-tabla>

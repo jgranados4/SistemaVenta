@@ -14,18 +14,12 @@ import {
   Validators,
   FormGroup,
 } from '@angular/forms';
-import { Rol } from '@core/models/rol';
-import { Usuario } from '@core/models/usuario';
+import { Rol,Usuario,showAlert} from '@core/interface';
 // service
 import { RolService } from '@core/services/rol.service';
 import { Router } from '@angular/router';
+import { MaterialModule } from '@jgranados199795/apx-ui/apx-material';
 import { UsuarioStoreService } from '@core/services/SignalStore/usuario-store.service';
-import { showAlert } from '@core/models/utility.Alert';
-import { MatSelectModule } from '@angular/material/select';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
@@ -36,19 +30,18 @@ import { ModalGenericoComponent } from '../modal-generico/modal-generico.compone
   selector: 'app-modal-usuario',
   standalone: true,
   imports: [
+    MaterialModule,
     ReactiveFormsModule,
     FormsModule,
     MatDialogModule,
-    MatButtonModule,
-    MatIconModule,
-    MatSelectModule,
-    MatInputModule,
-    MatFormFieldModule,
     ModalGenericoComponent,
   ],
   templateUrl: './modal-usuario.component.html',
   styleUrl: './modal-usuario.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host:{
+    
+  }
 })
 export class ModalUsuarioComponent {
   //injectar
@@ -61,10 +54,8 @@ export class ModalUsuarioComponent {
   private data = inject<{ data?:{usuario?: Usuario} }>(
     MAT_DIALOG_DATA
   );
-  ocultarPassword: boolean = true;
   // Signals
-  
-  usuarioEditar  = signal<Usuario | undefined>(this.data.data?.usuario);
+  protected usuarioEditar  = signal<Usuario | undefined>(this.data.data?.usuario);
   ListarRoles = signal<Rol[]>([]);
 
   formularioUsuario: FormGroup = this.fb.group({
@@ -147,7 +138,8 @@ export class ModalUsuarioComponent {
       esActivo: parseInt(this.formularioUsuario.value.esActivo),
       rolDescripcion: rolSeleccionado?.descripcion ?? '',
     };
-    if (this.titulo() === 'Editar') {
+    const esEdicion = this.esEdicion();
+    if (esEdicion) {
       console.log('contenido de la Editar', _usuario);
       this.storeUs.actualizar(_usuario).subscribe({
         next: () => {
