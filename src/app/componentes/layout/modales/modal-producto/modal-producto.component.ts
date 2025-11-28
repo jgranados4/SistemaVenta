@@ -15,7 +15,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Categoria,Producto,showAlert } from '@core/interface';
+import { Categoria, Producto, showAlert } from '@core/interface';
 import { CategoriaService } from '@core/services/categoria.service';
 import { ProductoStoreService } from '@core/services/SignalStore/producto-store.service';
 import { MaterialModule } from '@jgranados199795/apx-ui/apx-material';
@@ -29,7 +29,12 @@ import {
 @Component({
   selector: 'app-modal-producto',
   standalone: true,
-  imports: [ReactiveFormsModule,MaterialModule,ModalGenericoComponent,MatDialogModule],
+  imports: [
+    ReactiveFormsModule,
+    MaterialModule,
+    ModalGenericoComponent,
+    MatDialogModule,
+  ],
   templateUrl: './modal-producto.component.html',
   styleUrl: './modal-producto.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,13 +46,12 @@ export class ModalProductoComponent {
   storeProd = inject(ProductoStoreService);
   private categoriaService = inject(CategoriaService);
   private dialogRef = inject(MatDialogRef<ModalProductoComponent>);
-  private data = inject<{ data?:{producto?: Producto} }>(
-    MAT_DIALOG_DATA
-  );
+  private data = inject<{ data?: { producto?: Producto } }>(MAT_DIALOG_DATA);
   //*SIGNAL , INPUT Y OUTPUT`
   datas = input<Producto | undefined>(undefined);
-  listaCategoria = signal<Categoria[]>([]);
-  protected productoEditar  = signal<Producto | undefined>(this.data.data?.producto);
+  protected productoEditar = signal<Producto | undefined>(
+    this.data.data?.producto
+  );
   //*formulario
   formularioProducto: FormGroup = this.fb.group({
     nombre: ['', Validators.required],
@@ -57,21 +61,21 @@ export class ModalProductoComponent {
     esActivo: ['1', Validators.required],
   });
 
-  readonly titulo = computed(() => 
+  readonly titulo = computed(() =>
     this.productoEditar() ? 'Editar' : 'Agregar'
   );
   readonly botonAccion = computed(() =>
     this.titulo() === 'Editar' ? 'Actualizar' : 'Guardar'
   );
   readonly tituloModal = computed(() => `${this.titulo()} Producto`);
-   readonly esEdicion = computed(() => this.titulo() === 'Editar');
-  readonly Categorias = computed(() => this.listaCategoria());
-  constructor(){
-    effect(
-    () => {
-      this.cargarCategoria();
+  readonly esEdicion = computed(() => this.titulo() === 'Editar');
+  readonly valuesCategoria = computed(
+    () => this.categoriaService.listar.value()?.value
+  );
+  constructor() {
+    effect(() => {
       const dataproducto = this.productoEditar();
-      console.log("dialog data",dataproducto)
+      console.log('dialog data', dataproducto);
       const esEdicion = this.esEdicion();
       if (dataproducto && esEdicion) {
         this.formularioProducto.patchValue({
@@ -90,26 +94,14 @@ export class ModalProductoComponent {
           esActivo: '1',
         });
       }
-    }
-  );
-  }
-
-  cargarCategoria(): void {
-    this.categoriaService.lista().subscribe({
-      next: (data) => {
-        if (data.status) this.listaCategoria.set(data.value);
-      },
-      error: (err) => {
-        console.log(err);
-      },
     });
   }
   GuardarEditar_producto() {
     const ProductoAc = this.productoEditar();
     const idCategoria = parseInt(this.formularioProducto.value.idCategoria);
-    const IdCateSelec = this.listaCategoria().find(
-      (Ca) => Ca.idCategoria === idCategoria
-    );
+    // const IdCateSelec = this.listaCategoria().find(
+    //   (Ca) => Ca.idCategoria === idCategoria
+    // );
 
     const _producto: Producto = {
       idProducto: ProductoAc?.idProducto ?? 0,
@@ -118,7 +110,7 @@ export class ModalProductoComponent {
       stock: this.formularioProducto.value.stock,
       precio: String(this.formularioProducto.value.precio),
       esActivo: parseInt(this.formularioProducto.value.esActivo),
-      descripcionCategoria: IdCateSelec?.descripcion ?? '',
+      descripcionCategoria: '',
     };
     const esEdicion = this.esEdicion();
     if (esEdicion) {
@@ -126,13 +118,12 @@ export class ModalProductoComponent {
       this.storeProd.actualizar(_producto).subscribe({
         next: () => {
           showAlert('¡Operación exitosa!', 'Editado correctamente.', 'success');
-           this.dialogRef.close()
+          this.dialogRef.close();
         },
         error: (err) => {
           console.error('Error al agregar el producto:', err);
         },
       });
-      
     } else {
       console.log('contenido de la guardar', _producto);
       //Agregar
@@ -143,11 +134,9 @@ export class ModalProductoComponent {
             'Agregado correctamente.',
             'success'
           );
-           this.dialogRef.close()
+          this.dialogRef.close();
         },
       });
-  
     }
   }
-
 }

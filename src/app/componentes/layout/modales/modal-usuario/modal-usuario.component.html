@@ -1,81 +1,78 @@
- <app-modal-generico
-      [title]="tituloModal()" 
+<app-modal-generico [title]="tituloModal()">
+  <!-- Contenido del formulario -->
+  <form [formGroup]="formularioUsuario" class="flex flex-col gap-4">
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre Completo</mat-label>
+      <input
+        matInput
+        formControlName="nombreApellidos"
+        placeholder="Ingrese el Nombre Completo"
+        required
+      />
+      @if (formularioUsuario.get('nombreApellidos')?.hasError('required')) {
+      <mat-error> El nombre es requerido </mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Correo</mat-label>
+      <input
+        matInput
+        type="email"
+        formControlName="correo"
+        placeholder="name@company.com"
+        required
+      />
+      @if (formularioUsuario.get('correo')?.hasError('required')) {
+      <mat-error> El correo es requerido </mat-error>
+      } @if (formularioUsuario.get('correo')?.hasError('email')) {
+      <mat-error> Ingrese un correo válido </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Rol</mat-label>
+      <mat-select formControlName="idRol">
+        @for(item of valuesRoles(); track item.idRol) {
+        <mat-option [value]="item.idRol">
+          {{ item.descripcion }}
+        </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Contraseña</mat-label>
+      <input
+        matInput
+        type="password"
+        formControlName="clave"
+        placeholder="••••••••"
+        required
+      />
+      @if (formularioUsuario.get('clave')?.hasError('required')) {
+      <mat-error> La contraseña es requerida </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Estado</mat-label>
+      <mat-select formControlName="esActivo">
+        <mat-option value="1">Activo</mat-option>
+        <mat-option value="0">Inactivo</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+
+  <!-- Footer con botones -->
+  <div footer class="flex justify-end gap-2">
+    <button mat-button [mat-dialog-close]="false">Cancelar</button>
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="formularioUsuario.invalid"
+      (click)="GuardarEditar_Ussuario()"
     >
-      <!-- Contenido del formulario -->
-      <form [formGroup]="formularioUsuario" class="flex flex-col gap-4">
-        <mat-form-field appearance="outline">
-          <mat-label>Nombre Completo</mat-label>
-          <input
-            matInput
-            formControlName="nombreApellidos"
-            placeholder="Ingrese el Nombre Completo"
-            required
-          />
-          @if (formularioUsuario.get('nombreApellidos')?.hasError('required')) {
-            <mat-error> El nombre es requerido </mat-error>
-          }
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Correo</mat-label>
-          <input
-            matInput
-            type="email"
-            formControlName="correo"
-            placeholder="name@company.com"
-            required
-          />
-          @if (formularioUsuario.get('correo')?.hasError('required')) {
-            <mat-error> El correo es requerido </mat-error>
-          } 
-          @if (formularioUsuario.get('correo')?.hasError('email')) {
-            <mat-error> Ingrese un correo válido </mat-error>
-          }
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Rol</mat-label>
-          <mat-select formControlName="idRol">
-            @for(item of roles(); track item.idRol) {
-              <mat-option [value]="item.idRol">
-                {{ item.descripcion }}
-              </mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Contraseña</mat-label>
-          <input
-            matInput
-            type="password"
-            formControlName="clave"
-            placeholder="••••••••"
-            required
-          />
-          @if (formularioUsuario.get('clave')?.hasError('required')) {
-            <mat-error> La contraseña es requerida </mat-error>
-          }
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Estado</mat-label>
-          <mat-select formControlName="esActivo">
-            <mat-option value="1">Activo</mat-option>
-            <mat-option value="0">Inactivo</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </form>
-
-      <!-- Footer con botones -->
-      <div footer class="flex justify-end gap-2">
-        <button mat-button [mat-dialog-close]="false">Cancelar</button>
-        <button
-          mat-raised-button
-          color="primary"
-          [disabled]="formularioUsuario.invalid"
-          (click)="GuardarEditar_Ussuario()"
-        >
-          {{ botonAccion() }}
-        </button>
-      </div>
-    </app-modal-generico>
+      {{ botonAccion() }}
+    </button>
+  </div>
+</app-modal-generico>

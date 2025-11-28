@@ -23,7 +23,7 @@
         <mat-form-field appearance="outline">
           <mat-label>Categoría</mat-label>
           <mat-select formControlName="idCategoria" required>
-            @for(item of Categorias(); track item.idCategoria) {
+            @for(item of valuesCategoria(); track item.idCategoria) {
               <mat-option [value]="item.idCategoria">
                 {{ item.descripcion }}
               </mat-option>

@@ -14,7 +14,7 @@ import {
   Validators,
   FormGroup,
 } from '@angular/forms';
-import { Rol,Usuario,showAlert} from '@core/interface';
+import { Rol, Usuario, showAlert } from '@core/interface';
 // service
 import { RolService } from '@core/services/rol.service';
 import { Router } from '@angular/router';
@@ -39,9 +39,7 @@ import { ModalGenericoComponent } from '../modal-generico/modal-generico.compone
   templateUrl: './modal-usuario.component.html',
   styleUrl: './modal-usuario.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host:{
-    
-  }
+  host: {},
 })
 export class ModalUsuarioComponent {
   //injectar
@@ -51,13 +49,11 @@ export class ModalUsuarioComponent {
   private RolService = inject(RolService);
   private storeUs = inject(UsuarioStoreService);
   private dialogRef = inject(MatDialogRef<ModalUsuarioComponent>);
-  private data = inject<{ data?:{usuario?: Usuario} }>(
-    MAT_DIALOG_DATA
-  );
+  private data = inject<{ data?: { usuario?: Usuario } }>(MAT_DIALOG_DATA);
   // Signals
-  protected usuarioEditar  = signal<Usuario | undefined>(this.data.data?.usuario);
-  ListarRoles = signal<Rol[]>([]);
-
+  protected usuarioEditar = signal<Usuario | undefined>(
+    this.data.data?.usuario
+  );
   formularioUsuario: FormGroup = this.fb.group({
     nombreApellidos: ['', Validators.required],
     correo: ['', [Validators.required, Validators.email]],
@@ -66,24 +62,22 @@ export class ModalUsuarioComponent {
     esActivo: ['1', Validators.required],
   });
   //* COMPUTED
-  readonly titulo = computed(() => 
+  readonly titulo = computed(() =>
     this.usuarioEditar() ? 'Editar' : 'Agregar'
   );
   readonly botonAccion = computed(() =>
     this.titulo() === 'Editar' ? 'Actualizar' : 'Guardar'
   );
-  readonly roles = computed(() => this.ListarRoles());
+
+  readonly valuesRoles = computed(() => this.RolService.listar.value()?.value);
   readonly tituloModal = computed(() => `${this.titulo()} Usuario`);
-   readonly esEdicion = computed(() => this.titulo() === 'Editar');
-   constructor(){
-    effect(
-    () => {
+  readonly esEdicion = computed(() => this.titulo() === 'Editar');
+  constructor() {
+    effect(() => {
       const usuario = this.usuarioEditar();
-        const esEdicion = this.esEdicion();
-        console.log('🔄 Effect ejecutándose:', { usuario, esEdicion });
-        console.log("data",this.data?.data?.usuario)
-      this.cargarRoles();
-   
+      const esEdicion = this.esEdicion();
+      console.log('🔄 Effect ejecutándose:', { usuario, esEdicion });
+      console.log('data', this.data?.data?.usuario);
       if (usuario && esEdicion) {
         this.formularioUsuario.patchValue({
           nombreApellidos: usuario.nombreApellidos,
@@ -101,34 +95,16 @@ export class ModalUsuarioComponent {
           esActivo: '1',
         });
       }
-    }
-  );
-   }
-
-  cargarRoles() {
-    this.RolService.lista().subscribe({
-      next: (data) => {
-        if (data.status) this.ListarRoles.set(data.value);
-      },
-      error: (e) => {
-        console.error(e);
-      },
     });
   }
-
   //*METODO GUARDAR
   GuardarEditar_Ussuario() {
     const usuarioActual = this.usuarioEditar();
     const idRolSelec = parseInt(this.formularioUsuario.value.idRol);
-    const rolSeleccionado = this.ListarRoles().find(
-      (r) => r.idRol === idRolSelec
-    );
-    console.log(
-      'roles selec',
-      rolSeleccionado,
-      'cambios formu value rol',
-      typeof idRolSelec
-    );
+    // const rolSeleccionado = this.ListarRoles().find(
+    //   (r) => r.idRol === idRolSelec
+    // );
+    console.log('contenido', this.formularioUsuario.value);
     const _usuario: Usuario = {
       idUsuario: usuarioActual?.idUsuario ?? 0,
       nombreApellidos: this.formularioUsuario.value.nombreApellidos,
@@ -136,7 +112,7 @@ export class ModalUsuarioComponent {
       clave: this.formularioUsuario.value.clave,
       idRol: idRolSelec,
       esActivo: parseInt(this.formularioUsuario.value.esActivo),
-      rolDescripcion: rolSeleccionado?.descripcion ?? '',
+      rolDescripcion: '',
     };
     const esEdicion = this.esEdicion();
     if (esEdicion) {
@@ -145,7 +121,7 @@ export class ModalUsuarioComponent {
         next: () => {
           console.log('Usuario Editado correctamente');
           showAlert('¡Operación exitosa!', 'Editado correctamente.', 'success');
-          this.dialogRef.close()
+          this.dialogRef.close();
         },
         error: (err) => {
           console.error('Error al agregar el usuario:', err);
@@ -161,13 +137,12 @@ export class ModalUsuarioComponent {
             'Agregado correctamente.',
             'success'
           );
-          this.dialogRef.close()
+          this.dialogRef.close();
         },
         error: (err) => {
           console.error('Error al agregar el usuario:', err);
         },
       });
     }
-    
   }
 }
