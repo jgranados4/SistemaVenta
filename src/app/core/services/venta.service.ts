@@ -10,8 +10,6 @@ import { HttpClient } from '@angular/common/http';
 export class VentaService {
   private readonly url = `${environment.endpoint}Venta`;
   private http = inject(HttpClient);
-
-  constructor() {}
   registrar(request: Venta): Observable<ResponseApi> {
     return this.http.post<ResponseApi>(`${this.url}/Registrar`, request);
   }
