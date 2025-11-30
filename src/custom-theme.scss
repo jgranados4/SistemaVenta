@@ -1,4 +1,4 @@
-@use '@angular/material' as mat;
+@use "@angular/material" as mat;
 @include mat.core();
 // ============================================
 // CONFIGURACIÓN DE TIPOGRAFÍA PERSONALIZADA
@@ -17,10 +17,8 @@ $custom-typography: mat.m2-define-typography-config(
   $body-2: mat.m2-define-typography-level(14px, 20px, 400, 0.0025em),
   $button: mat.m2-define-typography-level(14px, 36px, 500, 0.0125em),
   $caption: mat.m2-define-typography-level(12px, 20px, 400, 0.004em),
-  $overline: mat.m2-define-typography-level(12px, 32px, 500, 0.02em)
+  $overline: mat.m2-define-typography-level(12px, 32px, 500, 0.02em),
 );
-
-
 
 // ============================================
 // CONFIGURACIÓN DE COLORES - TEMA CLARO
@@ -36,15 +34,17 @@ $my-accent: mat.m2-define-palette(mat.$m2-amber-palette, A200, A100, A400);
 $my-warn: mat.m2-define-palette(mat.$m2-red-palette, 600, 400, 800);
 
 // Crear el tema claro
-$my-light-theme: mat.m2-define-light-theme((
-  color: (
-    primary: $my-primary,
-    accent: $my-accent,
-    warn: $my-warn,
-  ),
-  typography: $custom-typography,
-  density: -1,
-));
+$my-light-theme: mat.m2-define-light-theme(
+  (
+    color: (
+      primary: $my-primary,
+      accent: $my-accent,
+      warn: $my-warn,
+    ),
+    typography: $custom-typography,
+    density: -1,
+  )
+);
 
 // ============================================
 // CONFIGURACIÓN DE COLORES - TEMA OSCURO
@@ -57,18 +57,25 @@ $my-dark-primary: mat.m2-define-palette(mat.$m2-blue-palette, 300, 200, 400);
 $my-dark-accent: mat.m2-define-palette(mat.$m2-amber-palette, A200, A100, A400);
 
 // Paleta Warn para tema oscuro (Naranja)
-$my-dark-warn: mat.m2-define-palette(mat.$m2-deep-orange-palette, 400, 300, 600);
+$my-dark-warn: mat.m2-define-palette(
+  mat.$m2-deep-orange-palette,
+  400,
+  300,
+  600
+);
 
 // Crear el tema oscuro
-$my-dark-theme: mat.m2-define-dark-theme((
-  color: (
-    primary: $my-dark-primary,
-    accent: $my-dark-accent,
-    warn: $my-dark-warn,
-  ),
-  typography: $custom-typography,
-  density: 0,
-));
+$my-dark-theme: mat.m2-define-dark-theme(
+  (
+    color: (
+      primary: $my-dark-primary,
+      accent: $my-dark-accent,
+      warn: $my-dark-warn,
+    ),
+    typography: $custom-typography,
+    density: 0,
+  )
+);
 
 // ============================================
 // APLICAR TEMA CLARO POR DEFECTO
@@ -89,7 +96,7 @@ $my-dark-theme: mat.m2-define-dark-theme((
 // Personalizar mat-form-field
 .mat-mdc-form-field {
   width: 100%;
-  
+  height: 100%;
   .mat-mdc-text-field-wrapper {
     padding-bottom: 0;
   }
@@ -143,8 +150,6 @@ $my-dark-theme: mat.m2-define-dark-theme((
 .dark-theme {
   background-color: #424242;
   color: #ffffff;
-  
-  
   .mat-mdc-card {
     background-color: #1e1e1e;
     color: #ffffff;
