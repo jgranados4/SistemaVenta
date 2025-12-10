@@ -55,7 +55,6 @@ export class VentaComponent {
   TipoPagoPorDefecto = 'Efectivo';
   //directivas
   formDirective = viewChild<FormGroupDirective>('formDirective');
-  inputProductoRef = viewChild<ElementRef<HTMLInputElement>>('inputProducto');
 
   FormularioProductoVenta: FormGroup = this.fb.group({
     producto: ['', Validators.required],
@@ -129,7 +128,7 @@ export class VentaComponent {
 
     const cantidad = formValue.cantidad || 1;
     // Cálculos numéricos internos
-    const precioBase = Number(productoSeleccionado.precio);;
+    const precioBase = Number(productoSeleccionado.precio);
     const totalLineaNum = precioBase * cantidad;
 
     this.listaProductoParaVenta.update((detalles) => {
@@ -179,8 +178,8 @@ export class VentaComponent {
     // 1. Resetear valores del FormGroup
     // Mantenemos el tipo de pago para UX, reseteamos producto y cantidad
     this.FormularioProductoVenta.reset({
-      producto: '',
-      cantidad: 1,
+      producto: null,
+      cantidad: 0,
       tipospago: this.FormularioProductoVenta.controls['tipospago'].value, // Mantener selección
     });
 
@@ -188,19 +187,16 @@ export class VentaComponent {
     // Esto elimina las clases de error rojas de Angular Material.
     if (this.formDirective()) {
       this.formDirective()!.resetForm({
-        producto: '',
-        cantidad: 1,
+        producto: null,
+        cantidad: 0,
         tipospago: this.FormularioProductoVenta.controls['tipospago'].value,
       });
     }
-
-    // 3. Hack pequeño para limpiar el input físico si el autocomplete se queda pegado
-    if (this.inputProductoRef) {
-      this.inputProductoRef()!.nativeElement.value = '';
-    }
+    
+    this.listaProductoFiltro.set(this.listaPto());
   }
   registrarVenta() {
-     const listaActual = this.listaProductoParaVenta();
+    const listaActual = this.listaProductoParaVenta();
     console.log('Lista de producto de venta ', this.listaProductoParaVenta());
     if (this.listaProductoParaVenta().length > 0) {
       this.bloqueoBotonRegistar = true;
@@ -212,7 +208,7 @@ export class VentaComponent {
         total: this.totalPagar().toFixed(2),
         detalleVentaDTOs: [...listaActual],
       };
-      console.info('request',request)
+      console.info('request', request);
       this._ventaService.registrar(request).subscribe({
         next: (response) => {
           if (response.status) {

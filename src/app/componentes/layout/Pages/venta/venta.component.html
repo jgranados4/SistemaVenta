@@ -16,14 +16,13 @@
         formControlName="producto"
         [matAutocomplete]="auto"
         placeholder="Escribe para buscar..."
-         #inputProducto
       />
       <mat-autocomplete
         #auto="matAutocomplete"
         [displayWith]="displayProducto"
         (optionSelected)="productoParaVenta($event.option.value)"
       >
-        @for (item of listaProductoFiltro(); track $index) {
+        @for (item of listaProductoFiltro(); track item.idProducto) {
         <mat-option [value]="item">
           {{ item.nombre }}
         </mat-option>
