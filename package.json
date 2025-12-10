@@ -8,7 +8,11 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "testVite": "vitest", 
+  "test:ui": "vitest --ui", 
+  "test:coverage": "vitest run --coverage", 
+  "test:run": "vitest run"
   },
   "private": true,
   "dependencies": {
