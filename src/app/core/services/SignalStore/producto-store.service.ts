@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { ICrudService,Producto,ResponseApi,showAlert } from '@core/interface';
+import { ICrudService,Producto,ResponseApi } from '@core/interface';
 import {
   catchError,
   filter,
@@ -12,6 +12,7 @@ import {
 } from 'rxjs';
 import { ProductoService } from '../producto.service';
 import { extractErrorMessage } from '@core/Utils';
+import { showAlert } from '@shared/utility';
 
 interface WritingState {
   saving: boolean;

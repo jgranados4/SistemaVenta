@@ -1,8 +1,9 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { Usuario,ICrudService,showAlert,ResponseApi } from '@core/interface';
+import { Usuario,ICrudService,ResponseApi } from '@core/interface';
 import { catchError, filter, finalize, from, map, Observable, switchMap, tap } from 'rxjs';
 import { UsuarioService } from '../index';
 import { extractErrorMessage } from '@core/Utils';
+import { showAlert } from '@shared/utility';
 
 interface WritingState {
   saving: boolean;

@@ -11,8 +11,6 @@ export class UsuarioService implements IUsuarioService<ResponseApi> {
   private readonly url = `${environment.endpoint}Usuario`;
   private http = inject(HttpClient);
 
-  constructor() {}
-
   //Iniciar sesión
   iniciarSesion(request: Login): Observable<ResponseApi> {
     return this.http.post<ResponseApi>(`${this.url}/IniciarSesion`, request);
