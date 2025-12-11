@@ -1,13 +1,10 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { showAlert } from '@core/interface';
+import { showAlert } from '@shared/utility';
 import { catchError, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 
 let isAlertShown = false;
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
-  const router = inject(Router);
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 0) {
@@ -28,7 +25,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           case 401:
             showAlert('Sesión Expirada',
           'Por favor inicia sesión nuevamente.',
-          'warning',);
+          'warning');
             break;
           case 403:
             showAlert(
