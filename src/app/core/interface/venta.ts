@@ -5,3 +5,10 @@ export interface Venta {
   total: string;
   detalleVentaDTOs?: detalleVentaDTOs[];
 }
+
+
+export type VentaType = Venta & {
+  IdVenta: number;
+  numeroDocumento: string;
+  fechaRegistro: string;
+};
