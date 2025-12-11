@@ -6,7 +6,6 @@ import {
   inject,
   Injector,
   input,
-  output,
   signal,
 } from '@angular/core';
 import {
@@ -15,7 +14,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Categoria, Producto, showAlert } from '@core/interface';
+import { Producto, showAlert } from '@core/interface';
 import { CategoriaService } from '@core/services/categoria.service';
 import { ProductoStoreService } from '@core/services/SignalStore/producto-store.service';
 import { MaterialModule } from '@jgranados199795/apx-ui/apx-material';
