@@ -14,7 +14,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Producto, showAlert } from '@core/interface';
+import { Producto } from '@core/interface';
 import { CategoriaService } from '@core/services/categoria.service';
 import { ProductoStoreService } from '@core/services/SignalStore/producto-store.service';
 import { MaterialModule } from '@jgranados199795/apx-ui/apx-material';
@@ -24,6 +24,7 @@ import {
   MatDialogModule,
   MatDialogRef,
 } from '@angular/material/dialog';
+import { showAlert } from '@shared/utility';
 
 @Component({
   selector: 'app-modal-producto',
