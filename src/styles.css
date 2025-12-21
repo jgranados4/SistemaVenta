@@ -3,35 +3,83 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================
+   1. CAPA DE UTILIDADES
+   ============================================ */
+@layer utilities {
+  .theme-transition {
+    /* Animamos solo lo necesario */
+    @apply transition-[background-color,border-color,color,fill,stroke] duration-300 ease-in-out;
+  }
+}
+
+/* ============================================
+   2. CAPA DE COMPONENTES
+   ============================================ */
+@layer components {
+  /* Clase reutilizable para items del menú sidebar */
+  .nav-link {
+    @apply flex items-center p-4 rounded-lg 
+           text-gray-900 dark:text-gray-100 
+           hover:bg-gray-200 dark:hover:bg-gray-800 
+           theme-transition cursor-pointer;
+  }
+
+  /* Estilo para el icono dentro del link */
+  .nav-icon {
+    @apply w-5 h-5 text-gray-500 dark:text-gray-400 
+           theme-transition group-hover:text-primary-700 dark:group-hover:text-white;
+  }
+
+  /* MOVIDO AQUI: Título Gradiente (Mejor práctica dentro de layer components) */
+  .tituloGradiante {
+    @apply p-3 text-4xl text-center font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-red-700;
+  }
+}
+
+/* ============================================
+   3. CAPA BASE
+   ============================================ */
+@layer base {
+  html {
+    /* Evita el flash blanco en móviles */
+    @apply bg-gray-50 dark:bg-gray-900;
+  }
+  body {
+    @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 theme-transition;
+    margin: 0;
+  }
+}
+
+/* ============================================
+   4. FIX SEGURO PARA MATERIAL
+   (Solo ajustamos el alto de línea si es necesario, pero NO quitamos bordes)
+   ============================================ */
+   
+/* Corrección Vital: Evita que Tailwind encoja los iconos de Material */
+.mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  overflow: visible; /* Asegura que el icono no se corte */
+}
+
+/* Corrección Vital: Asegura que el label flotante de los inputs tenga el ancho correcto */
+.mat-mdc-form-field-subscript-wrapper {
+  width: 100%;
+}
 /* ✅ Resetear border-style solo para componentes de Material */
 .mat-mdc-form-field *,
 .mat-mdc-form-field ::before,
 .mat-mdc-form-field ::after {
   border-style: none;
 }
-@layer base {
-  :root {
-    --color-indigo-50: 238 242 255;
-    --color-indigo-500: 99 102 241;
-    --color-indigo-600: 79 70 229;
-  }
-}
-
-.tituloGradiante {
-  @apply p-3 text-4xl text-center font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-red-700;
-}
-
-.botonSubmit {
-  @apply text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800;
-}
-.inputBuscar {
-  @apply block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500;
+input.mat-mdc-input-element {
+  border-bottom: none !important;
+  box-shadow: none !important;
 }
 
 html,
 body {
   height: 100%;
-}
-body {
-  margin: 0;
 }

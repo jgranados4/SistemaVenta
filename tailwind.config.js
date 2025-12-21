@@ -1,52 +1,38 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{html,ts}"],
-  darkMode: ['class', '.dark-theme'],
+  darkMode: ["selector", ".dark-theme"],
   theme: {
-    colors: {
-      transparent: "transparent",
-      current: "currentColor",
-      white: "#ffffff",
-      gray: {
-        50: "#f9fafb",
-        100: "#f3f4f6",
-        200: "#e5e7eb",
-        300: "#d1d5db",
-        400: "#9ca3af",
-        500: "#6b7280",
-        600: "#4b5563",
-        700: "#374151",
-        800: "#1f2937",
-        900: "#111827",
-        950: "#030712",
-      },
-      blue: {
-        50: "#eff6ff",
-        100: "#dbeafe",
-        200: "#bfdbfe",
-        300: "#93c5fd",
-        400: "#60a5fa",
-        500: "#3b82f6",
-        600: "#2563eb",
-        700: "#1d4ed8",
-        800: "#1e40af",
-        900: "#1e3a8a",
-        950: "#172554",
-      },
-      red: {
-        50: "#fef2f2",
-        100: "#fee2e2",
-        200: "#fecaca",
-        300: "#fca5a5",
-        400: "#f87171",
-        500: "#ef4444",
-        600: "#dc2626",
-        700: "#b91c1c",
-        800: "#991b1b",
-        900: "#7f1d1d",
-        950: "#450a0a",
+    extend: {
+      colors: {
+        primary: {
+          50: "#E6F1FF",
+          100: "#B8D9FF",
+          200: "#8AC0FF",
+          300: "#51A2FF",
+          400: "#2E8FFF",
+          500: "#0077FF", // Tu color principal
+          600: "#0062D1",
+          700: "#004CA3",
+          800: "#003775",
+          900: "#002147",
+          950: "#000C1A",
+        },
+        gray: {
+          50: "#F3F2F1",
+          100: "#DDDBD9",
+          200: "#C8C4C1",
+          300: "#B2ADA9",
+          400: "#9D9690",
+          500: "#877E78",
+          600: "#79716B",
+          700: "#56514D",
+          800: "#3E3A37", // Color para Tarjetas/Paneles en oscuro
+          900: "#262322", // Color de Fondo Principal en oscuro
+          950: "#0E0D0C", // Color para bordes muy oscuros o Navbar
+        },
       },
     },
-    extend: {},
   },
+  plugins: [],
 };

@@ -23,59 +23,50 @@ $custom-typography: mat.m2-define-typography-config(
 // ============================================
 // CONFIGURACIÓN DE COLORES - TEMA CLARO
 // ============================================
+$primary-palette-map: (
+  50: #E6F1FF,
+  100: #B8D9FF,
+  200: #8AC0FF,
+  300: #51A2FF,
+  400: #2E8FFF,
+  500: #0077FF,
+  600: #0062D1,
+  700: #004CA3,
+  800: #003775,
+  900: #002147,
+  contrast: (
+    50: black,
+    100: black,
+    200: black,
+    300: black,
+    400: white,
+    500: white, // Contraste blanco sobre tu azul principal
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  )
+);
+$my-primary: mat.m2-define-palette($primary-palette-map, 500, 100, 700);
 
-// Paleta Primary (Azul)
-$my-primary: mat.m2-define-palette(mat.$m2-blue-palette, 700, 500, 900);
-
-// Paleta Accent (Naranja/Amber)
+// Paleta Accent (Naranja - Mantenemos la de Material si te gusta)
 $my-accent: mat.m2-define-palette(mat.$m2-amber-palette, A200, A100, A400);
 
 // Paleta Warn (Rojo)
 $my-warn: mat.m2-define-palette(mat.$m2-red-palette, 600, 400, 800);
 
 // Crear el tema claro
-$my-light-theme: mat.m2-define-light-theme(
-  (
-    color: (
-      primary: $my-primary,
-      accent: $my-accent,
-      warn: $my-warn,
-    ),
+$my-light-theme: mat.m2-define-light-theme((
+    color: (primary: $my-primary, accent: $my-accent, warn: $my-warn),
     typography: $custom-typography,
     density: -1,
-  )
-);
+));
 
-// ============================================
-// CONFIGURACIÓN DE COLORES - TEMA OSCURO
-// ============================================
-
-// Paleta Primary para tema oscuro (Azul más claro)
-$my-dark-primary: mat.m2-define-palette(mat.$m2-blue-palette, 300, 200, 400);
-
-// Paleta Accent para tema oscuro (Amber)
-$my-dark-accent: mat.m2-define-palette(mat.$m2-amber-palette, A200, A100, A400);
-
-// Paleta Warn para tema oscuro (Naranja)
-$my-dark-warn: mat.m2-define-palette(
-  mat.$m2-deep-orange-palette,
-  400,
-  300,
-  600
-);
-
-// Crear el tema oscuro
-$my-dark-theme: mat.m2-define-dark-theme(
-  (
-    color: (
-      primary: $my-dark-primary,
-      accent: $my-dark-accent,
-      warn: $my-dark-warn,
-    ),
+$my-dark-theme: mat.m2-define-dark-theme((
+    color: (primary: $my-primary, accent: $my-accent, warn: $my-warn),
     typography: $custom-typography,
-    density: 0,
-  )
-);
+    density: -1,
+));
 
 // ============================================
 // APLICAR TEMA CLARO POR DEFECTO
@@ -87,71 +78,22 @@ $my-dark-theme: mat.m2-define-dark-theme(
 // ============================================
 .dark-theme {
   @include mat.all-component-colors($my-dark-theme);
-}
-
-// ============================================
-// ESTILOS GLOBALES ADICIONALES PARA MATERIAL
-// ============================================
-
-// Personalizar mat-form-field
-.mat-mdc-form-field {
-  width: 100%;
-  height: 100%;
-  .mat-mdc-text-field-wrapper {
-    padding-bottom: 0;
-  }
-}
-
-// Personalizar botones
-.mat-mdc-raised-button {
-  text-transform: uppercase;
-  font-weight: 500;
-  letter-spacing: 1.25px;
-}
-
-.mat-mdc-button {
-  font-weight: 500;
-}
-
-// Personalizar diálogos
-.mat-mdc-dialog-container {
-  border-radius: 8px;
-}
-
-// Personalizar inputs
-.mat-mdc-form-field-input-control {
-  font-size: 16px;
-}
-
-// Personalizar cards
-.mat-mdc-card {
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-// Personalizar tabs
-.mat-mdc-tab-group {
-  .mat-mdc-tab-label {
-    font-weight: 500;
-  }
-}
-
-// Personalizar tooltips
-.mat-mdc-tooltip {
-  font-size: 12px;
-}
-
-// Personalizar snackbar
-.mat-mdc-snack-bar-container {
-  border-radius: 4px;
-}
-
-// Estilos para modo oscuro adicionales
-.dark-theme {
-  background-color: #424242;
-  color: #ffffff;
+  // Sincronización con Tailwind Gray Palette
+  background-color: #262322 !important; // gray-900
+  color: #F3F2F1 !important;            // gray-50
+  // Tarjetas Material
   .mat-mdc-card {
-    background-color: #1e1e1e;
+    background-color: #3E3A37 !important; // gray-800
     color: #ffffff;
   }
+
+  // Menús y Selects
+  .mat-mdc-menu-panel, .mat-mdc-select-panel, .mat-mdc-autocomplete-panel {
+    background-color: #3E3A37 !important;
+  }
+  // Diálogos
+  .mat-mdc-dialog-container {
+     --mdc-dialog-container-color: #3E3A37;
+  }
 }
+
