@@ -19,3 +19,22 @@ export interface IUsuarioService<T> {
   editar(request: Usuario): Observable<T>;
   eliminar(id: number): Observable<T>;
 }
+
+export interface UsuarioData {
+  esActivoTexto: string;
+  idUsuario: number;
+  nombreApellidos: string;
+  correo: string;
+  idRol: number;
+  rolDescripcion: string;
+  clave: string;
+  esActivo: number;
+}
+
+export interface UsuarioRow {
+  idUsuario: number;
+  nombreApellidos: string;
+  correo: string;
+  rolDescripcion: string;
+  esActivoTexto: string;
+}
