@@ -1,0 +1,64 @@
+<app-modal-generico [title]="tituloModal()">
+  <!-- Contenido del formulario -->
+  <form [formGroup]="formularioDetalle" class="flex flex-col gap-4">
+    <mat-form-field appearance="outline">
+      <mat-label>Fecha Registro</mat-label>
+      <input
+        matInput
+        formControlName="fechaRegistro"
+        placeholder="Ingrese Fecha Registro"
+        required
+      />
+      <app-input-error [control]="formularioDetalle.get('fechaRegistro')"
+      label="Fecha Registro" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Numero Venta</mat-label>
+      <input
+        matInput
+        formControlName="numeroVenta"
+        placeholder="Ingrese Numero Venta"
+        required
+      />
+      <app-input-error [control]="formularioDetalle.get('numeroVenta')"
+      label="Numero Venta" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Tipo de Pago</mat-label>
+      <input
+        matInput
+        formControlName="tipoPago"
+        placeholder="Ingrese Numero Venta"
+        required
+      />
+      <app-input-error [control]="formularioDetalle.get('tipoPago')"
+      label="tipo Pago" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Total</mat-label>
+      <input
+        matInput
+        formControlName="total"
+        placeholder="Ingrese total"
+        required
+      />
+      <app-input-error [control]="formularioDetalle.get('total')"
+      label="total" />
+    </mat-form-field>
+  </form>
+  @defer (when detalleVenta()!.length >0 ;prefetch on idle) {
+    <lib-apx-tabla [columns]="columnaTabla" [data]="detalleVenta()!" />
+
+  }@placeholder {
+    <h2>cargar....</h2>
+  }@error{
+    <h2>no hay datos</h2>
+  }
+  <!-- Footer con botones -->
+  <div footer class="flex justify-end gap-2">
+    <button mat-raised-button color="warn" [mat-dialog-close]="false">volver</button>
+  </div>
+</app-modal-generico>
