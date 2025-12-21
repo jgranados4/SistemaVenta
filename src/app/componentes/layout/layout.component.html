@@ -1,16 +1,19 @@
 <aside
   id="logo-sidebar"
-  class="fixed top-0 bottom-0 w-52 z-40 h-full p-4  border-r "
+  class="fixed top-0 bottom-0 w-52 z-40 h-full p-4 border-r 
+         bg-white dark:bg-gray-900 
+         border-gray-200 dark:border-gray-800 
+         theme-transition"
 >
   <div class="py-4">
     <ul class="space-y-2 font-medium">
       <li>
         <a
           routerLink="/pages/dasboard"
-          class="flex items-center p-4 rounded-lg hover:bg-gray-400 hover:text-bluePastel group cursor-pointer"
+          class="nav-link"
         >
           <svg
-            class="w-5 h-5 text-gray-500 transition duration-75"
+            class="nav-icon"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="currentColor"
@@ -23,16 +26,16 @@
               d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"
             />
           </svg>
-          <span class="ms-3">Dashboard</span>
+          <span class="flex-1 ms-3 whitespace-nowrap">Dashboard</span>
         </a>
       </li>
       <li>
         <a
           routerLink="/pages/usuarios"
-          class="flex items-center p-4 rounded-lg hover:bg-gray-400 hover:text-bluePastel group cursor-pointer"
+          class="nav-link"
         >
           <svg
-            class="w-5 h-5 text-gray-500 transition duration-75"
+            class="nav-icon"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -48,18 +51,15 @@
           </svg>
 
           <span class="flex-1 ms-3 whitespace-nowrap">Usuarios</span>
-          <!-- <span
-            class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300"
-            >Pro</span >-->
         </a>
       </li>
       <li>
         <a
           routerLink="/pages/productos"
-          class="flex items-center p-4 rounded-lg hover:bg-gray-400 hover:text-bluePastel group cursor-pointer"
+          class="nav-link"
         >
           <svg
-            class="w-5 h-5 text-gray-500 transition duration-75"
+            class="nav-icon"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="currentColor"
@@ -75,7 +75,7 @@
       <li>
         <a
           routerLink="/pages/Venta"
-          class="flex items-center p-4 rounded-lg hover:bg-gray-400 hover:text-bluePastel group cursor-pointer"
+          class="nav-link"
         >
           <svg
             class="w-6 h-6 text-gray-500 transition duration-75"
@@ -94,7 +94,6 @@
               d="M8 17.345a4.76 4.76 0 0 0 2.558 1.618c2.274.589 4.512-.446 4.999-2.31.487-1.866-1.273-3.9-3.546-4.49-2.273-.59-4.034-2.623-3.547-4.488.486-1.865 2.724-2.899 4.998-2.31.982.236 1.87.793 2.538 1.592m-3.879 12.171V21m0-18v2.2"
             />
           </svg>
-
           <span class="flex-1 ms-3 whitespace-nowrap">Venta</span>
         </a>
       </li>
@@ -102,10 +101,10 @@
       <li>
         <a
           routerLink="/pages/historial_venta"
-          class="flex items-center p-4 rounded-lg hover:bg-gray-400 hover:text-bluePastel group cursor-pointer"
+          class="nav-link"
         >
           <svg
-            class="w-5 h-5 text-gray-500 transition duration-75"
+            class="nav-icon"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -125,10 +124,10 @@
       <li>
         <a
           routerLink="/pages/reportes"
-          class="flex items-center p-4 rounded-lg hover:bg-gray-400 hover:text-bluePastel group cursor-pointer"
+          class="nav-link"
         >
           <svg
-            class="w-5 h-5 text-gray-500 transition duration-75"
+            class="nav-icon"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="currentColor"
@@ -150,25 +149,26 @@
     </ul>
   </div>
 </aside>
-<main class="relative md:ml-52">
-  <nav
-    class="absolute z-50 h-18 w-full p-2 top-0  border-b border-gray-300"
-  >
-    <div class="flex p-2 justify-between">
+<main class="relative md:ml-52 min-h-screen 
+             bg-gray-50 dark:bg-gray-900 
+             theme-transition">
+  <!-- Navbar -->
+  <nav class="sticky top-0 z-50 w-full p-2 
+             border-b border-gray-300 dark:border-gray-800 
+             bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm
+             theme-transition">
+    <div class="flex p-2 justify-between items-center">
       <div class="">
-        <span
-          class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-black"
-          >Sistema de Venta</span
-        >
+        <span class="self-center text-xl font-semibold whitespace-nowrap text-gray-900 dark:text-white theme-transition">
+          Sistema de Venta
+        </span>
       </div>
       <div class="w-10 flex items-center gap-2">
-        <!-- Botón para cambiar tema -->
         <button
           mat-icon-button
           [matTooltip]="theme() === 'dark' ? 'Modo Claro' : 'Modo Oscuro'"
           (click)="toggleTheme()"
-          class="mr-2"
-          aria-label="Cambiar tema"
+          class="text-gray-600 dark:text-gray-300 theme-transition hover:bg-gray-100 dark:hover:bg-gray-800"
         >
           @if (theme() === 'dark') {
             <mat-icon>light_mode</mat-icon>
@@ -176,14 +176,11 @@
             <mat-icon>dark_mode</mat-icon>
           }
         </button>
-        
       </div>
     </div>
   </nav>
 
-  <div class="absolute top-20 items-center justify-center w-full h-full">
-    <div class="w-auto top-20 p-2  rounded-lg">
+  <div class="p-4 mt-4 w-full h-full">
       <router-outlet />
-    </div>
   </div>
 </main>
