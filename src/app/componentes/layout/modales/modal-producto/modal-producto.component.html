@@ -1,107 +1,97 @@
- <app-modal-generico [title]="tituloModal()">
-      <!-- Contenido del formulario -->
-      <form [formGroup]="formularioProducto" class="flex flex-col gap-4">
-        
-        <!-- Campo: Nombre del Producto -->
-        <mat-form-field appearance="outline">
-          <mat-label>Nombre del Producto</mat-label>
-          <input
-            matInput
-            formControlName="nombre"
-            placeholder="Ingrese el nombre del producto"
-            required
-          />
-          @if (formularioProducto.get('nombre')?.hasError('required')) {
-            <mat-error>El nombre es requerido</mat-error>
-          }
-          @if (formularioProducto.get('nombre')?.hasError('minlength')) {
-            <mat-error>El nombre debe tener al menos 3 caracteres</mat-error>
-          }
-        </mat-form-field>
+<app-modal-generico [title]="tituloModal()">
+  <!-- Contenido del formulario -->
+  <form [formGroup]="formularioProducto" class="flex flex-col gap-4">
+    <!-- Campo: Nombre del Producto -->
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre del Producto</mat-label>
+      <input
+        matInput
+        formControlName="nombre"
+        placeholder="Ingrese el nombre del producto"
+        required
+      />
+      <app-input-error
+        [control]="formularioProducto.get('nombre')"
+        label="nombre"
+      />
+    </mat-form-field>
 
-        <!-- Campo: Categoría -->
-        <mat-form-field appearance="outline">
-          <mat-label>Categoría</mat-label>
-          <mat-select formControlName="idCategoria" required>
-            @for(item of valuesCategoria(); track item.idCategoria) {
-              <mat-option [value]="item.idCategoria">
-                {{ item.descripcion }}
-              </mat-option>
-            }
-          </mat-select>
-          @if (formularioProducto.get('idCategoria')?.hasError('required')) {
-            <mat-error>Debe seleccionar una categoría</mat-error>
-          }
-        </mat-form-field>
+    <!-- Campo: Categoría -->
+    <mat-form-field appearance="outline">
+      <mat-label>Categoría</mat-label>
+      <mat-select formControlName="idCategoria" required>
+        @for(item of valuesCategoria(); track item.idCategoria) {
+        <mat-option [value]="item.idCategoria">
+          {{ item.descripcion }}
+        </mat-option>
+        }
+      </mat-select>
+      <app-input-error
+        [control]="formularioProducto.get('idCategoria')"
+        label="Debe seleccionar una categoría"
+      />
+    </mat-form-field>
 
-        <!-- Campo: Stock -->
-        <mat-form-field appearance="outline">
-          <mat-label>Stock</mat-label>
-          <input
-            matInput
-            type="number"
-            formControlName="stock"
-            placeholder="Ingrese la cantidad en stock"
-            min="0"
-            required
-          />
-          <mat-hint>Cantidad disponible en inventario</mat-hint>
-          @if (formularioProducto.get('stock')?.hasError('required')) {
-            <mat-error>El stock es requerido</mat-error>
-          }
-          @if (formularioProducto.get('stock')?.hasError('min')) {
-            <mat-error>El stock no puede ser negativo</mat-error>
-          }
-        </mat-form-field>
+    <!-- Campo: Stock -->
+    <mat-form-field appearance="outline">
+      <mat-label>Stock</mat-label>
+      <input
+        matInput
+        type="number"
+        formControlName="stock"
+        placeholder="Ingrese la cantidad en stock"
+        min="0"
+        required
+      />
+      <mat-hint>Cantidad disponible en inventario</mat-hint>
+      @if (formularioProducto.get('stock')?.hasError('required')) {
+      <mat-error>El stock es requerido</mat-error>
+      } @if (formularioProducto.get('stock')?.hasError('min')) {
+      <mat-error>El stock no puede ser negativo</mat-error>
+      }
+    </mat-form-field>
 
-        <!-- Campo: Precio -->
-        <mat-form-field appearance="outline">
-          <mat-label>Precio</mat-label>
-          <input
-            matInput
-            type="number"
-            formControlName="precio"
-            placeholder="Ingrese el precio"
-            min="0.01"
-            step="0.01"
-            required
-          />
-          <span matPrefix>$ &nbsp;</span>
-          @if (formularioProducto.get('precio')?.hasError('required')) {
-            <mat-error>El precio es requerido</mat-error>
-          }
-          @if (formularioProducto.get('precio')?.hasError('min')) {
-            <mat-error>El precio debe ser mayor a 0</mat-error>
-          }
-        </mat-form-field>
+    <!-- Campo: Precio -->
+    <mat-form-field appearance="outline">
+      <mat-label>Precio</mat-label>
+      <input
+        matInput
+        type="number"
+        formControlName="precio"
+        placeholder="Ingrese el precio"
+        min="0.01"
+        step="0.01"
+        required
+      />
+      <span matPrefix>$ &nbsp;</span>
+      @if (formularioProducto.get('precio')?.hasError('required')) {
+      <mat-error>El precio es requerido</mat-error>
+      } @if (formularioProducto.get('precio')?.hasError('min')) {
+      <mat-error>El precio debe ser mayor a 0</mat-error>
+      }
+    </mat-form-field>
 
-        <!-- Campo: Estado Activo -->
-        <mat-form-field appearance="outline">
-          <mat-label>Estado</mat-label>
-          <mat-select formControlName="esActivo">
-            <mat-option value="1">Activo</mat-option>
-            <mat-option value="0">Inactivo</mat-option>
-          </mat-select>
-        </mat-form-field>
+    <!-- Campo: Estado Activo -->
+    <mat-form-field appearance="outline">
+      <mat-label>Estado</mat-label>
+      <mat-select formControlName="esActivo">
+        <mat-option value="1">Activo</mat-option>
+        <mat-option value="0">Inactivo</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
 
-      </form>
-
-      <!-- Footer con botones -->
-      <div footer class="flex justify-end gap-2">
-        <button 
-          mat-button 
-          [mat-dialog-close]="false"
-        >
-          Cancelar
-        </button>
-        <button
-          mat-raised-button
-          color="primary"
-          [disabled]="formularioProducto.invalid"
-          (click)="GuardarEditar_producto()"
-          type="button"
-        >
-          {{ botonAccion() }}
-        </button>
-      </div>
-    </app-modal-generico>
+  <!-- Footer con botones -->
+  <div footer class="flex justify-end gap-2">
+    <button mat-button [mat-dialog-close]="false">Cancelar</button>
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="formularioProducto.invalid"
+      (click)="GuardarEditar_producto()"
+      type="button"
+    >
+      {{ botonAccion() }}
+    </button>
+  </div>
+</app-modal-generico>

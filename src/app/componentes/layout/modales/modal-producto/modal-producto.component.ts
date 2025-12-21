@@ -25,6 +25,7 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { showAlert } from '@shared/utility';
+import { InputError } from '@shared/components/input-error/input-error';
 
 @Component({
   selector: 'app-modal-producto',
@@ -34,6 +35,7 @@ import { showAlert } from '@shared/utility';
     MaterialModule,
     ModalGenericoComponent,
     MatDialogModule,
+    InputError,
   ],
   templateUrl: './modal-producto.component.html',
   styleUrl: './modal-producto.component.css',
