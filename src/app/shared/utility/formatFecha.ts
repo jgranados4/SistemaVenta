@@ -1,27 +1,32 @@
-export function formatearFecha(fechaInput:unknown): string {
-  if (!fechaInput) return '';
+export function formatFechaUniversal(input: unknown): string {
+  if (!input) return '';
 
-  const fecha = crearFecha(fechaInput);
-  if (!esFechaValida(fecha)) return '';
-
-  const dia = fecha.getDate().toString().padStart(2, '0');
-  const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
-  const anio = fecha.getFullYear();
-
-  return `${dia}/${mes}/${anio}`;
-}
-export function esFechaValida(fechaInput: unknown): boolean {
-  if (!fechaInput) return false;
-
-  const fecha = crearFecha(fechaInput);
-  return !isNaN(fecha.getTime());
-}
-
-// Función interna privada
-function crearFecha(fechaInput: unknown): Date {
-  if (fechaInput instanceof Date) return fechaInput;
-  if (typeof fechaInput === 'string' || typeof fechaInput === 'number') {
-    return new Date(fechaInput);
+  // CASO 1: Es un objeto Date (Viene del Formulario/DatePicker)
+  if (input instanceof Date) {
+    return _formatDateToString(input);
   }
-  return new Date();
+
+  // CASO 2: Es un string (Viene del API o del Formulario como texto)
+  if (typeof input === 'string') {
+    // Si ya tiene formato latino DD/MM/YYYY, lo devolvemos igual
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(input)) {
+      return input;
+    }
+
+    // Si es un string ISO o similar, intentamos parsearlo
+    const parsedDate = new Date(input);
+    if (!isNaN(parsedDate.getTime())) {
+      return _formatDateToString(parsedDate);
+    }
+  }
+
+  return '';
+}
+
+/** Función interna para evitar repetir la lógica de construcción del string */
+function _formatDateToString(date: Date): string {
+  const dia = date.getDate().toString().padStart(2, '0');
+  const mes = (date.getMonth() + 1).toString().padStart(2, '0');
+  const anio = date.getFullYear();
+  return `${dia}/${mes}/${anio}`;
 }
