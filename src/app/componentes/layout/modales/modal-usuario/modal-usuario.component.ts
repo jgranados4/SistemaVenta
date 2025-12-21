@@ -14,7 +14,7 @@ import {
   Validators,
   FormGroup,
 } from '@angular/forms';
-import { Rol, Usuario, showAlert } from '@core/interface';
+import { Rol, Usuario } from '@core/interface';
 // service
 import { RolService } from '@core/services/rol.service';
 import { Router } from '@angular/router';
@@ -26,6 +26,7 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { ModalGenericoComponent } from '../modal-generico/modal-generico.component';
+import { showAlert } from '@shared/utility';
 @Component({
   selector: 'app-modal-usuario',
   standalone: true,
