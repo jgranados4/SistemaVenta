@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   inject,
   signal,
 } from '@angular/core';
@@ -10,66 +11,87 @@ import { ApxTabla, TableAction } from '@jgranados199795/apx-ui/apx-tabla';
 import { MaterialModule } from '@jgranados199795/apx-ui/apx-material';
 import { ModalService } from '@core/services';
 import { ModalProductoComponent } from '@component/layout/modales/modal-producto/modal-producto.component';
-import { Producto, showAlert } from '@core/interface';
+import { Producto } from '@core/interface';
+import { showAlert } from '@shared/utility';
+import { CurrencyPipe } from '@angular/common';
+import { limpiarPrecio } from '@shared/utility/parsePrecioApi';
 
 @Component({
   selector: 'app-producto',
   standalone: true,
-  imports: [ApxTabla,MaterialModule],
+  imports: [ApxTabla, MaterialModule],
+  providers: [CurrencyPipe],
   templateUrl: './producto.component.html',
   styleUrl: './producto.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'p-4',
+    class: 'block p-6',
   },
 })
 export class ProductoComponent {
-  agregar = signal<string>('Agregar Producto');
-  //
   columnasTablas: any[] = [
-    { key: 'idProducto',label:'ID'},
-    { key: 'nombre',label:'Nombre'},
-    { key: 'descripcionCategoria',label:'Descripcion'},
-    { key: 'stock',label:'Stock'},
-    { key: 'precio',label:'Precio'},
-    { key: 'esActivoTexto',label:'Estado'},
+    { key: 'idProducto', label: 'ID' },
+    { key: 'nombre', label: 'Nombre' },
+    { key: 'descripcionCategoria', label: 'Descripcion' },
+    { key: 'stock', label: 'Stock' },
+    { key: 'precio', label: 'Precio' },
+    { key: 'esActivoTexto', label: 'Estado' },
   ];
 
   editarPro = signal<string>('EditarProducto');
   productoFiltro = signal<string>('');
-  producto = inject(ProductoStoreService);
+  productoStore = inject(ProductoStoreService);
   readonly #dialogModal = inject(ModalService);
+  private readonly _currencyPipe = inject(CurrencyPipe);
   dataListaProducto = computed(() => {
-    const value = this.producto.values();
+    const value = this.productoStore.values();
     return value;
   });
-  listaFiltrada = computed(() => {
+  // constructor(){
+  //   effect(()=>{
+  //   })
+  // }
+  readonly listaFiltrada = computed(() => {
     const filtro = this.productoFiltro().toLowerCase().trim();
-    const lista = this.dataListaProducto().map((producto) => ({
-      ...producto,
-      esActivoTexto: producto.esActivo === 1 ? 'Activo' : 'Inactivo',
-    }));
+    // Mapeamos los datos asegurando la conversion
+    const lista = this.dataListaProducto().map((producto) => {
+     const precioNumerico =limpiarPrecio(producto.precio);
+      return {
+        ...producto,
+        precio:
+          this._currencyPipe.transform(
+            precioNumerico,
+            'USD',
+            'symbol',
+            '1.2-2',
+            'es-EC'
+          ) || '$ 0,00',
+
+        esActivoTexto: producto.esActivo === 1 ? 'Activo' : 'Inactivo',
+      } as unknown as Producto;
+    });
+
     if (!filtro) return lista;
-    return lista.filter((u) =>
-      u.nombre.toLowerCase().includes(filtro)
-    );
+    return lista.filter((u) => u.nombre.toLowerCase().includes(filtro));
   });
-  constructor() {
-  }
 
   aplicarFiltroTabla(event: Event) {
-    console.log('entrar', event.target);
     const filterValue = (event.target as HTMLInputElement).value;
     this.productoFiltro.set(filterValue);
   }
- 
+  limpiarFiltro(inputElement: HTMLInputElement): void {
+    inputElement.value = '';
+    this.productoFiltro.set('');
+    inputElement.focus();
+  }
+
   nuevoProducto() {
     this.#dialogModal.openModal<ModalProductoComponent>(ModalProductoComponent);
   }
   handleEdit(event: TableAction<Producto>): void {
     console.log('Editando usuario:', event.row);
     // Aquí podrías abrir un dialog de edición
-    const dialogRef = this.#dialogModal.openModal<ModalProductoComponent, any>(
+    this.#dialogModal.openModal<ModalProductoComponent, unknown>(
       ModalProductoComponent,
       {
         data: {
@@ -82,11 +104,11 @@ export class ProductoComponent {
   // Manejar eliminación
   handleDelete(event: TableAction<Producto>): void {
     console.log('Eliminando usuario:', event.row);
-this.producto.eliminar(event.row).subscribe({
-        next: () => {
-          console.log('Producto eliminado correctamente');
-          showAlert('¡Operación exitosa!', 'Eliminado correctamente.', 'success');
-        },
-      });
+    this.productoStore.eliminar(event.row).subscribe({
+      next: () => {
+        console.log('Producto eliminado correctamente');
+        showAlert('¡Operación exitosa!', 'Eliminado correctamente.', 'success');
+      },
+    });
   }
 }

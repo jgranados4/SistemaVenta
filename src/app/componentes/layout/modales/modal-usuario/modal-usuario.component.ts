@@ -4,7 +4,6 @@ import {
   computed,
   effect,
   inject,
-  Injector,
   signal,
 } from '@angular/core';
 import {
@@ -46,7 +45,6 @@ export class ModalUsuarioComponent {
   //injectar
   fb = inject(FormBuilder);
   router = inject(Router);
-  inject = inject(Injector);
   private RolService = inject(RolService);
   private storeUs = inject(UsuarioStoreService);
   private dialogRef = inject(MatDialogRef<ModalUsuarioComponent>);

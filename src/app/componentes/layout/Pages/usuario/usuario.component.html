@@ -1,53 +1,48 @@
+<section class="flex justify-between items-center mb-4 gap-4 flex-wrap">
+  <!-- Botón de Acción Principal -->
+  <button mat-raised-button color="primary" (click)="nuevoUsuario()">
+    <mat-icon>add</mat-icon>
+    Nuevo Usuario
+  </button>
 
-<section class="input" >
-   <button mat-raised-button color="primary" (click)="nuevoUsuario()">Nuevo Usuario</button>
-</section>
-<div class="mt-2 mb-2">
-  <div class="relative">
-    <form class="max-w-md mx-auto">
-      <label
-        for="default-search"
-        class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
-        >Search</label
+  <!-- Input de Búsqueda Material Design -->
+  <mat-form-field appearance="outline" class="w-full max-w-md search-field" subscriptSizing="dynamic">
+    <mat-label>Buscar usuario</mat-label>
+    <!-- Icono de Lupa (Prefijo) -->
+    <mat-icon matPrefix class="text-gray-500 mr-2">search</mat-icon>
+    <!-- Input Nativo vinculado a Material -->
+    <input 
+      matInput 
+      #inputSearch
+      type="text" 
+      placeholder="Ej. Juan Pérez"
+      (keyup)="aplicarFiltroTabla($event)"
+    >
+    <!-- Botón de Limpiar (Sufijo) - Solo visible si hay texto -->
+    @if (usuarioFiltro()) {
+      <button 
+        matSuffix 
+        mat-icon-button 
+        aria-label="Limpiar búsqueda" 
+        (click)="limpiarFiltro(inputSearch)"
       >
-      <div class="relative">
-        <div
-          class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"
-        >
-          <svg
-            class="w-4 h-4 text-gray-500 dark:text-gray-400"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 20 20"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-            />
-          </svg>
-        </div>
-        <input
-          type="search"
-          id="default-search"
-          (keyup)="aplicarFiltroTabla($event)"
-          class="inputBuscar"
-          placeholder="Buscar por Nombre y Apellido"
-          required
-        />
-      </div>
-    </form>
-  </div>
-</div>
-<!-- tablas -->
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+  </mat-form-field>
+</section>
 
-<!-- <app-table-rtze
-  class="m-2"
-  [columns]="columnasTablas"
-  [data2]="listaFiltrada()"
-  [titulo]="usuarios()"
-/> -->
-<lib-apx-tabla [columns]="columnasTablas" [data]="listaFiltrada()" [showActions]="true" (Edit)="handleEdit($event)"(Delete)="handleDelete($event)" >
+<!-- Tabla con @defer para Lazy Loading (Optimización de carga inicial) -->
+@defer (on viewport) {
+  <lib-apx-tabla 
+    [columns]="columnasTablas" 
+    [data]="listaFiltrada()" 
+    [showActions]="true" 
+    (Edit)="handleEdit($event)"
+    (Delete)="handleDelete($event)" 
+  />
+} @placeholder {
+  <div class="p-4 bg-gray-50 rounded animate-pulse">
+    Cargando tabla de usuarios...
+  </div>
+}

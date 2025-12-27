@@ -1,1 +1,129 @@
-<p>historial-venta works!</p>
+<h5
+  class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 mb-6"
+>
+  Historial Venta
+</h5>
+
+<mat-card class="search-card">
+  <mat-card-content>
+    <form [formGroup]="formularioBusqueda" (ngSubmit)="buscarVentas()">
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Buscar Por</mat-label>
+          <mat-select formControlName="buscarPor">
+            @for (option of opcionesBusqueda; track option.value) {
+            <mat-option [value]="option.value">{{
+              option.descripcion
+            }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        @if (formularioBusqueda.get('buscarPor')?.value === 'numero') {
+        <mat-form-field appearance="outline" class="animate-fade">
+          <mat-label>Número Orden</mat-label>
+          <input matInput formControlName="numero" placeholder="Ej: 10025" />
+          <app-input-error
+            [control]="formularioBusqueda.get('numero')"
+            label="Numero"
+          />
+        </mat-form-field>
+        } @else {
+        <mat-form-field appearance="outline" class="animate-fade">
+          <mat-label>Rango de Fechas</mat-label>
+          <mat-date-range-input [rangePicker]="picker">
+            <input
+              matStartDate
+              formControlName="fechaInicio"
+              placeholder="Inicio"
+            />
+            <input matEndDate formControlName="fechaFin" placeholder="Fin" />
+          </mat-date-range-input>
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+
+          @if(formularioBusqueda.get('fechaInicio')?.hasError('required')) {
+          <mat-error>Requerido</mat-error>
+          }
+        </mat-form-field>
+        }
+
+        <div class="actions">
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            [disabled]="formularioBusqueda.invalid || isLoading()"
+          >
+            @if (isLoading()) {
+            <mat-icon class="spin">sync</mat-icon>
+            } @else {
+            <mat-icon>search</mat-icon>
+            }
+            {{ isLoading() ? "Buscando..." : "Buscar" }}
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <mat-divider class="my-6"></mat-divider>
+
+    <div class="table-filter">
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>Filtrar en resultados</mat-label>
+        <input
+          matInput
+          (keyup)="aplicarFiltroTabla($event)"
+          placeholder="Escriba para filtrar..."
+        />
+        <mat-icon matSuffix>filter_list</mat-icon>
+      </mat-form-field>
+    </div>
+
+    @defer (on viewport;prefetch on idle) { @if (hasSearched()) { @if (isLoading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Cargando registros...</p>
+    </div>
+    } @else if (historialResource.error()) {
+    <div class="p-8 text-center text-error bg-error/10 rounded-lg">
+            <mat-icon>error_outline</mat-icon>
+            <p>Error al recuperar el historial. Intente de nuevo.</p>
+          </div>
+    } @else if (listaFiltrada().length > 0) {
+    <div class="table-wrapper animate-in zoom-in-95 duration-300">
+      <lib-apx-tabla
+        [columns]="columnaTabla"
+        [data]="listaFiltrada()"
+        [showActions]="true"
+        [showEditButton]="true"
+        [showDeleteButton]="false"
+        (Edit)="handleEdit($event)"
+      />
+    </div>
+    } @else {
+   <div class="empty-state p-12 text-center border-2 border-dashed rounded-2xl">
+            <mat-icon class="text-6xl opacity-20">search_off</mat-icon>
+            <p class="text-xl font-medium mt-4">No hay resultados</p>
+            <p class="text-secondary">Pruebe con otros criterios de búsqueda.</p>
+          </div>
+    } } @else {
+    <div
+      class="mt-8 p-12 text-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-800 transition-colors duration-300"
+    >
+      <mat-icon class="text-6xl text-gray-300 dark:text-gray-500 mb-4 h-16 w-16"
+        >shopping_cart_checkout</mat-icon
+      >
+      <p class="text-gray-500 dark:text-gray-300 text-lg font-medium">
+        Seleccione filtros y presione buscar.
+      </p>
+    </div>
+
+    } } @placeholder {
+    <div class="skeleton">Cargando componente de tabla...</div>
+    }
+  </mat-card-content>
+</mat-card>

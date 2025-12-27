@@ -166,11 +166,11 @@
       <div class="w-10 flex items-center gap-2">
         <button
           mat-icon-button
-          [matTooltip]="theme() === 'dark' ? 'Modo Claro' : 'Modo Oscuro'"
+          [matTooltip]="isDark() ? 'Cambiar a Modo Claro' : 'Cambiar a Modo Oscuro'"
           (click)="toggleTheme()"
           class="text-gray-600 dark:text-gray-300 theme-transition hover:bg-gray-100 dark:hover:bg-gray-800"
         >
-          @if (theme() === 'dark') {
+          @if (isDark()) {
             <mat-icon>light_mode</mat-icon>
           } @else {
             <mat-icon>dark_mode</mat-icon>

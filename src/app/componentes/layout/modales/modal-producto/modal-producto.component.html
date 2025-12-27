@@ -44,11 +44,7 @@
         required
       />
       <mat-hint>Cantidad disponible en inventario</mat-hint>
-      @if (formularioProducto.get('stock')?.hasError('required')) {
-      <mat-error>El stock es requerido</mat-error>
-      } @if (formularioProducto.get('stock')?.hasError('min')) {
-      <mat-error>El stock no puede ser negativo</mat-error>
-      }
+      <app-input-error [control]="formularioProducto.get('stock')" label="stock" />
     </mat-form-field>
 
     <!-- Campo: Precio -->
@@ -59,16 +55,10 @@
         type="number"
         formControlName="precio"
         placeholder="Ingrese el precio"
-        min="0.01"
-        step="0.01"
         required
       />
       <span matPrefix>$ &nbsp;</span>
-      @if (formularioProducto.get('precio')?.hasError('required')) {
-      <mat-error>El precio es requerido</mat-error>
-      } @if (formularioProducto.get('precio')?.hasError('min')) {
-      <mat-error>El precio debe ser mayor a 0</mat-error>
-      }
+    <app-input-error [control]="formularioProducto.get('precio')" label="precio" />
     </mat-form-field>
 
     <!-- Campo: Estado Activo -->

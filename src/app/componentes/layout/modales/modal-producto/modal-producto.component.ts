@@ -4,8 +4,6 @@ import {
   computed,
   effect,
   inject,
-  Injector,
-  input,
   signal,
 } from '@angular/core';
 import {
@@ -26,6 +24,7 @@ import {
 } from '@angular/material/dialog';
 import { showAlert } from '@shared/utility';
 import { InputError } from '@shared/components/input-error/input-error';
+import { limpiarPrecio } from '@shared/utility/parsePrecioApi';
 
 @Component({
   selector: 'app-modal-producto',
@@ -44,13 +43,13 @@ import { InputError } from '@shared/components/input-error/input-error';
 export class ModalProductoComponent {
   //*INJECT
   private fb = inject(FormBuilder);
-  inject = inject(Injector);
   storeProd = inject(ProductoStoreService);
   private categoriaService = inject(CategoriaService);
   private dialogRef = inject(MatDialogRef<ModalProductoComponent>);
-  private data = inject<{ data?: { producto?: Producto } }>(MAT_DIALOG_DATA);
-  //*SIGNAL , INPUT Y OUTPUT`
-  datas = input<Producto | undefined>(undefined);
+  private data = inject<{ data?: { producto?: Producto } }>(
+    MAT_DIALOG_DATA
+  );
+  //*SIGNAL
   protected productoEditar = signal<Producto | undefined>(
     this.data.data?.producto
   );
@@ -59,8 +58,8 @@ export class ModalProductoComponent {
     nombre: ['', Validators.required],
     idCategoria: [1, Validators.required],
     stock: [0, Validators.required],
-    precio: ['', Validators.required],
-    esActivo: ['1', Validators.required],
+    precio: [0, Validators.required],
+    esActivo: [1, Validators.required],
   });
 
   readonly titulo = computed(() =>
@@ -77,40 +76,43 @@ export class ModalProductoComponent {
   constructor() {
     effect(() => {
       const dataproducto = this.productoEditar();
-      console.log('dialog data', dataproducto);
-      const esEdicion = this.esEdicion();
-      if (dataproducto && esEdicion) {
+      if (dataproducto && this.esEdicion()) {
+        const rawPrecio = dataproducto.precio;
+         const precioLimpio = limpiarPrecio(rawPrecio);
+        console.log('Cambios', rawPrecio, 'precios', precioLimpio);
         this.formularioProducto.patchValue({
           nombre: dataproducto.nombre,
           idCategoria: dataproducto.idCategoria,
           stock: dataproducto.stock,
-          precio: dataproducto.precio,
+          precio: precioLimpio, // Asignamos el número JS (2500.00)
           esActivo: dataproducto.esActivo.toString(),
         });
       } else {
         this.formularioProducto.reset({
           nombre: '',
           idCategoria: 1,
-          stock: '',
-          precio: '',
-          esActivo: '1',
+          stock: 0,
+          precio: 0,
+          esActivo: 1,
         });
       }
     });
   }
   GuardarEditar_producto() {
+    if (this.formularioProducto.invalid) {
+      this.formularioProducto.markAllAsTouched();
+      return;
+    }
     const ProductoAc = this.productoEditar();
     const idCategoria = parseInt(this.formularioProducto.value.idCategoria);
-    // const IdCateSelec = this.listaCategoria().find(
-    //   (Ca) => Ca.idCategoria === idCategoria
-    // );
-
+    const precioInput = this.formularioProducto.value.precio;
+    const precioParaApi = Number(precioInput).toFixed(2).replace('.', ',');
     const _producto: Producto = {
       idProducto: ProductoAc?.idProducto ?? 0,
       nombre: this.formularioProducto.value.nombre,
       idCategoria: idCategoria,
       stock: this.formularioProducto.value.stock,
-      precio: String(this.formularioProducto.value.precio),
+      precio: precioParaApi,
       esActivo: parseInt(this.formularioProducto.value.esActivo),
       descripcionCategoria: '',
     };

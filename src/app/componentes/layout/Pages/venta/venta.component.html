@@ -1,93 +1,150 @@
-<h5 class="tituloGradiante">Venta</h5>
+<h5
+  class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 mb-6"
+>
+  Nueva Venta
+</h5>
 
-<div class="mt-2">
+<div
+  class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 transition-colors duration-300"
+>
   <form
-    class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center"
-    [formGroup]="FormularioProductoVenta"
+    class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start"
+    [formGroup]="formularioVenta"
     #formDirective="ngForm"
-    (ngSubmit)="agregarProductoVenta()"
+    (ngSubmit)="agregarProducto()"
   >
-    <mat-form-field appearance="fill" class="w-full">
+    <!-- 1. Buscador de Producto (Ocupa más espacio) -->
+    <mat-form-field appearance="outline" class="col-span-1 md:col-span-6">
       <mat-label>Buscar Producto</mat-label>
-      <mat-icon matPrefix>search</mat-icon>
+      <mat-icon matPrefix class="text-gray-400 dark:text-gray-300 mr-2"
+        >search</mat-icon
+      >
       <input
         type="text"
         matInput
-        formControlName="producto"
+        formControlName="productoBusqueda"
         [matAutocomplete]="auto"
-        placeholder="Escribe para buscar..."
       />
       <mat-autocomplete
         #auto="matAutocomplete"
         [displayWith]="displayProducto"
-        (optionSelected)="productoParaVenta($event.option.value)"
+        (optionSelected)="onProductoSeleccionado($event)"
       >
-        @for (item of listaProductoFiltro(); track item.idProducto) {
+        @for (item of productosFiltrados(); track item.idProducto) {
         <mat-option [value]="item">
-          {{ item.nombre }}
+          <span class="font-medium text-gray-900 dark:text-gray-100">{{
+            item.nombre
+          }}</span>
+          <span class="text-xs text-gray-500 dark:text-gray-400 ml-2"
+            >| Stock: {{ item.stock }} | {{ item.precio | currency }}</span
+          >
         </mat-option>
+        } @empty {
+        <mat-option disabled>No se encontraron productos</mat-option>
         }
       </mat-autocomplete>
+      <app-input-error [control]="formularioVenta.get('productoBusqueda')" />
     </mat-form-field>
 
-    <mat-form-field appearance="fill" class="w-full">
-      <mat-label>Cantidad</mat-label>
+    <!-- 2. Cantidad -->
+    <mat-form-field appearance="outline" class="col-span-1 md:col-span-2">
+      <mat-label>Cant.</mat-label>
       <input
+        #inputCantidadRef
         matInput
         type="number"
         formControlName="cantidad"
         min="1"
-        placeholder="0"
+        placeholder="1"
+        (keydown.enter)="$event.preventDefault(); agregarProducto()"
       />
     </mat-form-field>
 
-    <mat-form-field appearance="fill" class="w-full">
-      <mat-label>Tipo de Pago</mat-label>
-      <mat-select formControlName="tipospago">
-        <mat-option value="Efectivo"  >Efectivo</mat-option>
-        <mat-option value="Tarjeta">Tarjeta</mat-option>
+    <!-- 3. Tipo de Pago -->
+    <mat-form-field appearance="outline" class="col-span-1 md:col-span-2">
+      <mat-label>Pago</mat-label>
+      <mat-select formControlName="tipoPago">
+        <mat-option value="Efectivo">
+          <mat-icon class="dark:text-green-400">money</mat-icon> Efectivo
+        </mat-option>
+        <mat-option value="Tarjeta">
+          <mat-icon class="dark:text-blue-400">credit_card</mat-icon> Tarjeta
+        </mat-option>
       </mat-select>
     </mat-form-field>
 
-    <div class="col-span-1 md:col-span-1">
+    <!-- 4. Botón Agregar -->
+    <div class="col-span-1 md:col-span-2 flex items-center h-full pt-1">
       <button
-        mat-raised-button
+        mat-flat-button
         color="primary"
         type="submit"
-        [disabled]="FormularioProductoVenta.invalid"
-        class="w-full py-2"
+        [disabled]="formularioVenta.invalid"
+        class="w-full h-12 !rounded-lg"
       >
+        <mat-icon>add_shopping_cart</mat-icon>
         Agregar
-      </button>
-    </div>
-
-    <div class="col-span-1 md:col-span-1">
-      <button
-        mat-raised-button
-        color="warn"
-        type="button"
-        class="w-full py-2 cursor-default"
-      >
-        Total: S/. {{ totalPagar() | currency : "USD" : "$" : "1.2-2" }}
       </button>
     </div>
   </form>
 </div>
-@defer(when listaProductoParaVenta().length > 0){
-<div class="mt-4">
-  <lib-apx-tabla [columns]="columnasTablas" [data]="listaProductoParaVenta()" />
-  <br />
 
-<div class="flex justify-end">
-  <button mat-raised-button color="accent" (click)="registrarVenta()" [disabled]="bloqueoBotonRegistar">
-    Registrar Venta
-  </button>
-</div>
-</div>
-}@placeholder{
-<div class="mt-4 p-4 text-center  border border-dashed border-gray-300 rounded">
-        <p class="text-gray-500">Agrega productos para comenzar la venta</p>
+<!-- Resumen y Tabla -->
+<div class="mt-6">
+  <!-- Defer Loading: Carga perezosa de la tabla si hay datos -->
+  @defer (when listaDetalleVenta().length > 0) {
+  <div class="animate-fade-in-up">
+    <lib-apx-tabla
+      [columns]="columnasTabla"
+      [data]="datosTablaVisual()"
+      [showActions]="true"
+      [showEditButton]="false"
+      (Delete)="handleDelete($event)"
+    />
+    <!-- Footer de Venta -->
+    <div
+      class="flex flex-col md:flex-row justify-between items-center mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 transition-colors duration-300"
+    >
+      <div
+        class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4 md:mb-0"
+      >
+        Total:
+        <span class="text-green-600 dark:text-green-400">{{
+          totalPagar() | currency : "USD" : "symbol" : "1.2-2"
+        }}</span>
       </div>
-}
 
-
+      <button
+        mat-raised-button
+        color="accent"
+        class="!py-6 !px-8 !text-lg !font-bold w-full md:w-auto"
+        (click)="registrarVenta()"
+        [disabled]="procesandoVenta()"
+      >
+        <div class="flex items-center justify-center gap-2">
+          @if (procesandoVenta()) {
+          <mat-spinner diameter="24" color="accent"></mat-spinner>
+          } @else {
+          <mat-icon>receipt_long</mat-icon>
+          <span>Procesar Venta</span>
+          }
+        </div>
+      </button>
+    </div>
+  </div>
+  } @placeholder {
+  <div
+    class="mt-8 p-12 text-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-800 transition-colors duration-300"
+  >
+    <mat-icon class="text-6xl text-gray-300 dark:text-gray-500 mb-4 h-16 w-16"
+      >shopping_cart_checkout</mat-icon
+    >
+    <p class="text-gray-500 dark:text-gray-300 text-lg font-medium">
+      El carrito de venta está vacío
+    </p>
+    <p class="text-gray-400 dark:text-gray-500 text-sm">
+      Busca productos arriba para comenzar
+    </p>
+  </div>
+  }
+</div>

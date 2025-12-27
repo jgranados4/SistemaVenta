@@ -6,6 +6,7 @@ import { MaterialModule } from '@jgranados199795/apx-ui/apx-material';
 import { ApxTabla, TableColumn } from '@jgranados199795/apx-ui/apx-tabla';
 import { ModalGenericoComponent } from '../modal-generico/modal-generico.component';
 import { InputError } from '@shared/components/input-error/input-error';
+import { limpiarPrecio } from '@shared/utility/parsePrecioApi';
 
 @Component({
   selector: 'app-modal-detalle-venta',
@@ -52,17 +53,20 @@ export class ModalDetalleVenta {
     fechaRegistro: ['', Validators.required],
     numeroVenta: ['', Validators.required],
     tipoPago: ['', Validators.required],
-    total: ['', Validators.required],
+    total: [null, Validators.required],
   });
   constructor() {
     effect(() => {
       const detalle = this.detalle();
       if (detalle) {
+        const rawPrecio=detalle.total;
+        const totalPar = limpiarPrecio(rawPrecio);
+        console.log('precio', rawPrecio, 'parseado', totalPar);
         this.formularioDetalle.patchValue({
           fechaRegistro: detalle.fechaRegistro,
           numeroVenta: detalle.numeroDocumento,
           tipoPago: detalle.tipoPago,
-          total: detalle.total,
+          total: totalPar,
         });
       }
     });

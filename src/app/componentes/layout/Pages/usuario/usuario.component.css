@@ -1,31 +1,17 @@
-.input{
-  margin: 5px;
-  min-width: 7.5rem;
+:host {
+  display: block;
 }
 
-.mat-mdc-button-base{
-  margin: 5px;
+/* Ajuste fino para el icono dentro del form-field si es necesario */
+.mat-icon {
+  vertical-align: middle;
 }
 
-/* Estilos para el botón Nuevo Usuario */
-.mat-mdc-raised-button.mat-primary {
-  background-color: #1d4ed8; /* blue-700 */
-  color: white;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.mat-mdc-raised-button.mat-primary:hover {
-  background-color: #1e40af; /* blue-800 */
-  box-shadow: 0 4px 8px rgba(29, 78, 216, 0.3);
-}
-
-/* Estilos para tema oscuro */
-.dark-theme .mat-mdc-raised-button.mat-primary {
-  background-color: #3b82f6; /* blue-500 para tema oscuro */
-  color: white;
-}
-
-.dark-theme .mat-mdc-raised-button.mat-primary:hover {
-  background-color: #2563eb; /* blue-600 para tema oscuro */
-  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+/* Opcional: Si deseas que el input tenga un ancho específico 
+  solo en pantallas grandes
+*/
+@media (min-width: 768px) {
+  .search-field {
+    min-width: 300px;
+  }
 }

@@ -4,49 +4,45 @@ import {
   signal,
   ChangeDetectionStrategy,
   computed,
-  Injector,
-  OnDestroy,
+  
 } from '@angular/core';
 import { ModalUsuarioComponent } from '../../modales/modal-usuario/modal-usuario.component';
 import { UsuarioStoreService } from '@core/services/SignalStore/usuario-store.service';
-import { ApxTabla, TableAction } from '@jgranados199795/apx-ui/apx-tabla';
+import { ApxTabla, TableAction, TableColumn } from '@jgranados199795/apx-ui/apx-tabla';
 import { MaterialModule } from '@jgranados199795/apx-ui/apx-material';
 import { ModalService } from '@core/services/modalServices/modal.service';
 import {FormsModule} from '@angular/forms';
-import { showAlert, Usuario} from '@core/interface';
+import {  Usuario, UsuarioRow} from '@core/interface';
+import { showAlert } from '@shared/utility';
 
 @Component({
   selector: 'app-usuario',
-  imports: [ApxTabla, MaterialModule,FormsModule],
+  imports: [ApxTabla, MaterialModule, FormsModule],
   templateUrl: './usuario.component.html',
   styleUrl: './usuario.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'p-6',
+    class: 'block p-6',
   },
 })
-export class UsuarioComponent implements OnDestroy {
-  columnasTablas: any[] = [
+export class UsuarioComponent {
+  columnasTablas: TableColumn<UsuarioRow>[] = [
     { key: 'idUsuario', label: 'ID' },
     { key: 'nombreApellidos', label: 'Nombre' },
     { key: 'correo', label: 'Correo' },
     { key: 'rolDescripcion', label: 'Rol' },
     { key: 'esActivoTexto', label: 'Estado' },
   ];
-  UsuarioFiltro = signal<string>('');
+  usuarioFiltro = signal<string>('');
   agregar = signal<string>('Agregar');
   //*inject
 
   Usuario = inject(UsuarioStoreService);
-  injector = inject(Injector);
   readonly #dialogModal = inject(ModalService);
 
-  dataListaUsuario = computed(() => {
-    const value = this.Usuario.values();
-    return value;
-  });
-  listaFiltrada = computed(() => {
-    const filtro = this.UsuarioFiltro().toLowerCase().trim();
+  private readonly dataListaUsuario = computed(() => this.Usuario.values());
+  readonly listaFiltrada = computed(() => {
+    const filtro = this.usuarioFiltro().toLowerCase().trim();
 
     const lista = this.dataListaUsuario().map((usuario) => ({
       ...usuario,
@@ -58,10 +54,14 @@ export class UsuarioComponent implements OnDestroy {
     );
   });
 
-  constructor() {}
   aplicarFiltroTabla(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.UsuarioFiltro.set(filterValue);
+    this.usuarioFiltro.set(filterValue);
+  }
+  limpiarFiltro(inputElement: HTMLInputElement): void {
+    inputElement.value = '';
+    this.usuarioFiltro.set('');
+    inputElement.focus(); // Mejora de accesibilidad
   }
   nuevoUsuario(): void {
     this.#dialogModal.openModal<ModalUsuarioComponent>(ModalUsuarioComponent);
@@ -69,7 +69,7 @@ export class UsuarioComponent implements OnDestroy {
   handleEdit(event: TableAction<Usuario>): void {
     console.log('Editando usuario:', event.row);
     // Aquí podrías abrir un dialog de edición
-    const dialogRef = this.#dialogModal.openModal<ModalUsuarioComponent, any>(
+    this.#dialogModal.openModal<ModalUsuarioComponent, unknown>(
       ModalUsuarioComponent,
       {
         data: {
@@ -78,18 +78,14 @@ export class UsuarioComponent implements OnDestroy {
       }
     );
   }
-
   // Manejar eliminación
   handleDelete(event: TableAction<Usuario>): void {
     console.log('Eliminando usuario:', event.row);
-this.Usuario.eliminar(event.row).subscribe({
-        next: () => {
-          console.log('Usuario eliminado correctamente');
-          showAlert('¡Operación exitosa!', 'Eliminado correctamente.', 'success');
-        },
-      });
-  }
-  ngOnDestroy(): void {
-    // this.effectos.destroy();
+    this.Usuario.eliminar(event.row).subscribe({
+      next: () => {
+        console.log('Usuario eliminado correctamente');
+        showAlert('¡Operación exitosa!', 'Eliminado correctamente.', 'success');
+      },
+    });
   }
 }

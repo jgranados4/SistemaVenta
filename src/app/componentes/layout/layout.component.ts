@@ -24,10 +24,10 @@ export class LayoutComponent {
   private themeService = inject(ThemeService);
   
   // Exponer el tema para usar en el template
-  readonly theme = this.themeService.theme;
+  readonly isDark = this.themeService.isDark;
 
   toggleSidebar() {
-    this.isSidebarActive.set(!this.isSidebarActive());
+    this.isSidebarActive.update(active=>!active)
   }
 
   toggleTheme() {
