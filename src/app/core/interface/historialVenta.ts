@@ -37,9 +37,11 @@ export interface ventaHistorialResponse extends ventaResponse {
 
 export interface ventaResponse {
   tipoPago: string;
-  total: string;
+  total: total;
   detalleVentaResponseDTOs?: detalleVentaResponseDTOs[];
 }
+
+type total = string | number;
 
 export interface detalleVentaResponseDTOs {
   idProducto: number;

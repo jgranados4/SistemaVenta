@@ -11,7 +11,7 @@ export interface Producto {
   esActivo: number;
 }
 
-type Precio = string | undefined;
+type Precio = string | number;
 
 export interface IProductoService<T> {
  listar: HttpResourceRef<T | undefined >;
@@ -19,3 +19,5 @@ export interface IProductoService<T> {
   editar(request: Producto): Observable<T>;
   eliminar(id: number): Observable<T>;
 }
+
+
