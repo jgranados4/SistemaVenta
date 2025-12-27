@@ -1,8 +1,8 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, Signal } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
-import { Venta ,ResponseApi} from '@core/interface';
+import { ResponseApi, VentaRequest} from '@core/interface';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, httpResource, HttpResourceRef } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -10,9 +10,10 @@ import { HttpClient } from '@angular/common/http';
 export class VentaService {
   private readonly url = `${environment.endpoint}Venta`;
   private http = inject(HttpClient);
-  registrar(request: Venta): Observable<ResponseApi> {
+  registrar(request: VentaRequest): Observable<ResponseApi> {
     return this.http.post<ResponseApi>(`${this.url}/Registrar`, request);
   }
+  //http Observable
   historial(
     buscarPor: string,
     numeroVenta: string,
@@ -28,4 +29,35 @@ export class VentaService {
       `${this.url}/Reporte?fechaInicio=${fechainicio}&fechaFin=${fechafin}`
     );
   }
+  //httpResource
+  historialR = (
+    filtros: Signal<{
+      buscarPor: string;
+      numeroVenta: string;
+      fechaInicio: string;
+      fechaFin: string;
+    }>
+  ): HttpResourceRef<ResponseApi | undefined> => {
+    return httpResource<ResponseApi>(() => {
+      const f = filtros();
+      const esBusquedaValida =
+        (f.fechaInicio && f.fechaFin) || // Rango de fechas
+        (f.numeroVenta && f.numeroVenta.length > 0); // O número de venta
+
+      if (!esBusquedaValida) {
+        return undefined; // <--- ESTO ES LA CLAVE: El resource no hará fetch.
+      }
+      // 🧹 LIMPIEZA DE PARÁMETROS
+      // Creamos un objeto solo con los valores que existen para no enviar "campo="
+      const params: Record<string, string> = {};
+      if (f.buscarPor) params['buscarPor'] = f.buscarPor;
+      if (f.numeroVenta) params['numeroVenta'] = f.numeroVenta;
+      if (f.fechaInicio) params['fechaInicio'] = f.fechaInicio;
+      if (f.fechaFin) params['fechaFin'] = f.fechaFin;
+      return {
+        url: `${this.url}/Historial`,
+        params: params, // Enviamos params limpios
+      };
+    });
+  };
 }

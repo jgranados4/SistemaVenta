@@ -8,7 +8,7 @@ import { MatDialog, MatDialogConfig} from '@angular/material/dialog';
 export class ModalService {
   private readonly dialog = inject(MatDialog);
 
-  openModal<CT, D = any>(
+  openModal<CT, D = unknown>(
     componentRef: ComponentType<CT>,
     config?: {
       data?: D;
