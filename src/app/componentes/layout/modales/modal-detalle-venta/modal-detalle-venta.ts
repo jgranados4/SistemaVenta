@@ -26,7 +26,7 @@ export class ModalDetalleVenta {
   //Variables
   columnaTabla: TableColumn<detalleVentaDTOs>[] = [
     {
-      key: 'idProducto', // La propiedad en detalleVentaDTOs
+      key: 'descripcionProducto', // La propiedad en detalleVentaDTOs
       label: 'Producto', // El título visible en la tabla
     },
     {
@@ -59,7 +59,7 @@ export class ModalDetalleVenta {
     effect(() => {
       const detalle = this.detalle();
       if (detalle) {
-        const rawPrecio=detalle.total;
+        const rawPrecio = detalle.total;
         const totalPar = limpiarPrecio(rawPrecio);
         console.log('precio', rawPrecio, 'parseado', totalPar);
         this.formularioDetalle.patchValue({
@@ -74,5 +74,7 @@ export class ModalDetalleVenta {
   readonly titulo = computed(() => (this.detalle() ? 'Editar' : 'Agregar'));
 
   readonly tituloModal = computed(() => `${this.titulo()} DetalleVenta`);
-  readonly detalleVenta = computed(() => this.detalle()?.detalleVentaResponseDTOs);
+  readonly detalleVenta = computed(
+    () => this.detalle()?.detalleVentaResponseDTOs
+  );
 }
