@@ -136,7 +136,6 @@ export class HistorialVentaComponent {
     // Formateo de fechas
     const fInicio = fechaInicio ? formatFechaUniversal(fechaInicio) : '';
     const fFin = fechaFin ? formatFechaUniversal(fechaFin) : '';
-    console.log('fechaini', fInicio, 'fecha Fin', fFin);
     this.filtrosBusqueda.set({
       buscarPor,
       numeroVenta: numero ?? '',
