@@ -1,12 +1,12 @@
 import {
   ApplicationConfig,
   inject,
+  LOCALE_ID,
   provideAppInitializer,
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
 import { routes } from './app.routes';
 import {
   provideHttpClient,
@@ -16,6 +16,9 @@ import {
 import { errorInterceptor } from '@core/interceptors/error.interceptor';
 import { ThemeService } from '@core/services';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import localeEsEc from '@angular/common/locales/es-EC';
+import { registerLocaleData } from '@angular/common';
+registerLocaleData(localeEsEc, 'es-EC');
 export const GLOBAL_DATE_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -33,11 +36,12 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideHttpClient(withFetch(), withInterceptors([errorInterceptor])),
-    provideAppInitializer(()=>{
+    provideAppInitializer(() => {
       const themeService = inject(ThemeService);
       themeService.init();
     }),
     { provide: MAT_DATE_LOCALE, useValue: 'es-EC' },
-    provideNativeDateAdapter()
+    provideNativeDateAdapter(),
+    { provide: LOCALE_ID, useValue: 'es-EC' },
   ],
 };
