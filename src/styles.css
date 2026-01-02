@@ -1,15 +1,38 @@
-/* You can add global styles to this file, and also import other style files */
+/* src/styles.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* ============================================
-   1. CAPA DE UTILIDADES
+   1. DEFINICIÓN DE VARIABLES (EL PUENTE)
    ============================================ */
-@layer utilities {
-  .theme-transition {
-    /* Animamos solo lo necesario */
-    @apply transition-[background-color,border-color,color,fill,stroke] duration-300 ease-in-out;
+@layer base {
+  :root {
+    /* Exponemos la paleta de Tailwind como variables CSS nativas */
+    --gray-50: theme('colors.gray.50');
+    --gray-700: theme('colors.gray.700');
+    --gray-800: theme('colors.gray.800');
+    --gray-900: theme('colors.gray.900');
+    
+    /* Configuración Base */
+    --body-bg: var(--gray-50);
+    --text-color: var(--gray-900);
+  }
+
+  /* Variables para Modo Oscuro */
+  .dark-theme {
+    --body-bg: var(--gray-900);
+    --text-color: var(--gray-50);
+  }
+
+  html {
+    @apply bg-gray-50 dark:bg-gray-900;
+  }
+  
+  body {
+    background-color: var(--body-bg);
+    color: var(--text-color);
+    @apply theme-transition m-0;
   }
 }
 
@@ -17,7 +40,6 @@
    2. CAPA DE COMPONENTES
    ============================================ */
 @layer components {
-  /* Clase reutilizable para items del menú sidebar */
   .nav-link {
     @apply flex items-center p-4 rounded-lg 
            text-gray-900 dark:text-gray-100 
@@ -25,50 +47,43 @@
            theme-transition cursor-pointer;
   }
 
-  /* Estilo para el icono dentro del link */
   .nav-icon {
     @apply w-5 h-5 text-gray-500 dark:text-gray-400 
            theme-transition group-hover:text-primary-700 dark:group-hover:text-white;
   }
 
-  /* MOVIDO AQUI: Título Gradiente (Mejor práctica dentro de layer components) */
   .tituloGradiante {
     @apply p-3 text-4xl text-center font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-red-700;
   }
-}
-
-/* ============================================
-   3. CAPA BASE
-   ============================================ */
-@layer base {
-  html {
-    /* Evita el flash blanco en móviles */
-    @apply bg-gray-50 dark:bg-gray-900;
-  }
-  body {
-    @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 theme-transition;
-    margin: 0;
+  .active {
+    @apply bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400 shadow-sm;
   }
 }
 
 /* ============================================
-   4. FIX SEGURO PARA MATERIAL
-   (Solo ajustamos el alto de línea si es necesario, pero NO quitamos bordes)
+   3. UTILIDADES
    ============================================ */
-   
-/* Corrección Vital: Evita que Tailwind encoja los iconos de Material */
+@layer utilities {
+  .theme-transition {
+    @apply transition-[background-color,border-color,color,fill,stroke] duration-300 ease-in-out;
+  }
+}
+
+/* ============================================
+   4. FIXES DE MATERIAL
+   ============================================ */
 .mat-icon {
-  font-size: 24px;
-  width: 24px;
-  height: 24px;
-  overflow: visible; /* Asegura que el icono no se corte */
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
 }
 
-/* Corrección Vital: Asegura que el label flotante de los inputs tenga el ancho correcto */
 .mat-mdc-form-field-subscript-wrapper {
   width: 100%;
 }
-/* ✅ Resetear border-style solo para componentes de Material */
+
+/* Tus resets personalizados */
 .mat-mdc-form-field *,
 .mat-mdc-form-field ::before,
 .mat-mdc-form-field ::after {
@@ -79,7 +94,4 @@ input.mat-mdc-input-element {
   box-shadow: none !important;
 }
 
-html,
-body {
-  height: 100%;
-}
+html, body { height: 100%; }
