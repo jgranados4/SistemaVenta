@@ -39,7 +39,9 @@ import { showAlert } from '@shared/utility';
   templateUrl: './modal-usuario.component.html',
   styleUrl: './modal-usuario.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {},
+  host: {
+    class: 'block p-6',
+  },
 })
 export class ModalUsuarioComponent {
   //injectar
