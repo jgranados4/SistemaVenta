@@ -56,13 +56,13 @@ $my-warn: mat.m2-define-palette(mat.$m2-red-palette);
 $my-light-theme: mat.m2-define-light-theme((
     color: (primary: $my-primary, accent: $my-accent, warn: $my-warn),
     typography: $custom-typography,
-    density: -1,
+    density: -2,
 ));
 
 $my-dark-theme: mat.m2-define-dark-theme((
     color: (primary: $my-primary, accent: $my-accent, warn: $my-warn),
     typography: $custom-typography,
-    density: -1,
+    density: -2,
 ));
 
 // ============================================
