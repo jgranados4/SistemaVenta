@@ -94,4 +94,34 @@ input.mat-mdc-input-element {
   box-shadow: none !important;
 }
 
+.app-sidebar-dialog-left,
+.app-sidebar-dialog-right {
+ 
+  max-width: 100vw !important; 
+
+  .mat-mdc-dialog-container {
+    
+    height: 100%;
+    border-radius: 0 !important; 
+    
+   
+    &.app-sidebar-dialog-left-radius {
+       border-top-right-radius: 16px !important;
+       border-bottom-right-radius: 16px !important;
+    }
+  }
+}
+
+
+.app-sidebar-dialog-left .mat-mdc-dialog-container {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+
+.app-sidebar-dialog-right .mat-mdc-dialog-container {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
 html, body { height: 100%; }
