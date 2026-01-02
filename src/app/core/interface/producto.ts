@@ -19,5 +19,8 @@ export interface IProductoService<T> {
   editar(request: Producto): Observable<T>;
   eliminar(id: number): Observable<T>;
 }
+export interface ProductoRow extends Producto{
+  esActivoTexto?: string;
+}
 
 
