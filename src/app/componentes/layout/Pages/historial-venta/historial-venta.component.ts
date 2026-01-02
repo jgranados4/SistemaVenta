@@ -153,6 +153,7 @@ export class HistorialVentaComponent {
       data: {
         historial: historialEdi,
       },
+      width: '800px',
     });
   }
 }

@@ -1,89 +1,94 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  input,
-} from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+
 @Component({
   selector: 'app-modal-generico',
-  template: 
-  `
-        <div class="modal">
-          <header>
-            <h2>{{ title() }}</h2>
-            <button (click)="close()">&times;</button>
-          </header>
-          <section class="content">
-            <ng-content></ng-content>
-          </section>
-          <footer>
-            <ng-content select="[footer]"></ng-content>
-          </footer>
-        </div>
-      
-    
-  `,
-  styles: `
-   
+  standalone: true,
+  imports: [MatButtonModule, MatIconModule],
+  template: `
+    <div class="modal-layout">
+      <!-- Header con Grid para centrado perfecto -->
+      <header class="modal-header">
+        <!-- Elemento fantasma para equilibrar el grid -->
+        <div class="header-spacer"></div>
+        
+        <h2 class="mat-title-medium">{{ title() }}</h2>
+        
+        <button mat-icon-button (click)="close()" type="button">
+          <mat-icon>close</mat-icon>
+        </button>
+      </header>
 
-    .modal {
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      <!-- Contenido Scrolleable -->
+      <section class="modal-content scroll-container">
+        <ng-content></ng-content>
+      </section>
+
+      <!-- Footer Fijo -->
+      <footer class="modal-footer">
+        <ng-content select="[footer]"></ng-content>
+      </footer>
+    </div>
+  `,
+  styles: [`
+    :host {
+      display: block;
+      height: 100%;
     }
-    header {
+
+    .modal-layout {
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .modal-header {
+      display: grid;
+      /* 3 columnas: botón fantasma (48px) - espacio flexible - botón real (48px) */
+      grid-template-columns: 48px 1fr 48px;
       align-items: center;
       padding: 16px 24px;
-      border-bottom: 1px solid #e0e0e0;
+      border-bottom: 1px solid var(--mat-sys-outline-variant, #e0e0e0);
+      flex-shrink: 0;
     }
 
-    header h2 {
+    .modal-header h2 {
       margin: 0;
-      font-size: 20px;
-      font-weight: 500;
+      color: var(--mat-sys-on-surface);
+      text-align: center; /* Centramos el texto en su celda */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    header button {
-      background: none;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      padding: 0;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 4px;
-      transition: background 0.2s;
+    /* El spacer ocupa el mismo espacio que el botón para equilibrar */
+    .header-spacer {
+      width: 48px; 
     }
 
-    header button:hover {
-      background: rgba(0, 0, 0, 0.04);
-    }
-
-    .content {
+    .modal-content {
       padding: 24px;
+      flex-grow: 1;
+      overflow-y: auto;
     }
 
-    footer {
+    .modal-footer {
       padding: 16px 24px;
-      border-top: 1px solid #e0e0e0;
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
+      border-top: 1px solid var(--mat-sys-outline-variant, #e0e0e0);
+      background-color: var(--mat-sys-surface);
+      flex-shrink: 0;
     }
-  `,
+  `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalGenericoComponent {
-private dialog=inject(MatDialog)
-  title = input<string>('');
+  private readonly dialogRef = inject(MatDialogRef);
   
+  title = input.required<string>();
 
   close() {
-    this.dialog.closeAll()
+    this.dialogRef.close();
   }
 }
