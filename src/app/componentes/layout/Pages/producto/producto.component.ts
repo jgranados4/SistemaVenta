@@ -2,16 +2,15 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   inject,
   signal,
 } from '@angular/core';
 import { ProductoStoreService } from '@core/services/SignalStore/producto-store.service';
-import { ApxTabla, TableAction } from '@jgranados199795/apx-ui/apx-tabla';
+import { ApxTabla, TableAction, TableColumn } from '@jgranados199795/apx-ui/apx-tabla';
 import { MaterialModule } from '@jgranados199795/apx-ui/apx-material';
 import { ModalService } from '@core/services';
 import { ModalProductoComponent } from '@component/layout/modales/modal-producto/modal-producto.component';
-import { Producto } from '@core/interface';
+import { Producto, ProductoRow } from '@core/interface';
 import { showAlert } from '@shared/utility';
 import { CurrencyPipe } from '@angular/common';
 import { limpiarPrecio } from '@shared/utility/parsePrecioApi';
@@ -29,7 +28,7 @@ import { limpiarPrecio } from '@shared/utility/parsePrecioApi';
   },
 })
 export class ProductoComponent {
-  columnasTablas: any[] = [
+  columnasTablas: TableColumn<ProductoRow>[] = [
     { key: 'idProducto', label: 'ID' },
     { key: 'nombre', label: 'Nombre' },
     { key: 'descripcionCategoria', label: 'Descripcion' },
@@ -55,7 +54,7 @@ export class ProductoComponent {
     const filtro = this.productoFiltro().toLowerCase().trim();
     // Mapeamos los datos asegurando la conversion
     const lista = this.dataListaProducto().map((producto) => {
-     const precioNumerico =limpiarPrecio(producto.precio);
+      const precioNumerico = limpiarPrecio(producto.precio);
       return {
         ...producto,
         precio:
