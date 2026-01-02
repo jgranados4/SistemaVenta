@@ -84,18 +84,34 @@ export class VentaComponent {
   // Transformamos los datos en la Signal. Así el HTML recibe números limpios.
   readonly productosFiltrados = computed<Producto[]>(() => {
     const termino = this.terminoBusqueda();
-    const todos = this._storePto
-      .values()
-      .filter((p) => p.esActivo === 1 && p.stock > 0)
-      .map((p) => ({
-        ...p,
-        precio: limpiarPrecio(p.precio),
-      }));
+     const itemsEnCarrito = this.listaDetalleVenta(); 
+    const todos = this._storePto.values();
+       const cantidadEnCarritoMap = new Map<number, number>();
+    itemsEnCarrito.forEach(item => {
+      cantidadEnCarritoMap.set(item.idProducto, item.cantidad);
+    });
+     const terminoLower = typeof termino === 'string' ? termino.toLowerCase() : '';
+     return todos
+      .map(p => {
+        // Calculamos el stock visual restante
+        const cantidadOcupada = cantidadEnCarritoMap.get(p.idProducto) || 0;
+        const stockReal = p.stock - cantidadOcupada;
 
-    if (!termino || typeof termino !== 'string') return todos;
+        return {
+          ...p,
+          stock: stockReal, // Sobrescribimos el stock para el UI
+          precio: limpiarPrecio(p.precio),
+        };
+      })
+      .filter(p => {
+        // Aplicamos reglas de negocio sobre el stock calculado
+        const esActivo = p.esActivo === 1;
+        const tieneStockDisponible = p.stock > 0; // Se oculta si ya agotamos el stock en el carrito
+        const coincideBusqueda = !terminoLower || p.nombre.toLowerCase().includes(terminoLower);
 
-    const terminoLower = termino.toLowerCase();
-    return todos.filter((p) => p.nombre.toLowerCase().includes(terminoLower));
+        return esActivo && tieneStockDisponible && coincideBusqueda;
+      });
+    
   });
   readonly datosTablaVisual = computed(() => {
     const rawData = this.listaDetalleVenta();
@@ -140,6 +156,12 @@ export class VentaComponent {
   onProductoSeleccionado(event: MatAutocompleteSelectedEvent): void {
     // Al venir del autocomplete, ya viene como ProductoUI (con precio numérico)
     const producto: Producto = event.option.value;
+     if (producto.stock <= 0) {
+      showAlert('Stock insuficiente', 'No queda stock disponible de este producto', 'warning');
+      this.formularioVenta.controls.productoBusqueda.setValue('');
+      return;
+    }
+
     this.productoSeleccionado.set(producto);
 
     setTimeout(() => {
@@ -183,6 +205,10 @@ export class VentaComponent {
     if (precioUnitario <= 0) {
       showAlert('Error', 'El precio del producto no es válido', 'error');
       return;
+    }
+    if (cantidad > producto.stock) {
+        showAlert('Stock Insuficiente', `Solo quedan ${producto.stock} unidades disponibles.`, 'warning');
+        return;
     }
 
     const totalLinea = precioUnitario * cantidad;
