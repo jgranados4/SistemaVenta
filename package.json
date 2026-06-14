@@ -9,10 +9,10 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "testVite": "vitest", 
-  "test:ui": "vitest --ui", 
-  "test:coverage": "vitest run --coverage", 
-  "test:run": "vitest run"
+    "testVite": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "test:run": "vitest run"
   },
   "private": true,
   "dependencies": {
@@ -48,6 +48,7 @@
     "eslint": "^9.39.1",
     "jasmine-core": "~5.1.0",
     "postcss": "^8.4.47",
+    "prettier": "^3.8.1",
     "tailwindcss": "^3.4.14",
     "typescript": "~5.9.3",
     "typescript-eslint": "8.46.4"

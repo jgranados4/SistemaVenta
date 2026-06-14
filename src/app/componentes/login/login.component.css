@@ -1,0 +1,3 @@
+.tituloGradiante {
+    @apply p-3 text-4xl text-center font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-red-700;
+  }

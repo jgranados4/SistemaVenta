@@ -13,7 +13,7 @@ import {
   Validators,
   FormGroup,
 } from '@angular/forms';
-import { Rol, Usuario } from '@core/interface';
+import {  Usuario } from '@core/interface';
 // service
 import { RolService } from '@core/services/rol.service';
 import { Router } from '@angular/router';

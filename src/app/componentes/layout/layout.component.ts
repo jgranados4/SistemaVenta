@@ -4,6 +4,7 @@ import { ThemeService } from '@core/services/theme.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AppTopbar } from './app-topbar/app-topbar';
 interface MenuItem {
   label: string;
   icon: string;
@@ -19,6 +20,7 @@ interface MenuItem {
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
+    AppTopbar
   ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css',
@@ -26,6 +28,7 @@ interface MenuItem {
 })
 export class LayoutComponent {
   isSidebarActive = signal<boolean>(false);
+  isCollapsed = signal(false);
   isUsuario = signal<boolean>(false);
   private themeService = inject(ThemeService);
   // Exponer el tema para usar en el template
@@ -41,6 +44,9 @@ export class LayoutComponent {
 
   toggleSidebar() {
     this.isSidebarActive.update((active) => !active);
+  }
+  toggleCollapse() {
+    this.isCollapsed.update(val => !val);
   }
 
   toggleTheme() {
