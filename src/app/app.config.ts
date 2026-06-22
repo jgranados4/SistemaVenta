@@ -10,7 +10,6 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import {
   provideHttpClient,
-  withFetch,
   withInterceptors,
 } from '@angular/common/http';
 import { errorInterceptor } from '@core/interceptors/error.interceptor';
@@ -35,7 +34,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
-    provideHttpClient(withFetch(), withInterceptors([errorInterceptor])),
+    provideHttpClient(withInterceptors([errorInterceptor])),
     provideAppInitializer(() => {
       const themeService = inject(ThemeService);
       themeService.init();

@@ -15,7 +15,13 @@ export class UsuarioService implements IUsuarioService<ResponseApi> {
   iniciarSesion(request: Login): Observable<ResponseApi> {
     return this.http.post<ResponseApi>(`${this.url}/IniciarSesion`, request);
   }
-  readonly listar= httpResource<ResponseApi>(()=>`${this.url}/Listar`);
+  readonly listar= httpResource<ResponseApi>(()=>{
+    if(!this.url){
+      return undefined
+    }
+    return `${this.url}/Listar`
+  }
+);
   guardar(request: Usuario): Observable<ResponseApi> {
     return this.http.post<ResponseApi>(`${this.url}/Crear`, request);
   }
