@@ -1,12 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-reporte',
   standalone: true,
   imports: [],
   templateUrl: './reporte.component.html',
-  styleUrl: './reporte.component.css'
+  
+  styleUrl: './reporte.component.css',
 })
-export class ReporteComponent {
-
-}
+export class ReporteComponent {}

@@ -2,9 +2,8 @@ import {
   Component,
   inject,
   signal,
-  ChangeDetectionStrategy,
   computed,
-  
+
 } from '@angular/core';
 import { ModalUsuarioComponent } from '../../modales/modal-usuario/modal-usuario.component';
 import { UsuarioStoreService } from '@core/services/SignalStore/usuario-store.service';
@@ -20,7 +19,7 @@ import { showAlert } from '@shared/utility';
   imports: [ApxTabla, MaterialModule, FormsModule],
   templateUrl: './usuario.component.html',
   styleUrl: './usuario.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+
   host: {
     class: 'block p-6',
   },

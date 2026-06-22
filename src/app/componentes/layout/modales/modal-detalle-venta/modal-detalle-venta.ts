@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {  Component, computed, effect, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { detalleVentaDTOs, ventaHistorialResponse } from '@core/interface';
@@ -20,7 +20,7 @@ import { limpiarPrecio } from '@shared/utility/parsePrecioApi';
   ],
   templateUrl: './modal-detalle-venta.html',
   styleUrl: './modal-detalle-venta.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  
 })
 export class ModalDetalleVenta {
   //Variables

@@ -38,7 +38,7 @@ import { limpiarPrecio } from '@shared/utility/parsePrecioApi';
   ],
   templateUrl: './modal-producto.component.html',
   styleUrl: './modal-producto.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  
 })
 export class ModalProductoComponent {
   //*INJECT

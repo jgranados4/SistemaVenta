@@ -24,7 +24,7 @@ interface MenuItem {
   ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  
 })
 export class LayoutComponent {
   isSidebarActive = signal<boolean>(false);

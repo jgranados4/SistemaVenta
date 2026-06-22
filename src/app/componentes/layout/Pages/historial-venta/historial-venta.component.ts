@@ -38,7 +38,7 @@ export const MY_DATA_FORMS = {
   providers: [CurrencyPipe],
   templateUrl: './historial-venta.component.html',
   styleUrl: './historial-venta.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  
   host: {
     class: 'block w-5/6 p-6 mx-auto',
   },
@@ -46,7 +46,6 @@ export const MY_DATA_FORMS = {
 export class HistorialVentaComponent {
   readonly #dialogModal = inject(ModalService);
   readonly #venta = inject(VentaService);
-  readonly #utilidad = inject(UtilidadService);
   readonly #fb = inject(NonNullableFormBuilder);
   private readonly _currencyPipe = inject(CurrencyPipe);
 

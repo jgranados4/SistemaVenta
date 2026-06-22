@@ -38,7 +38,7 @@ import { showAlert } from '@shared/utility';
   ],
   templateUrl: './modal-usuario.component.html',
   styleUrl: './modal-usuario.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  
   host: {
     class: 'block p-6',
   },

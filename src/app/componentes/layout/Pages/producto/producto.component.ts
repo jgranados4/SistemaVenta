@@ -22,7 +22,7 @@ import { limpiarPrecio } from '@shared/utility/parsePrecioApi';
   providers: [CurrencyPipe],
   templateUrl: './producto.component.html',
   styleUrl: './producto.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  
   host: {
     class: 'block p-6',
   },

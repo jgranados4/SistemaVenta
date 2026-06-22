@@ -81,7 +81,7 @@ import { MatIconModule } from '@angular/material/icon';
       flex-shrink: 0;
     }
   `],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  
 })
 export class ModalGenericoComponent {
   private readonly dialogRef = inject(MatDialogRef);

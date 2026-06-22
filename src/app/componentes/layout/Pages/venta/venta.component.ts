@@ -12,17 +12,25 @@ import {
   FormBuilder,
   ReactiveFormsModule,
   Validators,
-  
   FormGroupDirective,
   FormControl,
 } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Producto, VentaForm, VentaRequest, detalleVentaDTOs } from '@core/interface';
+import {
+  Producto,
+  VentaForm,
+  VentaRequest,
+  detalleVentaDTOs,
+} from '@core/interface';
 //*Servicios
 import { VentaService } from '@core/services/venta.service';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { ProductoStoreService } from '@core/services/SignalStore/producto-store.service';
-import { ApxTabla, TableAction, TableColumn } from '@jgranados199795/apx-ui/apx-tabla';
+import {
+  ApxTabla,
+  TableAction,
+  TableColumn,
+} from '@jgranados199795/apx-ui/apx-tabla';
 import { MaterialModule } from '@jgranados199795/apx-ui/apx-material';
 import { showAlert } from '@shared/utility';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -34,7 +42,6 @@ import { limpiarPrecio } from '@shared/utility/parsePrecioApi';
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    CommonModule,
     ApxTabla,
     MaterialModule,
     CurrencyPipe,
@@ -43,7 +50,6 @@ import { limpiarPrecio } from '@shared/utility/parsePrecioApi';
   providers: [CurrencyPipe],
   templateUrl: './venta.component.html',
   styleUrl: './venta.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'block w-5/6 p-6 mx-auto',
   },
@@ -77,22 +83,23 @@ export class VentaComponent {
 
   private readonly terminoBusqueda = toSignal(
     this.formularioVenta.controls.productoBusqueda.valueChanges,
-    { initialValue: '' }
+    { initialValue: '' },
   );
 
   // 4. SOLUCIÓN AQUÍ: "Adaptador de Datos"
   // Transformamos los datos en la Signal. Así el HTML recibe números limpios.
   readonly productosFiltrados = computed<Producto[]>(() => {
     const termino = this.terminoBusqueda();
-     const itemsEnCarrito = this.listaDetalleVenta(); 
+    const itemsEnCarrito = this.listaDetalleVenta();
     const todos = this._storePto.values();
-       const cantidadEnCarritoMap = new Map<number, number>();
-    itemsEnCarrito.forEach(item => {
+    const cantidadEnCarritoMap = new Map<number, number>();
+    itemsEnCarrito.forEach((item) => {
       cantidadEnCarritoMap.set(item.idProducto, item.cantidad);
     });
-     const terminoLower = typeof termino === 'string' ? termino.toLowerCase() : '';
-     return todos
-      .map(p => {
+    const terminoLower =
+      typeof termino === 'string' ? termino.toLowerCase() : '';
+    return todos
+      .map((p) => {
         // Calculamos el stock visual restante
         const cantidadOcupada = cantidadEnCarritoMap.get(p.idProducto) || 0;
         const stockReal = p.stock - cantidadOcupada;
@@ -103,15 +110,15 @@ export class VentaComponent {
           precio: limpiarPrecio(p.precio),
         };
       })
-      .filter(p => {
+      .filter((p) => {
         // Aplicamos reglas de negocio sobre el stock calculado
         const esActivo = p.esActivo === 1;
         const tieneStockDisponible = p.stock > 0; // Se oculta si ya agotamos el stock en el carrito
-        const coincideBusqueda = !terminoLower || p.nombre.toLowerCase().includes(terminoLower);
+        const coincideBusqueda =
+          !terminoLower || p.nombre.toLowerCase().includes(terminoLower);
 
         return esActivo && tieneStockDisponible && coincideBusqueda;
       });
-    
   });
   readonly datosTablaVisual = computed(() => {
     const rawData = this.listaDetalleVenta();
@@ -144,10 +151,10 @@ export class VentaComponent {
     { key: 'precio', label: 'P. Unit' },
     { key: 'total', label: 'Total' },
   ];
-  constructor(){
-    effect(()=>{
-      console.log()
-    })
+  constructor() {
+    effect(() => {
+      console.log();
+    });
   }
   displayProducto(producto: Producto): string {
     return producto && producto.nombre ? producto.nombre : '';
@@ -156,8 +163,12 @@ export class VentaComponent {
   onProductoSeleccionado(event: MatAutocompleteSelectedEvent): void {
     // Al venir del autocomplete, ya viene como ProductoUI (con precio numérico)
     const producto: Producto = event.option.value;
-     if (producto.stock <= 0) {
-      showAlert('Stock insuficiente', 'No queda stock disponible de este producto', 'warning');
+    if (producto.stock <= 0) {
+      showAlert(
+        'Stock insuficiente',
+        'No queda stock disponible de este producto',
+        'warning',
+      );
       this.formularioVenta.controls.productoBusqueda.setValue('');
       return;
     }
@@ -193,7 +204,7 @@ export class VentaComponent {
       showAlert(
         'Atención',
         'Seleccione un producto válido de la lista',
-        'warning'
+        'warning',
       );
       return;
     }
@@ -207,15 +218,19 @@ export class VentaComponent {
       return;
     }
     if (cantidad > producto.stock) {
-        showAlert('Stock Insuficiente', `Solo quedan ${producto.stock} unidades disponibles.`, 'warning');
-        return;
+      showAlert(
+        'Stock Insuficiente',
+        `Solo quedan ${producto.stock} unidades disponibles.`,
+        'warning',
+      );
+      return;
     }
 
     const totalLinea = precioUnitario * cantidad;
 
     this.listaDetalleVenta.update((actual) => {
       const index = actual.findIndex(
-        (d) => d.idProducto === producto.idProducto
+        (d) => d.idProducto === producto.idProducto,
       );
 
       if (index >= 0) {
@@ -267,7 +282,7 @@ export class VentaComponent {
           showAlert(
             'Venta Exitosa',
             `Ticket: ${resp.value.numeroDocumento}`,
-            'success'
+            'success',
           );
 
           this.formDirective()?.resetForm({
@@ -291,7 +306,7 @@ export class VentaComponent {
 
   handleDelete(action: TableAction<detalleVentaDTOs>): void {
     this.listaDetalleVenta.update((lista) =>
-      lista.filter((item) => item.idProducto !== action.row.idProducto)
+      lista.filter((item) => item.idProducto !== action.row.idProducto),
     );
   }
 

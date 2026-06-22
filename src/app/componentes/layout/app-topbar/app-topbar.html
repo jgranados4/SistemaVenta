@@ -5,7 +5,7 @@
       <div class="flex items-center justify-between">
         <div class="flex items-center justify-start rtl:justify-end">
           <button
-            (click)="onToggleSidebar.emit()"
+            (click)="toggleSidebar.emit()"
             type="button"
             class="mobile-menu-btn"
           >
@@ -23,7 +23,7 @@
         <div class="flex items-center">
           <button
             mat-icon-button
-            (click)="onToggleTheme.emit()"
+            (click)="toggleTheme.emit()"
             class="text-gray-500 dark:text-gray-400"
           >
            <mat-icon>{{ isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
