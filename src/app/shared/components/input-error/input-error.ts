@@ -11,7 +11,7 @@ import { MaterialModule } from '@jgranados199795/apx-ui/apx-material';
     }
   `,
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  
 })
 export class InputError {
   control = input.required<AbstractControl | null>();
