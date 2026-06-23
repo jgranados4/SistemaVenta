@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import {  Component, inject, input } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,9 +13,9 @@ import { MatIconModule } from '@angular/material/icon';
       <header class="modal-header">
         <!-- Elemento fantasma para equilibrar el grid -->
         <div class="header-spacer"></div>
-        
+
         <h2 class="mat-title-medium">{{ title() }}</h2>
-        
+
         <button mat-icon-button (click)="close()" type="button">
           <mat-icon>close</mat-icon>
         </button>
@@ -65,7 +65,7 @@ import { MatIconModule } from '@angular/material/icon';
 
     /* El spacer ocupa el mismo espacio que el botón para equilibrar */
     .header-spacer {
-      width: 48px; 
+      width: 48px;
     }
 
     .modal-content {
@@ -81,11 +81,11 @@ import { MatIconModule } from '@angular/material/icon';
       flex-shrink: 0;
     }
   `],
-  
+
 })
 export class ModalGenericoComponent {
   private readonly dialogRef = inject(MatDialogRef);
-  
+
   title = input.required<string>();
 
   close() {

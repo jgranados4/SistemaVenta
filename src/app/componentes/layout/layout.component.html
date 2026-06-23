@@ -10,15 +10,16 @@
     (click)="toggleCollapse()"
     class="btn-collapse"
   >
-    <mat-icon 
-      class="text-gray-500 dark:text-gray-400 transition-transform duration-300 w-[18px] h-[18px] flex items-center justify-center text-[18px]" 
+    <mat-icon
+      class="text-gray-500 dark:text-gray-400 transition-transform duration-300 w-[18px] h-[18px] flex items-center justify-center text-[18px]"
       [class.rotate-180]="isCollapsed()"
     >
       keyboard_double_arrow_left
     </mat-icon>
   </button>
 
-  <div class="h-full px-3 pb-4 overflow-y-auto overflow-x-hidden bg-white dark:bg-gray-800">
+  <div class="flex h-full flex-col overflow-y-auto overflow-x-hidden px-3 py-4 bg-white dark:bg-gray-800">
+
     <ul class="space-y-2 font-medium">
       @for (item of menuItems(); track item.link) {
       <li>
@@ -27,7 +28,7 @@
           routerLinkActive="menu-item-active"
           class="menu-item group"
           [class.justify-center]="isCollapsed()"
-          [title]="isCollapsed() ? item.label : ''" 
+          [title]="isCollapsed() ? item.label : ''"
         >
           <mat-icon
             class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white group-[.active]:text-inherit shrink-0"
@@ -35,7 +36,7 @@
             {{ item.icon }}
           </mat-icon>
 
-          <span 
+          <span
             class="ms-3 whitespace-nowrap transition-all duration-300"
             [class.opacity-0]="isCollapsed()"
             [class.w-0]="isCollapsed()"
@@ -50,7 +51,34 @@
       </li>
       }
     </ul>
+    <div class="mt-auto pt-4 border-t border-gray-800 shrink-0">
+      <div
+        class="flex items-center rounded-xl p-2 hover:bg-gray-800 transition-colors cursor-pointer"
+        [class.justify-center]="isCollapsed()"
+      >
+        <img
+          src="https://ui-avatars.com/api/?name=Carlos+Solis&background=3b82f6&color=fff&rounded=true&bold=true"
+          alt="Perfil"
+          class="w-9 h-9 rounded-full shrink-0 border border-gray-700"
+        />
+
+        <div
+          class="ms-3 overflow-hidden transition-all duration-300"
+          [class.opacity-0]="isCollapsed()"
+          [class.w-0]="isCollapsed()"
+          [class.hidden]="isCollapsed()"
+          [class.opacity-100]="!isCollapsed()"
+          [class.w-auto]="!isCollapsed()"
+          [class.block]="!isCollapsed()"
+        >
+          <p class="text-sm font-medium text-white truncate">Carlos Solís</p>
+          <p class="text-xs text-gray-400 truncate">Administrador</p>
+        </div>
+      </div>
+    </div>
+
   </div>
+
 </aside>
 
 <main

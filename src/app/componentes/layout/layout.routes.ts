@@ -7,7 +7,7 @@ const routes: Routes = [
       import('./layout.component').then((m) => m.LayoutComponent),
     children: [
       {
-        path: 'dasboard',
+        path: 'dashboard',
         loadComponent: () =>
           import('./Pages/dash-board/dash-board.component').then(
             (d) => d.DashBoardComponent,
@@ -28,12 +28,12 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'Venta',
+        path: 'vender',
         loadComponent: () =>
           import('./Pages/venta/venta.component').then((d) => d.VentaComponent),
       },
       {
-        path: 'historial_venta',
+        path: 'historial-ventas',
         loadComponent: () =>
           import('./Pages/historial-venta/historial-venta.component').then(
             (d) => d.HistorialVentaComponent,
