@@ -1,0 +1,35 @@
+<section class="flex justify-center items-center min-h-screen bg-gray-900 p-4">
+
+  <div class="w-full max-w-lg bg-gray-800 rounded-2xl shadow-2xl border border-gray-700 p-8 sm:p-10">
+
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500">
+        Crea tu Empresa
+      </h2>
+      <p class="text-gray-400 mt-2 text-sm">Empieza a gestionar tus ventas en segundos.</p>
+    </div>
+
+    <lib-apx-formulario
+      [fields]="fields()"
+      submitButtonText="Registrar Negocio"
+      [showFormStatus]="true"
+      (formSubmit)="onSubmit($event)"
+    />
+
+    @if (mostrarLoading()) {
+    <div class="mt-4 px-3 py-2 text-sm font-medium text-center text-blue-200 bg-blue-900/50 border border-blue-800 rounded-lg animate-pulse">
+      Creando tu espacio de trabajo...
+    </div>
+    }
+
+    <div class="mt-6 text-center">
+      <p class="text-sm text-gray-400">
+        ¿Ya tienes una cuenta?
+        <a routerLink="/login" class="font-medium text-blue-400 hover:text-blue-300 transition-colors">
+          Inicia sesión aquí
+        </a>
+      </p>
+    </div>
+
+  </div>
+</section>
