@@ -1,20 +1,48 @@
-<section class="flex justify-center content-center items-center h-dvh">
-  <div
-    class="w-full h-3/4 items-center max-w-sm rounded-lg shadow sm:p-6 md:p-8"
-  >
-    <h5 class="tituloGradiante">Login</h5>
+<section class="flex flex-col justify-center items-center min-h-screen bg-gray-900 p-4">
+
+  <div class="w-full max-w-md mb-4 text-left">
+    <a routerLink="/" class="flex items-center gap-1.5 text-gray-500 hover:text-gray-300 transition-colors text-sm group">
+      <span class="material-icons text-xl">arrow_back</span>
+      <span>Inicio</span>
+    </a>
+  </div>
+
+  <div class="w-full max-w-lg bg-gray-800 rounded-2xl shadow-2xl border border-gray-700 p-8 sm:p-10">
+
+    <h5 class="tituloGradiante text-center text-3xl font-bold mb-8">Login</h5>
+
     <lib-apx-formulario
       [fields]="fields"
       submitButtonText="Ingresar"
       [showFormStatus]="false"
       (formSubmit)="onSubmit($event)"
     />
-    @if (mostrarLoading) {
-    <div
-      class="px-3 py-1 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200"
-    >
-      loading...
+
+    <div class="w-full mt-2 mb-6 text-center">
+      <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors text-sm">
+        ¿Olvidaste tu contraseña?
+      </a>
+    </div>
+
+    @if (mostrarLoading()) {
+    <div class="w-full mt-4 px-3 py-2 text-sm font-medium text-center text-blue-200 bg-blue-900/50 border border-blue-800 rounded-lg animate-pulse">
+      Iniciando sesión...
     </div>
     }
+
+    <div class="mt-8 text-center pt-6 border-t border-gray-700 w-full space-y-3">
+      <p class="text-gray-400">¿Aún no tienes cuenta en el sistema?</p>
+
+      <a routerLink="/registro-empresa" class="inline-block px-8 py-2.5 text-base font-semibold text-white bgGradiante rounded-full shadow-lg hover:shadow-xl transition-all">
+        Regístrate aquí
+      </a>
+    </div>
+
+    <div class="mt-6 text-center">
+      <a routerLink="/" class="font-medium text-blue-400 hover:text-blue-300 transition-colors">
+        Volver a la página principal
+      </a>
+    </div>
+
   </div>
 </section>
