@@ -1,6 +1,9 @@
 export interface Sesion {
-  idUsuario:number;
-  nombreoCompleto:string;
-  correo:string;
-  rolDescripcion:string;
+  correo: string;
+idEmpresa: number;
+idUsuario: number;
+nombreCompleto: string;
+rolDescripcion: string;
 }
+
+
