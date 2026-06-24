@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AppTopbar } from './app-topbar/app-topbar';
-import { MenuService } from '@core/services';
+import { MenuService, UtilidadService } from '@core/services';
 interface MenuItem {
   label: string;
   icon: string;
@@ -39,6 +39,7 @@ export class LayoutComponent {
   isCollapsed = signal(false);
   isUsuario = signal<boolean>(false);
   private themeService = inject(ThemeService);
+  protected readonly  usuario=inject(UtilidadService);
   private Menu = inject(MenuService).listar;
   constructor() {
     effect(() => {
