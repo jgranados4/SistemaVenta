@@ -3,19 +3,22 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () =>
-      import('./componentes/login/login.component').then(
-        (m) => m.LoginComponent
-      ),
-    pathMatch: 'full',
+    loadComponent: () => import('./componentes/landing-page/landing-page'),
   },
   {
     path: 'login',
     loadComponent: () =>
       import('./componentes/login/login.component').then(
-        (m) => m.LoginComponent
+        (m) => m.LoginComponent,
       ),
-    pathMatch: 'full',
+  },
+  {
+    path: 'registro-empresa',
+    title:'registro',
+    loadComponent: () =>
+      import('./componentes/registro-empresa/registro-empresa').then(
+        (r) => r.RegistroEmpresaComponent,
+      ),
   },
   {
     path: 'pages',
@@ -23,7 +26,7 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'login',
+    redirectTo: '',
     pathMatch: 'full',
   },
 ];
