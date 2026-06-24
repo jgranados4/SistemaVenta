@@ -1,11 +1,8 @@
 import {  httpResource } from '@angular/common/http';
-import {  Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { ResponseApi } from '@core/interface';
-
-@Injectable({
-  providedIn: 'root',
-})
+import { Service } from '@angular/core';
+@Service()
 export class CategoriaService {
   private readonly url = `${environment.endpoint}Categoria`;
 

@@ -1,19 +1,19 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { HttpClient, httpResource } from '@angular/common/http';
+import { inject, Service } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { ResponseApi } from '@core/interface';
-import { Observable } from 'rxjs';
+import { UtilidadService } from './utilidad.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+
+@Service()
 export class MenuService {
   private http = inject(HttpClient);
+  readonly #utilidadService = inject(UtilidadService);
+  readonly idusuario=this.#utilidadService.usuario()?.idUsuario
   private readonly url = `${environment.endpoint}Menu`;
-  constructor() {}
-  listar(idUsuario: number): Observable<ResponseApi> {
-    return this.http.get<ResponseApi>(
-      `${this.url}/Listar?idUsuario=${idUsuario}`
-    );
-  }
+
+  readonly listar = httpResource<ResponseApi>(() => {
+    if(!this.idusuario) return undefined
+    return `${this.url}/Listar/${this.idusuario}`
+  });
 }

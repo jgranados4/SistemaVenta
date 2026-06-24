@@ -30,11 +30,9 @@ export class ThemeService {
    */
   init(): void {
     const storedTheme = this.getInitialTheme();
-
     // 1. Aplicar al DOM INMEDIATAMENTE (Síncrono)
     // Esto asegura que antes de que Angular pinte el primer pixel, la clase ya esté ahí.
     this.applyThemeToDom(storedTheme);
-
     // 2. Sincronizar el estado reactivo (esto disparará el effect, pero el DOM ya estará listo)
     this._theme.set(storedTheme);
 
