@@ -15,6 +15,19 @@
       "request": "launch",
       "preLaunchTask": "npm: test",
       "url": "http://localhost:9876/debug.html"
+    },
+    {
+      "name": "bun serve",
+      "type": "chrome",
+      "request": "launch",
+      "preLaunchTask": "bun: start", // ← apunta al task de bun
+      "url": "http://localhost:4200/",
+      "webRoot": "${workspaceFolder}",
+      "sourceMapPathOverrides": {
+        "webpack:/*": "${webRoot}/*",
+        "/./*": "${webRoot}/*",
+        "/src/*": "${webRoot}/*"
+      }
     }
   ]
 }

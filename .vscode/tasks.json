@@ -21,6 +21,30 @@
       }
     },
     {
+      "label": "bun: start", // ← debe coincidir con preLaunchTask
+      "type": "shell",
+      "command": "bun run start",
+      "isBackground": true, // corre en background mientras debugeas
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": {
+          "regexp": "^([^\\s].*)\\((\\d+),(\\d+)\\):\\s+(error|warning)\\s+TS(\\d+):\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "code": 5,
+          "message": 6
+        },
+        "background": {
+          "activeOnStart": true,
+          // ✅ VSCode espera este mensaje antes de abrir Chrome
+          "beginsPattern": "Building\\.\\.\\.",
+          "endsPattern": "Compiled successfully|Local:.*localhost"
+        }
+      }
+    },
+    {
       "type": "npm",
       "script": "test",
       "isBackground": true,
